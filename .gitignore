@@ -1,0 +1,12 @@
+# Archivos generados por NetBeans
+/build/
+/dist/
+
+# Archivos compilados
+*.class
+
+# Logs
+*.log
+
+# Configuración de DB Browser for SQLite
+*.sqbpro
