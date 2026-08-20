@@ -10,3 +10,4 @@
 
 # Configuración de DB Browser for SQLite
 *.sqbpro
+/nbproject/private
