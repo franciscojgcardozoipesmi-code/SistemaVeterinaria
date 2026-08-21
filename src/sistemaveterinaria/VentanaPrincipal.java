@@ -37,6 +37,7 @@ private static boolean alertaTurnosMostrada = false;
         lblTituloNotificaciones = new javax.swing.JLabel();
         lblAlertaProductos = new javax.swing.JLabel();
         lblAlertaTurnos = new javax.swing.JLabel();
+        btnReportesVentas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,6 +92,9 @@ private static boolean alertaTurnosMostrada = false;
                 .addContainerGap(109, Short.MAX_VALUE))
         );
 
+        btnReportesVentas.setText("Reportes de ventas");
+        btnReportesVentas.addActionListener(this::btnReportesVentasActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -109,10 +113,12 @@ private static boolean alertaTurnosMostrada = false;
                         .addComponent(btnAlertas))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(67, 67, 67)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnVentas)
-                            .addComponent(btnProcedimientos)
-                            .addComponent(btnClientes))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnReportesVentas)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnVentas)
+                                .addComponent(btnProcedimientos)
+                                .addComponent(btnClientes)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,6 +151,8 @@ private static boolean alertaTurnosMostrada = false;
                         .addComponent(btnAnimales)
                         .addGap(16, 16, 16)
                         .addComponent(btnProcedimientos)
+                        .addGap(46, 46, 46)
+                        .addComponent(btnReportesVentas)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnTurnos)
                         .addGap(18, 18, 18)
@@ -244,6 +252,15 @@ private static boolean alertaTurnosMostrada = false;
 
         this.dispose();
     }//GEN-LAST:event_btnAlertasActionPerformed
+
+    private void btnReportesVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesVentasActionPerformed
+        VentanaReportesVentas vrv =
+                new VentanaReportesVentas(rolUsuario);
+
+        vrv.setVisible(true);
+
+        this.dispose();
+    }//GEN-LAST:event_btnReportesVentasActionPerformed
     
     private void revisarAlertasProductos() {
 
@@ -321,6 +338,7 @@ private static boolean alertaTurnosMostrada = false;
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnProcedimientos;
     private javax.swing.JButton btnProductos;
+    private javax.swing.JButton btnReportesVentas;
     private javax.swing.JButton btnTurnos;
     private javax.swing.JButton btnUsuarios;
     private javax.swing.JButton btnVentas;

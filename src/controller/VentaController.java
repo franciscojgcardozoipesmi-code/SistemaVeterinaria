@@ -77,4 +77,11 @@ public class VentaController {
     public static ArrayList<Object[]> listarVentasConDetalle() {
         return ventaDAO.listarVentasConDetalle();
     }
+
+    public static ArrayList<Object[]> listarVentasPorFecha(
+                                    String desde,
+                                    String hasta) {
+
+        return ventaDAO.listarVentasPorFecha(desde, hasta);
+    }
 }

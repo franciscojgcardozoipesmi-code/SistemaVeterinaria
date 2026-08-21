@@ -371,4 +371,101 @@ public class VentaDAO implements CrudDAO<Venta> {
 
         return lista;
     }
+    
+    public ArrayList<Object[]> listarVentasPorFecha(
+            String desde,
+            String hasta) {
+
+        ArrayList<Object[]> lista = new ArrayList<>();
+        Connection conn = null;
+
+        try {
+
+            conn = Conexion.getInstancia().conectar();
+
+            String sql = """
+                SELECT v.id_venta,
+                       v.fecha,
+                       p.nombre AS producto,
+                       d.cantidad,
+                       d.precio,
+                       (d.cantidad * d.precio) AS subtotal,
+                       v.total,
+                       v.medio_pago
+                FROM ventas v
+                JOIN detalle_venta d
+                    ON v.id_venta = d.id_venta
+                JOIN productos p
+                    ON d.id_producto = p.id_producto
+                WHERE date(
+                        substr(v.fecha, 7, 4) || '-' ||
+                        substr(v.fecha, 4, 2) || '-' ||
+                        substr(v.fecha, 1, 2)
+                      )
+                      BETWEEN date(
+                        substr(?, 7, 4) || '-' ||
+                        substr(?, 4, 2) || '-' ||
+                        substr(?, 1, 2)
+                      )
+                      AND date(
+                        substr(?, 7, 4) || '-' ||
+                        substr(?, 4, 2) || '-' ||
+                        substr(?, 1, 2)
+                      )
+                ORDER BY v.id_venta DESC
+            """;
+
+            PreparedStatement pst =
+                    conn.prepareStatement(sql);
+
+            pst.setString(1, desde);
+            pst.setString(2, desde);
+            pst.setString(3, desde);
+
+            pst.setString(4, hasta);
+            pst.setString(5, hasta);
+            pst.setString(6, hasta);
+
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+
+                lista.add(new Object[]{
+                    rs.getInt("id_venta"),
+                    rs.getString("fecha"),
+                    rs.getString("producto"),
+                    rs.getInt("cantidad"),
+                    rs.getDouble("precio"),
+                    rs.getDouble("subtotal"),
+                    rs.getDouble("total"),
+                    rs.getString("medio_pago")
+                });
+            }
+
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+
+            throw new RuntimeException(
+                    "Error al generar reporte de ventas: "
+                    + e.getMessage(),
+                    e
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return lista;
+    }
 }
