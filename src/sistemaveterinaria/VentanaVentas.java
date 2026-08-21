@@ -19,13 +19,18 @@ public class VentanaVentas extends javax.swing.JFrame {
             javax.swing.table.DefaultTableModel modelo =
                new javax.swing.table.DefaultTableModel();
 
-       modelo.addColumn("ID");
-       modelo.addColumn("Fecha");
-       modelo.addColumn("Total");
+        modelo.addColumn("ID");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Producto");
+        modelo.addColumn("Cantidad");
+        modelo.addColumn("Precio");
+        modelo.addColumn("Subtotal");
+        modelo.addColumn("Total");
+        modelo.addColumn("Medio de pago");
 
-       for (Object[] fila : VentaController.listarVentas()) {
-           modelo.addRow(fila);
-       }
+       for (Object[] fila : VentaController.listarVentasConDetalle()) {
+            modelo.addRow(fila);
+        }
 
        tblVentas.setModel(modelo);
    }
@@ -38,6 +43,7 @@ public class VentanaVentas extends javax.swing.JFrame {
         scrollVentas = new javax.swing.JScrollPane();
         tblVentas = new javax.swing.JTable();
         btnVolver = new javax.swing.JButton();
+        btnEliminarVenta = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,6 +66,9 @@ public class VentanaVentas extends javax.swing.JFrame {
         btnVolver.setText("Volver");
         btnVolver.addActionListener(this::btnVolverActionPerformed);
 
+        btnEliminarVenta.setText("Anular venta");
+        btnEliminarVenta.addActionListener(this::btnEliminarVentaActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -67,7 +76,9 @@ public class VentanaVentas extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(211, 211, 211)
+                        .addGap(110, 110, 110)
+                        .addComponent(btnEliminarVenta)
+                        .addGap(26, 26, 26)
                         .addComponent(btnCrearVenta)
                         .addGap(27, 27, 27)
                         .addComponent(btnVolver))
@@ -84,7 +95,8 @@ public class VentanaVentas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCrearVenta)
-                    .addComponent(btnVolver))
+                    .addComponent(btnVolver)
+                    .addComponent(btnEliminarVenta))
                 .addGap(17, 17, 17))
         );
 
@@ -106,6 +118,51 @@ public class VentanaVentas extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    private void btnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarVentaActionPerformed
+        int fila = tblVentas.getSelectedRow();
+
+        if (fila == -1) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccione una venta para anular."
+            );
+            return;
+        }
+
+        int idVenta = Integer.parseInt(
+                tblVentas.getValueAt(fila, 0).toString()
+        );
+
+        int opcion = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de que desea anular la venta seleccionada?",
+                "Confirmar anulación",
+                javax.swing.JOptionPane.YES_NO_OPTION
+        );
+
+        if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+
+            try {
+
+                VentaController.eliminarVenta(idVenta);
+
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Venta anulada correctamente."
+                );
+
+                cargarVentas();
+
+            } catch (Exception e) {
+
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Error al anular la venta: " + e.getMessage()
+                );
+            }
+        }
+    }//GEN-LAST:event_btnEliminarVentaActionPerformed
+
   
     public static void main(String args[]) {
     
@@ -114,6 +171,7 @@ public class VentanaVentas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCrearVenta;
+    private javax.swing.JButton btnEliminarVenta;
     private javax.swing.JButton btnVolver;
     private javax.swing.JScrollPane scrollVentas;
     private javax.swing.JTable tblVentas;

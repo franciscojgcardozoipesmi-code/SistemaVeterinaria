@@ -20,21 +20,24 @@ public class VentaController {
             lista.add(new Object[]{
                 venta.getIdVenta(),
                 venta.getFecha(),
-                venta.getTotal()
+                venta.getTotal(),
+                venta.getMedioPago()
             });
         }
 
         return lista;
     }
 
-    public static void guardarVenta(String fecha, JTable tablaDetalle) {
+    public static void guardarVenta(String fecha,
+                                    String medioPago,
+                                    JTable tablaDetalle) {
 
         Venta venta = ModeloFactory.crearVenta(
                 -1,
                 fecha,
-                0
+                0,
+                medioPago
         );
-
         double total = 0;
 
         for (int i = 0; i < tablaDetalle.getRowCount(); i++) {
@@ -69,5 +72,9 @@ public class VentaController {
 
     public static void eliminarVenta(int idVenta) {
         ventaDAO.eliminar(idVenta);
+    }
+
+    public static ArrayList<Object[]> listarVentasConDetalle() {
+        return ventaDAO.listarVentasConDetalle();
     }
 }

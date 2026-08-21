@@ -22,7 +22,8 @@ public class VentaDAO implements CrudDAO<Venta> {
             conn.setAutoCommit(false);
 
             String sqlVenta =
-                    "INSERT INTO ventas (fecha, total) VALUES (?, ?)";
+                "INSERT INTO ventas (fecha, total, medio_pago) "
+                + "VALUES (?, ?, ?)";
 
             PreparedStatement pstVenta = conn.prepareStatement(
                     sqlVenta,
@@ -31,7 +32,7 @@ public class VentaDAO implements CrudDAO<Venta> {
 
             pstVenta.setString(1, venta.getFecha());
             pstVenta.setDouble(2, venta.getTotal());
-
+            pstVenta.setString(3, venta.getMedioPago());
             pstVenta.executeUpdate();
 
             ResultSet rsVenta = pstVenta.getGeneratedKeys();
@@ -165,7 +166,8 @@ public class VentaDAO implements CrudDAO<Venta> {
                 Venta venta = new Venta(
                         rs.getInt("id_venta"),
                         rs.getString("fecha"),
-                        rs.getDouble("total")
+                        rs.getDouble("total"),
+                        rs.getString("medio_pago")
                 );
 
                 lista.add(venta);
@@ -208,6 +210,45 @@ public class VentaDAO implements CrudDAO<Venta> {
             conn = Conexion.getInstancia().conectar();
             conn.setAutoCommit(false);
 
+            String sqlBuscarDetalles =
+                    "SELECT id_producto, cantidad "
+                    + "FROM detalle_venta "
+                    + "WHERE id_venta = ?";
+
+            PreparedStatement pstBuscarDetalles =
+                    conn.prepareStatement(sqlBuscarDetalles);
+
+            pstBuscarDetalles.setInt(1, idVenta);
+
+            ResultSet rsDetalles =
+                    pstBuscarDetalles.executeQuery();
+
+            while (rsDetalles.next()) {
+
+                int idProducto =
+                        rsDetalles.getInt("id_producto");
+
+                int cantidad =
+                        rsDetalles.getInt("cantidad");
+
+                String sqlStock =
+                        "UPDATE productos "
+                        + "SET stock = stock + ? "
+                        + "WHERE id_producto = ?";
+
+                PreparedStatement pstStock =
+                        conn.prepareStatement(sqlStock);
+
+                pstStock.setInt(1, cantidad);
+                pstStock.setInt(2, idProducto);
+
+                pstStock.executeUpdate();
+                pstStock.close();
+            }
+
+            rsDetalles.close();
+            pstBuscarDetalles.close();
+
             String sqlDetalle =
                     "DELETE FROM detalle_venta WHERE id_venta = ?";
 
@@ -233,9 +274,11 @@ public class VentaDAO implements CrudDAO<Venta> {
         } catch (Exception e) {
 
             try {
+
                 if (conn != null) {
                     conn.rollback();
                 }
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -259,5 +302,73 @@ public class VentaDAO implements CrudDAO<Venta> {
                 e.printStackTrace();
             }
         }
+    }
+
+    public ArrayList<Object[]> listarVentasConDetalle() {
+
+        ArrayList<Object[]> lista = new ArrayList<>();
+        Connection conn = null;
+
+        try {
+
+            conn = Conexion.getInstancia().conectar();
+
+            String sql = """
+                SELECT v.id_venta,
+                       v.fecha,
+                       p.nombre AS producto,
+                       d.cantidad,
+                       d.precio,
+                       (d.cantidad * d.precio) AS subtotal,
+                       v.total,
+                       v.medio_pago
+                FROM ventas v
+                JOIN detalle_venta d
+                    ON v.id_venta = d.id_venta
+                JOIN productos p
+                    ON d.id_producto = p.id_producto
+                ORDER BY v.id_venta DESC
+            """;
+
+            PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+
+                lista.add(new Object[]{
+                    rs.getInt("id_venta"),
+                    rs.getString("fecha"),
+                    rs.getString("producto"),
+                    rs.getInt("cantidad"),
+                    rs.getDouble("precio"),
+                    rs.getDouble("subtotal"),
+                    rs.getDouble("total"),
+                    rs.getString("medio_pago")
+                });
+            }
+
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+
+            throw new RuntimeException(
+                    "Error al listar ventas con detalle: "
+                    + e.getMessage(),
+                    e
+            );
+
+        } finally {
+
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return lista;
     }
 }

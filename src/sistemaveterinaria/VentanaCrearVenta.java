@@ -83,6 +83,8 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         tblDetalle = new javax.swing.JTable();
         btnGuardar = new javax.swing.JButton();
         lblTotal = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        cmbMedioPago = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -122,6 +124,10 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
 
         lblTotal.setText("Total:");
 
+        jLabel1.setText("Medio de pago:");
+
+        cmbMedioPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Tarjeta", "Transferencia" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -141,14 +147,17 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                                     .addComponent(lblFecha)
                                     .addGap(57, 57, 57))
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(lblCantidad)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel1)
+                                        .addComponent(lblCantidad))
                                     .addGap(40, 40, 40)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtCantidad, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
-                                .addComponent(txtFecha)))))
+                                .addComponent(txtCantidad)
+                                .addComponent(txtFecha)
+                                .addComponent(cmbMedioPago, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(18, 18, 18)
                 .addComponent(scrollDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,7 +189,11 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                                     .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(cmbProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(btnAgregar))
+                        .addComponent(btnAgregar)
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(cmbMedioPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(45, 45, 45)
                         .addComponent(scrollDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -295,7 +308,8 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                 return;
             }
 
-            VentaController.guardarVenta(txtFecha.getText().trim(),tblDetalle);
+            VentaController.guardarVenta(txtFecha.getText().trim(),cmbMedioPago.getSelectedItem().toString(),
+                                                                      tblDetalle);
 
             javax.swing.JOptionPane.showMessageDialog(
                     this,
@@ -332,7 +346,9 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnVolver;
+    private javax.swing.JComboBox<String> cmbMedioPago;
     private javax.swing.JComboBox<String> cmbProducto;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblCantidad;
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblProducto;

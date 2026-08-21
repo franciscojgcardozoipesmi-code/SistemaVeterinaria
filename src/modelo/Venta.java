@@ -3,7 +3,7 @@ package modelo;
 import java.util.ArrayList;
 
 public class Venta {
-
+    private String medioPago;
     private int idVenta;
     private String fecha;
     private double total;
@@ -13,10 +13,11 @@ public class Venta {
         detalles = new ArrayList<>();
     }
 
-    public Venta(int idVenta, String fecha, double total) {
+    public Venta(int idVenta, String fecha, double total, String medioPago) {
         this.idVenta = idVenta;
         this.fecha = fecha;
         this.total = total;
+        this.medioPago = medioPago;
         this.detalles = new ArrayList<>();
     }
 
@@ -54,5 +55,13 @@ public class Venta {
 
     public void agregarDetalle(DetalleVenta detalle) {
         detalles.add(detalle);
+    }
+
+    public String getMedioPago() {
+        return medioPago;
+    }
+
+    public void setMedioPago(String medioPago) {
+        this.medioPago = medioPago;
     }
 }

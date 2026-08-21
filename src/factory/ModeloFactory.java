@@ -60,13 +60,15 @@ public class ModeloFactory {
     }
 
     public static Venta crearVenta(int idVenta,
-                               String fecha,
-                               double total) {
+                                String fecha,
+                                double total,
+                                String medioPago) {
 
         return new Venta(
                 idVenta,
                 fecha,
-                total
+                total,
+                medioPago
         );
     }
 
