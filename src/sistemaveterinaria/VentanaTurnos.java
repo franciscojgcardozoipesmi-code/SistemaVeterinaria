@@ -1,6 +1,9 @@
 package sistemaveterinaria;
 import controller.TurnoController;
-
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 public class VentanaTurnos extends javax.swing.JFrame {
     private String rolUsuario;
     
@@ -8,12 +11,18 @@ public class VentanaTurnos extends javax.swing.JFrame {
 
     public VentanaTurnos() {
         initComponents();
+
+        TurnoController.marcarTurnosVencidos();
+
         cargarTabla();
     }
     
     public VentanaTurnos(String rolUsuario) {
         initComponents();
         this.rolUsuario = rolUsuario;
+
+        TurnoController.marcarTurnosVencidos();
+
         cargarTabla();
     }
 
@@ -29,12 +38,14 @@ public class VentanaTurnos extends javax.swing.JFrame {
             modelo.addColumn("Fecha");
             modelo.addColumn("Hora");
             modelo.addColumn("Motivo");
+            modelo.addColumn("Estado");
 
             for (Object[] fila : TurnoController.listarTurnos()) {
                 modelo.addRow(fila);
             }
 
             tblTurnos.setModel(modelo);
+            aplicarColoresEstado();
         }
     
     private void buscarTurnos(String filtro) {
@@ -49,12 +60,13 @@ public class VentanaTurnos extends javax.swing.JFrame {
     modelo.addColumn("Fecha");
     modelo.addColumn("Hora");
     modelo.addColumn("Motivo");
-
+    modelo.addColumn("Estado");
     for (Object[] fila : TurnoController.buscarTurnos(filtro)) {
         modelo.addRow(fila);
     }
 
     tblTurnos.setModel(modelo);
+    aplicarColoresEstado();
 }
     
 
@@ -71,6 +83,9 @@ public class VentanaTurnos extends javax.swing.JFrame {
         btnBuscarTurno = new javax.swing.JButton();
         btnMostrarTodos = new javax.swing.JButton();
         btnVolver = new javax.swing.JButton();
+        cmbEstado = new javax.swing.JComboBox<>();
+        btnCambiarEstado = new javax.swing.JButton();
+        btnVencidos = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -107,6 +122,14 @@ public class VentanaTurnos extends javax.swing.JFrame {
         btnVolver.setText("Volver");
         btnVolver.addActionListener(this::btnVolverActionPerformed);
 
+        cmbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PENDIENTE", "EN ATENCIÓN", "FINALIZADO", "CANCELADO", "VENCIDO" }));
+
+        btnCambiarEstado.setText("Cambiar estado");
+        btnCambiarEstado.addActionListener(this::btnCambiarEstadoActionPerformed);
+
+        btnVencidos.setText("Vencidos");
+        btnVencidos.addActionListener(this::btnVencidosActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,16 +147,22 @@ public class VentanaTurnos extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(btnEditarTurno)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCrearTurno)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnEliminarTurno)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnCrearTurno)
-                        .addGap(114, 114, 114))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnVolver)
-                        .addGap(31, 31, 31)))
+                        .addGap(18, 18, 18)
+                        .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(btnVolver))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(btnCambiarEstado)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnVencidos)))
+                .addGap(27, 27, 27)
                 .addComponent(btnBuscarTurno)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnMostrarTodos)
@@ -144,8 +173,8 @@ public class VentanaTurnos extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(scrollTurnos, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollTurnos, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(26, 26, 26)
@@ -158,10 +187,15 @@ public class VentanaTurnos extends javax.swing.JFrame {
                             .addComponent(btnBuscarTurno)
                             .addComponent(btnMostrarTodos)))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCrearTurno)
                         .addGap(8, 8, 8)
-                        .addComponent(btnVolver)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnCambiarEstado)
+                            .addComponent(btnVencidos))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnVolver)
+                            .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCrearTurno))))
                 .addGap(17, 17, 17))
         );
 
@@ -263,6 +297,126 @@ public class VentanaTurnos extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    private void btnCambiarEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarEstadoActionPerformed
+        int fila = tblTurnos.getSelectedRow();
+
+        if (fila == -1) {
+
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccioná un turno"
+            );
+
+            return;
+        }
+
+        int idTurno = Integer.parseInt(
+                tblTurnos.getValueAt(fila, 0).toString()
+        );
+
+        String nuevoEstado =
+                cmbEstado.getSelectedItem().toString();
+
+        try {
+
+            TurnoController.cambiarEstado(
+                    idTurno,
+                    nuevoEstado
+            );
+
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Estado actualizado correctamente"
+            );
+
+            cargarTabla();
+
+        } catch (Exception e) {
+
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Error: " + e.getMessage()
+            );
+        }
+    }//GEN-LAST:event_btnCambiarEstadoActionPerformed
+
+    private void btnVencidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVencidosActionPerformed
+
+        VentanaTurnosVencidos vtv =
+                new VentanaTurnosVencidos(rolUsuario);
+
+        vtv.setVisible(true);
+
+        this.dispose();
+    
+    }//GEN-LAST:event_btnVencidosActionPerformed
+    private void aplicarColoresEstado() {
+
+        tblTurnos.getColumnModel()
+                .getColumn(7)
+                .setCellRenderer(new DefaultTableCellRenderer() {
+
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table,
+                    Object value,
+                    boolean isSelected,
+                    boolean hasFocus,
+                    int row,
+                    int column) {
+
+                Component componente =
+                        super.getTableCellRendererComponent(
+                                table,
+                                value,
+                                isSelected,
+                                hasFocus,
+                                row,
+                                column
+                        );
+
+                if (isSelected) {
+                    return componente;
+                }
+
+                String estado =
+                        value != null ? value.toString() : "";
+
+                switch (estado) {
+
+                    case "PENDIENTE":
+                        componente.setBackground(
+                                new Color(255, 204, 102)
+                        );
+                        break;
+
+                    case "EN ATENCIÓN":
+                        componente.setBackground(
+                                new Color(102, 178, 255)
+                        );
+                        break;
+
+                    case "FINALIZADO":
+                        componente.setBackground(
+                                new Color(153, 255, 153)
+                        );
+                        break;
+
+                    case "CANCELADO":
+                        componente.setBackground(
+                                new Color(255, 153, 153)
+                        );
+                        break;
+
+                    default:
+                        componente.setBackground(Color.WHITE);
+                        break;
+                }
+
+                return componente;
+            }
+        });
+    }
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(() -> new VentanaTurnos().setVisible(true));
@@ -270,11 +424,14 @@ public class VentanaTurnos extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarTurno;
+    private javax.swing.JButton btnCambiarEstado;
     private javax.swing.JButton btnCrearTurno;
     private javax.swing.JButton btnEditarTurno;
     private javax.swing.JButton btnEliminarTurno;
     private javax.swing.JButton btnMostrarTodos;
+    private javax.swing.JButton btnVencidos;
     private javax.swing.JButton btnVolver;
+    private javax.swing.JComboBox<String> cmbEstado;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JScrollPane scrollTurnos;
     private javax.swing.JTable tblTurnos;

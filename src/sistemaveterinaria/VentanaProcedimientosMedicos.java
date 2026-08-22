@@ -2,15 +2,15 @@
 package sistemaveterinaria;
 import controller.ProcedimientoMedicoController;
 
-public class VentanaProcedimientos extends javax.swing.JFrame {
+public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
     private String rolUsuario;
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaProcedimientos.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaProcedimientosMedicos.class.getName());
 
-    public VentanaProcedimientos() {
+    public VentanaProcedimientosMedicos() {
         initComponents();
         cargarTabla();
     }
-    public VentanaProcedimientos(String rolUsuario) {
+    public VentanaProcedimientosMedicos(String rolUsuario) {
         initComponents();
         this.rolUsuario = rolUsuario;
         cargarTabla();
@@ -26,7 +26,9 @@ public class VentanaProcedimientos extends javax.swing.JFrame {
         modelo.addColumn("Emergencia");
         modelo.addColumn("Monto");
         modelo.addColumn("ID Animal");
-
+        modelo.addColumn("Animal");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Descripción");
         for (Object[] fila :
                 ProcedimientoMedicoController.buscarProcedimientos(filtro)) {
 
@@ -34,6 +36,17 @@ public class VentanaProcedimientos extends javax.swing.JFrame {
         }
 
         tblProcedimientos.setModel(modelo);
+                tblProcedimientos.getColumnModel()
+                .getColumn(4)
+                .setMinWidth(0);
+
+        tblProcedimientos.getColumnModel()
+                .getColumn(4)
+                .setMaxWidth(0);
+
+        tblProcedimientos.getColumnModel()
+                .getColumn(4)
+                .setPreferredWidth(0);
     }
     private void cargarTabla() {
 
@@ -45,6 +58,9 @@ public class VentanaProcedimientos extends javax.swing.JFrame {
         modelo.addColumn("Emergencia");
         modelo.addColumn("Monto");
         modelo.addColumn("ID Animal");
+        modelo.addColumn("Animal");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Descripción");
 
         for (Object[] fila :
                 ProcedimientoMedicoController.listarProcedimientos()) {
@@ -53,6 +69,17 @@ public class VentanaProcedimientos extends javax.swing.JFrame {
         }
 
         tblProcedimientos.setModel(modelo);
+        tblProcedimientos.getColumnModel()
+                .getColumn(4)
+                .setMinWidth(0);
+
+        tblProcedimientos.getColumnModel()
+                .getColumn(4)
+                .setMaxWidth(0);
+
+        tblProcedimientos.getColumnModel()
+                .getColumn(4)
+                .setWidth(0);
     }
 
     @SuppressWarnings("unchecked")
@@ -195,9 +222,10 @@ public class VentanaProcedimientos extends javax.swing.JFrame {
         String tipo =
                 tblProcedimientos.getValueAt(fila, 1).toString();
 
-        boolean emergencia = Boolean.parseBoolean(
-                tblProcedimientos.getValueAt(fila, 2).toString()
-        );
+        boolean emergencia =
+                tblProcedimientos.getValueAt(fila, 2)
+                        .toString()
+                        .equals("Sí");
 
         double monto = Double.parseDouble(
                 tblProcedimientos.getValueAt(fila, 3).toString()
@@ -209,13 +237,20 @@ public class VentanaProcedimientos extends javax.swing.JFrame {
 
         VentanaAgregarProcedimiento vap =
                 new VentanaAgregarProcedimiento(rolUsuario);
-
+        String fecha =
+            tblProcedimientos.getValueAt(fila, 5).toString();
+        
+        String descripcion =
+        tblProcedimientos.getValueAt(fila, 6).toString();
+        
         vap.cargarDatos(
                 idProcedimiento,
                 tipo,
                 emergencia,
                 monto,
-                idAnimal
+                idAnimal,
+                fecha,
+                descripcion
         );
 
         vap.setVisible(true);
@@ -270,7 +305,7 @@ public class VentanaProcedimientos extends javax.swing.JFrame {
     private void btnBuscarProcedimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProcedimientoActionPerformed
                   String texto = javax.swing.JOptionPane.showInputDialog(
                 this,
-                "Buscar por tipo de procedimiento:"
+                "Buscar por tipo, animal o fecha:"
         );
 
         if (texto != null && !texto.trim().isEmpty()) {
@@ -287,7 +322,7 @@ public class VentanaProcedimientos extends javax.swing.JFrame {
 
     public static void main(String args[]) {
 
-        java.awt.EventQueue.invokeLater(() -> new VentanaProcedimientos().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new VentanaProcedimientosMedicos().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

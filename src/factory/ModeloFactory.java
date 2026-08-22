@@ -5,7 +5,7 @@ import modelo.Producto;
 import modelo.Turno;
 import modelo.Venta;
 import modelo.Usuario;
-
+import interfaces.EstadoTurno;
 public class ModeloFactory {
 
     public static Producto crearProducto(int idProducto,
@@ -39,26 +39,27 @@ public class ModeloFactory {
 
 
     public static Turno crearTurno(int idTurno,
-                               String dueno,
-                               String dni,
-                               int idAnimal,
-                               String animal,
-                               String fecha,
-                               String hora,
-                               String motivo) {
+                                    String dueno,
+                                    String dni,
+                                    int idAnimal,
+                                    String animal,
+                                    String fecha,
+                                    String hora,
+                                    String motivo,
+                                    EstadoTurno estado) {
 
-        return new Turno(
-                idTurno,
-                dueno,
-                dni,
-                idAnimal,
-                animal,
-                fecha,
-                hora,
-                motivo
-        );
-    }
-
+         return new Turno(
+                 idTurno,
+                 dueno,
+                 dni,
+                 idAnimal,
+                 animal,
+                 fecha,
+                 hora,
+                 motivo,
+                 estado
+         );
+     }
     public static Venta crearVenta(int idVenta,
                                 String fecha,
                                 double total,

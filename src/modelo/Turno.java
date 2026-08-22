@@ -1,5 +1,5 @@
 package modelo;
-
+import interfaces.EstadoTurno;
 public class Turno {
 
     private int idTurno;
@@ -10,23 +10,30 @@ public class Turno {
     private String fecha;
     private String hora;
     private String motivo;
-
+    private EstadoTurno estado;
     public Turno() {
     }
 
-    public Turno(int idTurno, String dueno, String dni,
-             int idAnimal, String animal, String fecha,
-             String hora, String motivo) {
+    public Turno(int idTurno,
+                String dueno,
+                String dni,
+                int idAnimal,
+                String animal,
+                String fecha,
+                String hora,
+                String motivo,
+                EstadoTurno estado) {
 
-        this.idTurno = idTurno;
-        this.dueno = dueno;
-        this.dni = dni;
-        this.animal = animal;
-        this.fecha = fecha;
-        this.hora = hora;
-        this.motivo = motivo;
-        this.idAnimal = idAnimal;
-    }
+       this.idTurno = idTurno;
+       this.dueno = dueno;
+       this.dni = dni;
+       this.idAnimal = idAnimal;
+       this.animal = animal;
+       this.fecha = fecha;
+       this.hora = hora;
+       this.motivo = motivo;
+       this.estado = estado;
+   }
 
     public int getIdTurno() {
         return idTurno;
@@ -90,5 +97,16 @@ public class Turno {
 
     public void setIdAnimal(int idAnimal) {
         this.idAnimal = idAnimal;
+    }
+
+    public EstadoTurno getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoTurno estado) {
+        this.estado = estado;
+    }
+    public void cambiarEstado(EstadoTurno nuevoEstado) {
+        nuevoEstado.aplicar(this);
     }
 }

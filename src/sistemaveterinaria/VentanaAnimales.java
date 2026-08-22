@@ -49,6 +49,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
         txtBuscar = new javax.swing.JButton();
         btnMostrarTodos = new javax.swing.JButton();
         btnVolver = new javax.swing.JButton();
+        btnHistorialMedico = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -83,6 +84,9 @@ public class VentanaAnimales extends javax.swing.JFrame {
         btnVolver.setText("Volver");
         btnVolver.addActionListener(this::btnVolverActionPerformed);
 
+        btnHistorialMedico.setText("Historial médico");
+        btnHistorialMedico.addActionListener(this::btnHistorialMedicoActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,8 +109,10 @@ public class VentanaAnimales extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnAgregarAnimal)
-                            .addComponent(btnEditarAnimal))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
+                            .addComponent(btnEditarAnimal))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnHistorialMedico)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(scrollAnimales, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
         );
@@ -119,7 +125,9 @@ public class VentanaAnimales extends javax.swing.JFrame {
                         .addComponent(scrollAnimales, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(43, 43, 43)
-                        .addComponent(btnAgregarAnimal)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAgregarAnimal)
+                            .addComponent(btnHistorialMedico))
                         .addGap(18, 18, 18)
                         .addComponent(btnEditarAnimal)
                         .addGap(18, 18, 18)
@@ -264,6 +272,38 @@ public class VentanaAnimales extends javax.swing.JFrame {
         cargarTabla();
 
     }//GEN-LAST:event_btnMostrarTodosActionPerformed
+
+    private void btnHistorialMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialMedicoActionPerformed
+        int fila = tblAnimales.getSelectedRow();
+
+        if (fila == -1) {
+
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Seleccioná un animal"
+            );
+
+            return;
+        }
+
+        int idAnimal = Integer.parseInt(
+                tblAnimales.getValueAt(fila, 0).toString()
+        );
+
+        String nombreAnimal =
+                tblAnimales.getValueAt(fila, 1).toString();
+
+        VentanaHistorialMedico vhm =
+                new VentanaHistorialMedico(
+                        idAnimal,
+                        nombreAnimal,
+                        rolUsuario
+                );
+
+        vhm.setVisible(true);
+
+        this.dispose();
+    }//GEN-LAST:event_btnHistorialMedicoActionPerformed
     private void buscarAnimales(String filtro) {
 
         javax.swing.table.DefaultTableModel modelo =
@@ -292,6 +332,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
     private javax.swing.JButton btnAgregarAnimal;
     private javax.swing.JButton btnDarDeBajaRegistro;
     private javax.swing.JButton btnEditarAnimal;
+    private javax.swing.JButton btnHistorialMedico;
     private javax.swing.JButton btnMostrarTodos;
     private javax.swing.JButton btnVolver;
     private javax.swing.JScrollPane scrollAnimales;

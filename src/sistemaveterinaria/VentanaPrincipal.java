@@ -236,8 +236,8 @@ private static boolean alertaTurnosMostrada = false;
     }//GEN-LAST:event_btnAnimalesActionPerformed
 
     private void btnProcedimientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcedimientosActionPerformed
-        VentanaProcedimientos vp =
-                new VentanaProcedimientos(rolUsuario);
+        VentanaProcedimientosMedicos vp =
+                new VentanaProcedimientosMedicos(rolUsuario);
 
         vp.setVisible(true);
 

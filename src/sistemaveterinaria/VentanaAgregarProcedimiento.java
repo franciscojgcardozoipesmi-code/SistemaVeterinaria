@@ -2,6 +2,10 @@
 package sistemaveterinaria;
 import controller.AnimalController;
 import controller.ProcedimientoMedicoController;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
     private String rolUsuario;
     private int idProcedimiento = -1;
@@ -22,14 +26,16 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
                             String tipo,
                             boolean emergencia,
                             double monto,
-                            int idAnimal) {
+                            int idAnimal,
+                            String fecha,
+                            String descripcion) {
 
         this.idProcedimiento = idProcedimiento;
 
         txtTipo.setText(tipo);
         chkEmergencia.setSelected(emergencia);
         txtMonto.setText(String.valueOf(monto));
-
+        txtDescripcion.setText(descripcion);
         for (int i = 0; i < cmbAnimal.getItemCount(); i++) {
 
             String item = cmbAnimal.getItemAt(i);
@@ -73,10 +79,17 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
         cmbAnimal = new javax.swing.JComboBox<>();
         btnGuardar = new javax.swing.JButton();
         btnVolver = new javax.swing.JButton();
+        lblFecha = new javax.swing.JLabel();
+        txtFecha = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtDescripcion = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblTipo.setText("Tipo");
+
+        txtTipo.addActionListener(this::txtTipoActionPerformed);
 
         lblEmergencia.setText("Emergencia");
 
@@ -94,71 +107,92 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
         btnVolver.setText("Volver");
         btnVolver.addActionListener(this::btnVolverActionPerformed);
 
+        lblFecha.setText("Fecha");
+
+        jLabel1.setText("Descripción/obervaciones");
+
+        txtDescripcion.setColumns(20);
+        txtDescripcion.setRows(5);
+        jScrollPane1.setViewportView(txtDescripcion);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(lblFecha)
+                        .addGap(103, 103, 103)
+                        .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(28, 28, 28)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblEmergencia, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(lblTipo)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addGap(148, 148, 148)
-                                    .addComponent(chkEmergencia, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnVolver)
-                                .addGap(13, 13, 13))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnGuardar)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblAnimal)
-                                    .addComponent(lblMonto))
+                                .addComponent(lblEmergencia)
+                                .addGap(104, 104, 104)
+                                .addComponent(chkEmergencia, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(cmbAnimal, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE)))))))
-                .addContainerGap(74, Short.MAX_VALUE))
+                                    .addComponent(lblMonto)
+                                    .addComponent(lblTipo)
+                                    .addComponent(lblAnimal))))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnGuardar)
+                        .addGap(28, 28, 28)
+                        .addComponent(btnVolver))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(cmbAnimal, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(5, 5, 5))
+                            .addComponent(txtMonto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTipo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(135, 135, 135))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTipo)
-                    .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblFecha)
+                    .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEmergencia)
+                    .addComponent(chkEmergencia))
                 .addGap(18, 18, 18)
-                .addComponent(lblEmergencia)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkEmergencia)
-                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblMonto)
-                    .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblAnimal)
                     .addComponent(cmbAnimal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGuardar)
-                    .addComponent(btnVolver))
-                .addGap(33, 33, 33))
+                    .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTipo))
+                .addGap(29, 29, 29)
+                .addComponent(lblMonto)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnVolver)))
         );
 
         pack();
@@ -171,11 +205,31 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
 
             String tipo = txtTipo.getText().trim();
             String montoTexto = txtMonto.getText().trim();
+            String fecha = txtFecha.getText().trim();
+            try {
 
+                DateTimeFormatter formato =
+                        DateTimeFormatter.ofPattern("dd/MM/uuuu")
+                                .withResolverStyle(ResolverStyle.STRICT);
+
+                LocalDate.parse(fecha, formato);
+
+            } catch (DateTimeParseException e) {
+
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "La fecha debe tener formato dd/MM/yyyy y ser válida"
+                );
+
+                return;
+            }
+            String descripcion = txtDescripcion.getText().trim();
             if (tipo.isEmpty()
                     || montoTexto.isEmpty()
+                    || fecha.isEmpty()
+                    || descripcion.isEmpty()
                     || cmbAnimal.getSelectedItem() == null) {
-
+                
                 javax.swing.JOptionPane.showMessageDialog(
                         this,
                         "Completar todos los campos obligatorios"
@@ -200,6 +254,8 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
                     emergencia,
                     monto,
                     idAnimal,
+                    fecha,
+                    descripcion,
                     idProcedimiento
             );
 
@@ -208,8 +264,8 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
                     "Procedimiento guardado correctamente"
             );
 
-            VentanaProcedimientos vp =
-                    new VentanaProcedimientos(rolUsuario);
+            VentanaProcedimientosMedicos vp =
+                    new VentanaProcedimientosMedicos(rolUsuario);
 
             vp.setVisible(true);
 
@@ -233,14 +289,18 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        VentanaProcedimientos vp =
-                new VentanaProcedimientos(rolUsuario);
+        VentanaProcedimientosMedicos vp =
+                new VentanaProcedimientosMedicos(rolUsuario);
 
         vp.setVisible(true);
 
         this.dispose();
     
     }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void txtTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTipoActionPerformed
 
 
     public static void main(String args[]) {
@@ -253,10 +313,15 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
     private javax.swing.JButton btnVolver;
     private javax.swing.JCheckBox chkEmergencia;
     private javax.swing.JComboBox<String> cmbAnimal;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAnimal;
     private javax.swing.JLabel lblEmergencia;
+    private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblMonto;
     private javax.swing.JLabel lblTipo;
+    private javax.swing.JTextArea txtDescripcion;
+    private javax.swing.JTextField txtFecha;
     private javax.swing.JTextField txtMonto;
     private javax.swing.JTextField txtTipo;
     // End of variables declaration//GEN-END:variables

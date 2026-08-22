@@ -18,9 +18,12 @@ public class ProcedimientoMedicoController {
             lista.add(new Object[]{
                 procedimiento.getIdProcedimiento(),
                 procedimiento.getTipo(),
-                procedimiento.isEmergencia(),
+                procedimiento.isEmergencia() ? "Sí" : "No",
                 procedimiento.getMonto(),
-                procedimiento.getIdAnimal()
+                procedimiento.getIdAnimal(),
+                procedimiento.getAnimal(),
+                procedimiento.getFecha(),
+                procedimiento.getDescripcion()
             });
         }
 
@@ -38,9 +41,12 @@ public class ProcedimientoMedicoController {
             lista.add(new Object[]{
                 procedimiento.getIdProcedimiento(),
                 procedimiento.getTipo(),
-                procedimiento.isEmergencia(),
+                procedimiento.isEmergencia() ? "Sí" : "No",
                 procedimiento.getMonto(),
-                procedimiento.getIdAnimal()
+                procedimiento.getIdAnimal(),
+                procedimiento.getAnimal(),
+                procedimiento.getFecha(),
+                procedimiento.getDescripcion()
             });
         }
 
@@ -48,20 +54,25 @@ public class ProcedimientoMedicoController {
     }
 
     public static void guardarProcedimiento(
-            String tipo,
-            boolean emergencia,
-            double monto,
-            int idAnimal,
-            int idProcedimiento) {
+                String tipo,
+                boolean emergencia,
+                double monto,
+                int idAnimal,
+                String fecha,
+                String descripcion,
+                int idProcedimiento) {
 
         ProcedimientoMedico procedimiento =
-                new ProcedimientoMedico(
-                        idProcedimiento,
-                        tipo,
-                        emergencia,
-                        monto,
-                        idAnimal
-                );
+                    new ProcedimientoMedico(
+                            idProcedimiento,
+                            tipo,
+                            emergencia,
+                            monto,
+                            idAnimal,
+                            fecha,
+                            descripcion,
+                            true
+                    );
 
         procedimientoDAO.guardar(procedimiento);
     }
@@ -70,5 +81,23 @@ public class ProcedimientoMedicoController {
             int idProcedimiento) {
 
         procedimientoDAO.eliminar(idProcedimiento);
+    }
+    public static ArrayList<Object[]> listarPorAnimal(int idAnimal) {
+
+        ArrayList<Object[]> lista = new ArrayList<>();
+
+        for (ProcedimientoMedico procedimiento
+                : procedimientoDAO.listarPorAnimal(idAnimal)) {
+
+            lista.add(new Object[]{
+                procedimiento.getFecha(),
+                procedimiento.getTipo(),
+                procedimiento.isEmergencia() ? "Sí" : "No",
+                procedimiento.getDescripcion(),
+                procedimiento.getMonto()
+            });
+        }
+
+        return lista;
     }
 }

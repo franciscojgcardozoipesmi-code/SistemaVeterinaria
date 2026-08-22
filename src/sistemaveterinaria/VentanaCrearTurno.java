@@ -6,8 +6,29 @@ import controller.ClienteController;
 
 public class VentanaCrearTurno extends javax.swing.JFrame {
     private int idTurno = -1;
+    private boolean reprogramando = false;
     private String rolUsuario;
-    
+        public void cargarDatosReprogramacion(
+            int id,
+            String dueno,
+            String animal,
+            String fecha,
+            String hora,
+            String motivo,
+            String dni) {
+
+        reprogramando = true;
+
+        cargarDatos(
+                id,
+                dueno,
+                animal,
+                fecha,
+                hora,
+                motivo,
+                dni
+        );
+    }
     public VentanaCrearTurno() {
         initComponents();
         cargarAnimales();
@@ -176,7 +197,12 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
                                         motivo,
                                         idTurno
                                 );
-
+                        if (reprogramando) {
+                TurnoController.cambiarEstado(
+                        idTurno,
+                        "PENDIENTE"
+                );
+            }                    
             JOptionPane.showMessageDialog(this, "Turno guardado correctamente");
             
             VentanaTurnos vt = new VentanaTurnos(rolUsuario);

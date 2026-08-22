@@ -9,7 +9,6 @@ import modelo.ProcedimientoMedico;
 import sistemaveterinaria.Conexion;
 
 public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
-
     @Override
     public void guardar(ProcedimientoMedico procedimiento) {
 
@@ -26,9 +25,8 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
 
                 String sql =
                         "UPDATE procedimientos_medicos "
-                        + "SET tipo = ?, emergencia = ?, monto = ?, id_animal = ? "
+                        + "SET tipo = ?, emergencia = ?, monto = ?, id_animal = ?, fecha = ?, descripcion = ? "
                         + "WHERE id_procedimiento = ?";
-
                 PreparedStatement pst =
                         conn.prepareStatement(sql);
 
@@ -36,7 +34,9 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
                 pst.setBoolean(2, procedimiento.isEmergencia());
                 pst.setDouble(3, procedimiento.getMonto());
                 pst.setInt(4, procedimiento.getIdAnimal());
-                pst.setInt(5, procedimiento.getIdProcedimiento());
+                pst.setString(5, procedimiento.getFecha());
+                pst.setString(6, procedimiento.getDescripcion());
+                pst.setInt(7, procedimiento.getIdProcedimiento());
 
                 pst.executeUpdate();
                 pst.close();
@@ -45,8 +45,8 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
 
                 String sql =
                         "INSERT INTO procedimientos_medicos "
-                        + "(tipo, emergencia, monto, id_animal) "
-                        + "VALUES (?, ?, ?, ?)";
+                        + "(tipo, emergencia, monto, id_animal, fecha, descripcion) "
+                        + "VALUES (?, ?, ?, ?, ?, ?)";
 
                 PreparedStatement pst =
                         conn.prepareStatement(sql);
@@ -55,7 +55,8 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
                 pst.setBoolean(2, procedimiento.isEmergencia());
                 pst.setDouble(3, procedimiento.getMonto());
                 pst.setInt(4, procedimiento.getIdAnimal());
-
+                pst.setString(5, procedimiento.getFecha());
+                pst.setString(6, procedimiento.getDescripcion());
                 pst.executeUpdate();
                 pst.close();
             }
@@ -89,7 +90,10 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
             conn = Conexion.getInstancia().conectar();
 
             String sql =
-                    "SELECT * FROM procedimientos_medicos";
+                    "SELECT p.*, a.nombre AS animal "
+                    + "FROM procedimientos_medicos p "
+                    + "JOIN animales a ON p.id_animal = a.id_animal "
+                    + "WHERE p.activo = 1";
 
             PreparedStatement pst =
                     conn.prepareStatement(sql);
@@ -104,9 +108,14 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
                                 rs.getString("tipo"),
                                 rs.getBoolean("emergencia"),
                                 rs.getDouble("monto"),
-                                rs.getInt("id_animal")
+                                rs.getInt("id_animal"),
+                                rs.getString("fecha"),
+                                rs.getString("descripcion"),
+                                rs.getBoolean("activo")
                         );
-
+                procedimiento.setAnimal(
+                        rs.getString("animal")
+                );
                 lista.add(procedimiento);
             }
 
@@ -145,7 +154,8 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
             conn = Conexion.getInstancia().conectar();
 
             String sql =
-                    "DELETE FROM procedimientos_medicos "
+                    "UPDATE procedimientos_medicos "
+                    + "SET activo = 0 "
                     + "WHERE id_procedimiento = ?";
 
             PreparedStatement pst =
@@ -189,16 +199,24 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
             conn = Conexion.getInstancia().conectar();
 
             String sql =
-                    "SELECT * FROM procedimientos_medicos "
-                    + "WHERE tipo LIKE ?";
+                    "SELECT p.*, a.nombre AS animal "
+                    + "FROM procedimientos_medicos p "
+                    + "JOIN animales a ON p.id_animal = a.id_animal "
+                    + "WHERE p.activo = 1 "
+                    + "AND ("
+                    + "p.tipo LIKE ? "
+                    + "OR a.nombre LIKE ? "
+                    + "OR p.fecha LIKE ?"
+                    + ")";
 
             PreparedStatement pst =
                     conn.prepareStatement(sql);
 
-            pst.setString(
-                    1,
-                    "%" + filtro + "%"
-            );
+            String valor = "%" + filtro + "%";
+
+                pst.setString(1, valor);
+                pst.setString(2, valor);
+                pst.setString(3, valor);          
 
             ResultSet rs =
                     pst.executeQuery();
@@ -211,7 +229,13 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
                                 rs.getString("tipo"),
                                 rs.getBoolean("emergencia"),
                                 rs.getDouble("monto"),
-                                rs.getInt("id_animal")
+                                rs.getInt("id_animal"),
+                                rs.getString("fecha"),
+                                rs.getString("descripcion"),
+                                rs.getBoolean("activo")
+                        );
+                        procedimiento.setAnimal(
+                                rs.getString("animal")
                         );
 
                 lista.add(procedimiento);
@@ -224,6 +248,80 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
 
             System.out.println(
                     "Error al buscar procedimientos: " + e
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return lista;
+    }
+    public ArrayList<ProcedimientoMedico> listarPorAnimal(int idAnimal) {
+
+        ArrayList<ProcedimientoMedico> lista = new ArrayList<>();
+        Connection conn = null;
+
+        try {
+
+            conn = Conexion.getInstancia().conectar();
+
+            String sql =
+                    "SELECT p.*, a.nombre AS animal "
+                    + "FROM procedimientos_medicos p "
+                    + "JOIN animales a ON p.id_animal = a.id_animal "
+                    + "WHERE p.id_animal = ? "
+                    + "ORDER BY date("
+                    + "substr(p.fecha, 7, 4) || '-' || "
+                    + "substr(p.fecha, 4, 2) || '-' || "
+                    + "substr(p.fecha, 1, 2)"
+                    + ") DESC";
+
+            PreparedStatement pst =
+                    conn.prepareStatement(sql);
+
+            pst.setInt(1, idAnimal);
+
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+
+                ProcedimientoMedico procedimiento =
+                        new ProcedimientoMedico(
+                                rs.getInt("id_procedimiento"),
+                                rs.getString("tipo"),
+                                rs.getBoolean("emergencia"),
+                                rs.getDouble("monto"),
+                                rs.getInt("id_animal"),
+                                rs.getString("fecha"),
+                                rs.getString("descripcion"),
+                                rs.getBoolean("activo")
+                        );
+
+                procedimiento.setAnimal(
+                        rs.getString("animal")
+                );
+
+                lista.add(procedimiento);
+            }
+
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+
+            throw new RuntimeException(
+                    "Error al listar historial médico: "
+                    + e.getMessage(),
+                    e
             );
 
         } finally {
