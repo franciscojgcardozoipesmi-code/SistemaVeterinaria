@@ -23,7 +23,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         modelo.addColumn("Subtotal");
 
         tblDetalle.setModel(modelo);
-
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarProductos();
             mapaPrecios = ProductoController.obtenerMapaPrecios();
     }
@@ -40,7 +40,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         modelo.addColumn("Subtotal");
 
         tblDetalle.setModel(modelo);
-
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarProductos();
         mapaPrecios = ProductoController.obtenerMapaPrecios();
     }

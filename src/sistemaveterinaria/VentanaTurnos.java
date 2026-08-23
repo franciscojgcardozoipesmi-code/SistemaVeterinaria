@@ -13,7 +13,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
         initComponents();
 
         TurnoController.marcarTurnosVencidos();
-
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarTabla();
     }
     
@@ -22,7 +22,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
         this.rolUsuario = rolUsuario;
 
         TurnoController.marcarTurnosVencidos();
-
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarTabla();
     }
 

@@ -31,12 +31,14 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
     }
     public VentanaCrearTurno() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarAnimales();
     }
 
     public VentanaCrearTurno(String rolUsuario) {
         initComponents();
         this.rolUsuario = rolUsuario;
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarAnimales();
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

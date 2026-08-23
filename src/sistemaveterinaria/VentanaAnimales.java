@@ -8,12 +8,14 @@ public class VentanaAnimales extends javax.swing.JFrame {
    
     public VentanaAnimales() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarTabla();
     }
     
     public VentanaAnimales(String rolUsuario) {
         initComponents();
         this.rolUsuario = rolUsuario;
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarTabla();
     }
     

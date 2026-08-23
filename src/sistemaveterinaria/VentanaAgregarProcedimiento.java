@@ -13,12 +13,14 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
 
     public VentanaAgregarProcedimiento() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarAnimales();
     }
 
     public VentanaAgregarProcedimiento(String rolUsuario) {
         initComponents();
         this.rolUsuario = rolUsuario;
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarAnimales();
     }
     

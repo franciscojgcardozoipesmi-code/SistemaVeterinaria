@@ -9,6 +9,7 @@ public class VentanaHistorialMedico extends javax.swing.JFrame {
 
     public VentanaHistorialMedico() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
     }
     public VentanaHistorialMedico(
             int idAnimal,
@@ -24,7 +25,7 @@ public class VentanaHistorialMedico extends javax.swing.JFrame {
         lblAnimal.setText(
                 "Historial médico de: " + nombreAnimal
         );
-
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarHistorial();
     }
     

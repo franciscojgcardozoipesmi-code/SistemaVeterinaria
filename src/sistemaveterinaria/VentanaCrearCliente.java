@@ -9,10 +9,12 @@ public class VentanaCrearCliente extends javax.swing.JFrame {
 
     public VentanaCrearCliente() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
     }
     
     public VentanaCrearCliente(String rolUsuario) {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.rolUsuario = rolUsuario;
     }
     

@@ -8,10 +8,12 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
 
     public VentanaProcedimientosMedicos() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarTabla();
     }
     public VentanaProcedimientosMedicos(String rolUsuario) {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.rolUsuario = rolUsuario;
         cargarTabla();
     }

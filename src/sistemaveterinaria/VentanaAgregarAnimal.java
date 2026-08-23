@@ -11,12 +11,14 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
     
     public VentanaAgregarAnimal() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarClientes();
     }
 
     public VentanaAgregarAnimal(String rolUsuario) {
         initComponents();
         this.rolUsuario = rolUsuario;
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarClientes();
     }
   

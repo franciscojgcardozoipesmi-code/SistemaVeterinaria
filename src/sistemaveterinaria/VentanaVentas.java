@@ -8,11 +8,13 @@ public class VentanaVentas extends javax.swing.JFrame {
 
     public VentanaVentas() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarVentas();
     }
     public VentanaVentas(String rolUsuario) {
         initComponents();
         this.rolUsuario = rolUsuario;
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarVentas();
     }
     private void cargarVentas() {

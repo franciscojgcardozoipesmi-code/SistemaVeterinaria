@@ -11,9 +11,11 @@ private static boolean alertaTurnosMostrada = false;
 
     public VentanaPrincipal() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
     }
     public VentanaPrincipal(String rolUsuario) {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.rolUsuario = rolUsuario;
         revisarAlertasProductos();
         revisarAlertasTurnos();

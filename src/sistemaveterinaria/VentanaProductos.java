@@ -6,12 +6,14 @@ public class VentanaProductos extends javax.swing.JFrame {
 
     public VentanaProductos() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarTabla();
     }
     
     public VentanaProductos(String rolUsuario) {
         initComponents();
         this.rolUsuario = rolUsuario;
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarTabla();
     }
 

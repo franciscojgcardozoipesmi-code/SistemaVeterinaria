@@ -11,10 +11,12 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
  
     public VentanaDatosUsuario() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
     }
     
     public VentanaDatosUsuario(String rolUsuario) {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.rolUsuario = rolUsuario;
     }
     

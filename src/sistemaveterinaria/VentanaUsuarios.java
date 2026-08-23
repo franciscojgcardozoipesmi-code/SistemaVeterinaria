@@ -10,12 +10,14 @@ public class VentanaUsuarios extends javax.swing.JFrame {
    
     public VentanaUsuarios() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarTabla();
     }
 
     public VentanaUsuarios(String rolUsuario) {
         initComponents();
         this.rolUsuario = rolUsuario;
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarTabla();
     }
 

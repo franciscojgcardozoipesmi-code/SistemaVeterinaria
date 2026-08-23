@@ -7,11 +7,13 @@ public class VentanaTurnosVencidos extends javax.swing.JFrame {
 
     public VentanaTurnosVencidos() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarTabla();
     }
     public VentanaTurnosVencidos(String rolUsuario) {
         initComponents();
         this.rolUsuario = rolUsuario;
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarTabla();
     }
     private void cargarTabla() {

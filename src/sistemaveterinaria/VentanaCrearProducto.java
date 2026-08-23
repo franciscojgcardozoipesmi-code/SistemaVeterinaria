@@ -12,10 +12,12 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
 
     public VentanaCrearProducto() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
     }
     
     public VentanaCrearProducto(String rolUsuario) {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.rolUsuario = rolUsuario;
     }
 

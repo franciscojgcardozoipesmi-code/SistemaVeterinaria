@@ -9,10 +9,12 @@ public class VentanaAlertas extends javax.swing.JFrame {
  
     public VentanaAlertas() {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
     }
     
     public VentanaAlertas(String rolUsuario) {
         initComponents();
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.rolUsuario = rolUsuario;
     }
 
