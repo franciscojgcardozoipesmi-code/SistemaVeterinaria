@@ -43,7 +43,7 @@ public class VentanaLogin extends javax.swing.JFrame {
         );
 
     
-        configurarDisenoLogin();
+        configurarDiseñoLogin();
 
         
         lblUsuario.setForeground(textoOscuro);
@@ -245,7 +245,7 @@ public class VentanaLogin extends javax.swing.JFrame {
         );
     }
     
-   private void configurarDisenoLogin() {
+   private void configurarDiseñoLogin() {
 
         panelLogin.setLayout(null);
 
