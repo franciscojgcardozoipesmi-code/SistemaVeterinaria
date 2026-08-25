@@ -13,23 +13,45 @@ public class VentanaTurnos extends javax.swing.JFrame {
         initComponents();
 
         TurnoController.marcarTurnosVencidos();
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
         cargarTabla();
+
+        configurarDiseñoTurnos();
     }
     
     public VentanaTurnos(String rolUsuario) {
         initComponents();
+
         this.rolUsuario = rolUsuario;
 
         TurnoController.marcarTurnosVencidos();
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
         cargarTabla();
+
+        configurarDiseñoTurnos();
     }
 
         private void cargarTabla() {
 
             javax.swing.table.DefaultTableModel modelo =
-                    new javax.swing.table.DefaultTableModel();
+                    new javax.swing.table.DefaultTableModel() {
+
+                @Override
+                public boolean isCellEditable(
+                        int row,
+                        int column
+                ) {
+                    return false;
+                }
+            };
 
             modelo.addColumn("ID");
             modelo.addColumn("Dueño");
@@ -51,7 +73,16 @@ public class VentanaTurnos extends javax.swing.JFrame {
     private void buscarTurnos(String filtro) {
 
     javax.swing.table.DefaultTableModel modelo =
-            new javax.swing.table.DefaultTableModel();
+            new javax.swing.table.DefaultTableModel() {
+
+        @Override
+        public boolean isCellEditable(
+                int row,
+                int column
+        ) {
+            return false;
+        }
+    };
 
     modelo.addColumn("ID");
     modelo.addColumn("Dueño");
@@ -416,6 +447,372 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 return componente;
             }
         });
+    }
+    private void configurarDiseñoTurnos() {
+
+        setTitle(
+                "Henry System Vet - Gestión de turnos"
+        );
+
+        setIconImage(
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/HenrySystemVet.png"
+                        )
+                ).getImage()
+        );
+
+        getContentPane().removeAll();
+
+        getContentPane().setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        getContentPane().setLayout(
+                new java.awt.BorderLayout()
+        );
+
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel();
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setLayout(
+                new java.awt.BorderLayout()
+        );
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+
+        lblTitulo.setText(
+                "GESTIÓN DE TURNOS"
+        );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+
+        javax.swing.JPanel tarjetaTurnos =
+                new javax.swing.JPanel();
+
+        tarjetaTurnos.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaTurnos.setLayout(
+                new java.awt.BorderLayout(
+                        0,
+                        20
+                )
+        );
+
+        tarjetaTurnos.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+
+        Estilos.estilizarTabla(
+                tblTurnos
+        );
+
+        scrollTurnos.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        scrollTurnos.setPreferredSize(
+                new java.awt.Dimension(
+                        0,
+                        400
+                )
+        );
+
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblTurnos.getColumnModel()
+                .getColumn(0)
+                .setCellRenderer(centrado);
+
+        tblTurnos.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        tblTurnos.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(centrado);
+
+        tblTurnos.getColumnModel()
+                .getColumn(5)
+                .setCellRenderer(centrado);
+
+
+        tarjetaTurnos.add(
+                scrollTurnos,
+                java.awt.BorderLayout.CENTER
+        );
+
+
+        Estilos.estilizarBoton(btnCrearTurno);
+        Estilos.estilizarBoton(btnEditarTurno);
+        Estilos.estilizarBoton(btnEliminarTurno);
+        Estilos.estilizarBoton(btnBuscarTurno);
+        Estilos.estilizarBoton(btnMostrarTodos);
+        Estilos.estilizarBoton(btnCambiarEstado);
+        Estilos.estilizarBoton(btnVencidos);
+        Estilos.estilizarBoton(btnVolver);
+
+
+        javax.swing.JPanel panelAcciones =
+                new javax.swing.JPanel();
+
+        panelAcciones.setOpaque(false);
+
+        panelAcciones.setLayout(
+                new javax.swing.BoxLayout(
+                        panelAcciones,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+
+        javax.swing.JPanel filaPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        filaPrincipal.setOpaque(false);
+
+
+        java.awt.Dimension tamañoBoton =
+                new java.awt.Dimension(
+                        160,
+                        38
+                );
+
+        btnCrearTurno.setPreferredSize(tamañoBoton);
+        btnEditarTurno.setPreferredSize(tamañoBoton);
+        btnEliminarTurno.setPreferredSize(tamañoBoton);
+        btnBuscarTurno.setPreferredSize(tamañoBoton);
+        btnMostrarTodos.setPreferredSize(tamañoBoton);
+        btnVencidos.setPreferredSize(tamañoBoton);
+
+
+        filaPrincipal.add(btnCrearTurno);
+        filaPrincipal.add(btnEditarTurno);
+        filaPrincipal.add(btnEliminarTurno);
+        filaPrincipal.add(btnBuscarTurno);
+        filaPrincipal.add(btnMostrarTodos);
+        filaPrincipal.add(btnVencidos);
+
+
+        javax.swing.JPanel filaEstado =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        filaEstado.setOpaque(false);
+
+
+        javax.swing.JLabel lblEstado =
+                new javax.swing.JLabel(
+                        "ESTADO:"
+                );
+
+        lblEstado.setFont(
+                Estilos.fuenteBoton()
+        );
+
+        lblEstado.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+
+        cmbEstado.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbEstado.setPreferredSize(
+                new java.awt.Dimension(
+                        180,
+                        38
+                )
+        );
+
+
+        btnCambiarEstado.setPreferredSize(
+                new java.awt.Dimension(
+                        180,
+                        38
+                )
+        );
+
+
+        filaEstado.add(lblEstado);
+        filaEstado.add(cmbEstado);
+        filaEstado.add(btnCambiarEstado);
+
+
+        panelAcciones.add(
+                filaPrincipal
+        );
+
+        panelAcciones.add(
+                javax.swing.Box.createVerticalStrut(12)
+        );
+
+        panelAcciones.add(
+                filaEstado
+        );
+
+
+        tarjetaTurnos.add(
+                panelAcciones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+
+        javax.swing.JPanel panelInferior =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInferior.setOpaque(false);
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        panelInferior.add(
+                btnVolver
+        );
+
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaTurnos,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelInferior,
+                java.awt.BorderLayout.SOUTH
+        );
+
+
+        getContentPane().add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        aplicarColoresEstado();
+
+        revalidate();
+        repaint();
+       
     }
     public static void main(String args[]) {
 

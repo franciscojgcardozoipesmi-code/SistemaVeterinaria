@@ -9,19 +9,41 @@ public class VentanaAlertas extends javax.swing.JFrame {
  
     public VentanaAlertas() {
         initComponents();
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
+        configurarDiseñoAlertas();
+        prepararTablaVacia();
     }
     
     public VentanaAlertas(String rolUsuario) {
         initComponents();
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
         this.rolUsuario = rolUsuario;
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
+        configurarDiseñoAlertas();
+        prepararTablaVacia();
     }
 
     private void cargarTurnosProximos() {
 
         javax.swing.table.DefaultTableModel modelo =
-                new javax.swing.table.DefaultTableModel();
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
 
         modelo.addColumn("ID");
         modelo.addColumn("Dueño");
@@ -38,11 +60,45 @@ public class VentanaAlertas extends javax.swing.JFrame {
         }
 
         tblAlertas.setModel(modelo);
+        Estilos.estilizarTabla(
+                tblAlertas
+        );
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblAlertas.getColumnModel()
+                .getColumn(0)
+                .setCellRenderer(centrado);
+
+        tblAlertas.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        tblAlertas.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(centrado);
+
+        tblAlertas.getColumnModel()
+                .getColumn(5)
+                .setCellRenderer(centrado);
     }
     private void cargarProductosProximosAVencer() {
 
         javax.swing.table.DefaultTableModel modelo =
-                new javax.swing.table.DefaultTableModel();
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
 
         modelo.addColumn("ID");
         modelo.addColumn("Producto");
@@ -56,6 +112,27 @@ public class VentanaAlertas extends javax.swing.JFrame {
         }
 
         tblAlertas.setModel(modelo);
+        Estilos.estilizarTabla(
+                tblAlertas
+        );
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblAlertas.getColumnModel()
+                .getColumn(0)
+                .setCellRenderer(centrado);
+
+        tblAlertas.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        tblAlertas.getColumnModel()
+                .getColumn(3)
+                .setCellRenderer(centrado);
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -145,7 +222,279 @@ public class VentanaAlertas extends javax.swing.JFrame {
     
     }//GEN-LAST:event_btnTurnosProximosActionPerformed
 
-  
+    private void configurarDiseñoAlertas() {
+
+        setTitle(
+                "Henry System Vet - Alertas"
+        );
+
+        setIconImage(
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/HenrySystemVet.png"
+                        )
+                ).getImage()
+        );
+
+        getContentPane().removeAll();
+
+        getContentPane().setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        getContentPane().setLayout(
+                new java.awt.BorderLayout()
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "ALERTAS"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+        javax.swing.JPanel tarjetaAlertas =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        tarjetaAlertas.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaAlertas.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        Estilos.estilizarTabla(
+                tblAlertas
+        );
+
+        scrollAlertas.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        scrollAlertas.setPreferredSize(
+                new java.awt.Dimension(
+                        0,
+                        400
+                )
+        );
+
+        tarjetaAlertas.add(
+                scrollAlertas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        Estilos.estilizarBoton(
+                btnProductosVencer
+        );
+
+        Estilos.estilizarBoton(
+                btnTurnosProximos
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+        btnProductosVencer.setText(
+                "Productos por vencer"
+        );
+
+        btnTurnosProximos.setText(
+                "Turnos próximos"
+        );
+
+        btnProductosVencer.setPreferredSize(
+                new java.awt.Dimension(
+                        220,
+                        38
+                )
+        );
+
+        btnTurnosProximos.setPreferredSize(
+                new java.awt.Dimension(
+                        170,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(
+                btnProductosVencer
+        );
+
+        panelBotones.add(
+                btnTurnosProximos
+        );
+
+        tarjetaAlertas.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        javax.swing.JPanel panelInferior =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInferior.setOpaque(false);
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        panelInferior.add(
+                btnVolver
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaAlertas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelInferior,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        getContentPane().add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        revalidate();
+        repaint();
+    }
+    
+    private void prepararTablaVacia() {
+
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
+
+        tblAlertas.setModel(modelo);
+    }
     public static void main(String args[]) {
       
         java.awt.EventQueue.invokeLater(() -> new VentanaAlertas().setVisible(true));

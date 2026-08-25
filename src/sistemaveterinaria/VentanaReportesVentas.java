@@ -8,13 +8,26 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
   
     public VentanaReportesVentas() {
         initComponents();
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
+        configurarDiseñoReportes();
+        prepararTablaVacia();
     }
     
     public VentanaReportesVentas(String rolUsuario) {
         initComponents();
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
         this.rolUsuario = rolUsuario;
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
+        configurarDiseñoReportes();
+        prepararTablaVacia();
     }
 
     @SuppressWarnings("unchecked")
@@ -161,7 +174,16 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
             }
 
             javax.swing.table.DefaultTableModel modelo =
-                    new javax.swing.table.DefaultTableModel();
+                    new javax.swing.table.DefaultTableModel() {
+
+                @Override
+                public boolean isCellEditable(
+                        int row,
+                        int column
+                ) {
+                    return false;
+                }
+            };
 
             modelo.addColumn("ID");
             modelo.addColumn("Fecha");
@@ -292,6 +314,45 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
                 );
             }
             tblReporteVentas.setModel(modelo);
+            
+            Estilos.estilizarTabla(
+                    tblReporteVentas
+            );
+
+            javax.swing.table.DefaultTableCellRenderer centrado =
+                    new javax.swing.table.DefaultTableCellRenderer();
+
+            centrado.setHorizontalAlignment(
+                    javax.swing.SwingConstants.CENTER
+            );
+
+            tblReporteVentas.getColumnModel()
+                    .getColumn(0)
+                    .setCellRenderer(centrado);
+
+            tblReporteVentas.getColumnModel()
+                    .getColumn(1)
+                    .setCellRenderer(centrado);
+
+            tblReporteVentas.getColumnModel()
+                    .getColumn(3)
+                    .setCellRenderer(centrado);
+
+            tblReporteVentas.getColumnModel()
+                    .getColumn(4)
+                    .setCellRenderer(centrado);
+
+            tblReporteVentas.getColumnModel()
+                    .getColumn(5)
+                    .setCellRenderer(centrado);
+
+            tblReporteVentas.getColumnModel()
+                    .getColumn(6)
+                    .setCellRenderer(centrado);
+
+            tblReporteVentas.getColumnModel()
+                    .getColumn(7)
+                    .setCellRenderer(centrado);
 
             lblTotalVendido.setText(
                     "Total vendido: $" + totalVendido
@@ -323,8 +384,346 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
     private void txtHastaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHastaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtHastaActionPerformed
+    private void configurarDiseñoReportes() {
 
+        setTitle(
+                "Henry System Vet - Reportes de ventas"
+        );
 
+        setIconImage(
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/HenrySystemVet.png"
+                        )
+                ).getImage()
+        );
+
+        getContentPane().removeAll();
+
+        getContentPane().setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        getContentPane().setLayout(
+                new java.awt.BorderLayout()
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "REPORTES DE VENTAS"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+        contenedorTitulo.add(panelTitulo);
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+        javax.swing.JPanel tarjetaReporte =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        tarjetaReporte.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaReporte.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        javax.swing.JPanel panelFiltros =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                12,
+                                0
+                        )
+                );
+
+        panelFiltros.setOpaque(false);
+
+        lblDesde.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblHasta.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblDesde.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblHasta.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        txtDesde.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtHasta.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtDesde.setPreferredSize(
+                new java.awt.Dimension(
+                        150,
+                        35
+                )
+        );
+
+        txtHasta.setPreferredSize(
+                new java.awt.Dimension(
+                        150,
+                        35
+                )
+        );
+
+        Estilos.estilizarBoton(
+                btnGenerarReporte
+        );
+
+        btnGenerarReporte.setPreferredSize(
+                new java.awt.Dimension(
+                        175,
+                        38
+                )
+        );
+
+        panelFiltros.add(lblDesde);
+        panelFiltros.add(txtDesde);
+        panelFiltros.add(lblHasta);
+        panelFiltros.add(txtHasta);
+        panelFiltros.add(btnGenerarReporte);
+
+        tarjetaReporte.add(
+                panelFiltros,
+                java.awt.BorderLayout.NORTH
+        );
+
+        Estilos.estilizarTabla(
+                tblReporteVentas
+        );
+
+        scrollReporteVentas.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        scrollReporteVentas.setPreferredSize(
+                new java.awt.Dimension(
+                        0,
+                        350
+                )
+        );
+
+        tarjetaReporte.add(
+                scrollReporteVentas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JPanel panelResumen =
+                new javax.swing.JPanel();
+
+        panelResumen.setOpaque(false);
+
+        panelResumen.setLayout(
+                new java.awt.GridLayout(
+                        3,
+                        2,
+                        20,
+                        12
+                )
+        );
+
+        javax.swing.JLabel[] indicadores = {
+            lblTotalVendido,
+            lblCantidadVentas,
+            lblProductoMasVendido,
+            lblCantidadMasVendida,
+            lblMedioPagoMasUtilizado
+        };
+
+        for (javax.swing.JLabel indicador : indicadores) {
+
+            indicador.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            indicador.setForeground(
+                    Estilos.VERDE_OSCURO
+            );
+        }
+
+        panelResumen.add(lblTotalVendido);
+        panelResumen.add(lblCantidadVentas);
+        panelResumen.add(lblProductoMasVendido);
+        panelResumen.add(lblCantidadMasVendida);
+        panelResumen.add(lblMedioPagoMasUtilizado);
+
+        tarjetaReporte.add(
+                panelResumen,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelInferior =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInferior.setOpaque(false);
+        panelInferior.add(btnVolver);
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaReporte,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelInferior,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        getContentPane().add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        revalidate();
+        repaint();
+    }
+    private void prepararTablaVacia() {
+
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
+
+        modelo.addColumn("ID");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Producto");
+        modelo.addColumn("Cantidad");
+        modelo.addColumn("Precio");
+        modelo.addColumn("Subtotal");
+        modelo.addColumn("Total");
+        modelo.addColumn("Medio de pago");
+
+        tblReporteVentas.setModel(modelo);
+
+        Estilos.estilizarTabla(
+                tblReporteVentas
+        );
+    }
     public static void main(String args[]) {
       
         java.awt.EventQueue.invokeLater(() -> new VentanaReportesVentas().setVisible(true));

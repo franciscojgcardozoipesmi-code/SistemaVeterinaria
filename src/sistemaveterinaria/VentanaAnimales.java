@@ -7,22 +7,46 @@ public class VentanaAnimales extends javax.swing.JFrame {
 
    
     public VentanaAnimales() {
+
         initComponents();
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
         cargarTabla();
+
+        configurarDiseñoAnimales();
     }
     
     public VentanaAnimales(String rolUsuario) {
+
         initComponents();
+
         this.rolUsuario = rolUsuario;
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
         cargarTabla();
+
+        configurarDiseñoAnimales();
     }
     
     private void cargarTabla() {
 
         javax.swing.table.DefaultTableModel modelo =
-                new javax.swing.table.DefaultTableModel();
+            new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
 
         modelo.addColumn("ID");
         modelo.addColumn("Nombre");
@@ -324,7 +348,354 @@ public class VentanaAnimales extends javax.swing.JFrame {
 
         tblAnimales.setModel(modelo);
     }
+    private void configurarDiseñoAnimales() {
 
+        setTitle(
+                "Henry System Vet - Gestión de animales"
+        );
+
+        setIconImage(
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/HenrySystemVet.png"
+                        )
+                ).getImage()
+        );
+
+        getContentPane().removeAll();
+
+        getContentPane().setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        getContentPane().setLayout(
+                new java.awt.BorderLayout()
+        );
+
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel();
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setLayout(
+                new java.awt.BorderLayout()
+        );
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "GESTIÓN DE ANIMALES"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+
+        javax.swing.JPanel tarjetaAnimales =
+                new javax.swing.JPanel();
+
+        tarjetaAnimales.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaAnimales.setLayout(
+                new java.awt.BorderLayout(
+                        0,
+                        20
+                )
+        );
+
+        tarjetaAnimales.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+
+        Estilos.estilizarTabla(
+                tblAnimales
+        );
+
+        scrollAnimales.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        scrollAnimales.setPreferredSize(
+                new java.awt.Dimension(
+                        0,
+                        400
+                )
+        );
+
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblAnimales.getColumnModel()
+                .getColumn(0)
+                .setCellRenderer(centrado);
+
+        tblAnimales.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(centrado);
+
+        tblAnimales.getColumnModel()
+                .getColumn(5)
+                .setCellRenderer(centrado);
+
+
+        tarjetaAnimales.add(
+                scrollAnimales,
+                java.awt.BorderLayout.CENTER
+        );
+
+
+        Estilos.estilizarBoton(
+                btnAgregarAnimal
+        );
+
+        Estilos.estilizarBoton(
+                btnEditarAnimal
+        );
+
+        Estilos.estilizarBoton(
+                btnDarDeBajaRegistro
+        );
+
+        Estilos.estilizarBoton(
+                btnHistorialMedico
+        );
+
+        Estilos.estilizarBoton(
+                txtBuscar
+        );
+
+        Estilos.estilizarBoton(
+                btnMostrarTodos
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+
+        btnAgregarAnimal.setPreferredSize(
+                new java.awt.Dimension(
+                        165,
+                        38
+                )
+        );
+
+        btnEditarAnimal.setPreferredSize(
+                new java.awt.Dimension(
+                        165,
+                        38
+                )
+        );
+
+        btnDarDeBajaRegistro.setPreferredSize(
+                new java.awt.Dimension(
+                        210,
+                        38
+                )
+        );
+
+        btnHistorialMedico.setPreferredSize(
+                new java.awt.Dimension(
+                        175,
+                        38
+                )
+        );
+
+        txtBuscar.setPreferredSize(
+                new java.awt.Dimension(
+                        130,
+                        38
+                )
+        );
+
+        btnMostrarTodos.setPreferredSize(
+                new java.awt.Dimension(
+                        165,
+                        38
+                )
+        );
+
+
+        panelBotones.add(
+                btnAgregarAnimal
+        );
+
+        panelBotones.add(
+                btnEditarAnimal
+        );
+
+        panelBotones.add(
+                btnDarDeBajaRegistro
+        );
+
+        panelBotones.add(
+                btnHistorialMedico
+        );
+
+        panelBotones.add(
+                txtBuscar
+        );
+
+        panelBotones.add(
+                btnMostrarTodos
+        );
+
+
+        tarjetaAnimales.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+
+        javax.swing.JPanel panelInferior =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInferior.setOpaque(false);
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        panelInferior.add(
+                btnVolver
+        );
+
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaAnimales,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelInferior,
+                java.awt.BorderLayout.SOUTH
+        );
+
+
+        getContentPane().add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        revalidate();
+        repaint();
+    }
     public static void main(String args[]) {
       
         java.awt.EventQueue.invokeLater(() -> new VentanaAnimales().setVisible(true));

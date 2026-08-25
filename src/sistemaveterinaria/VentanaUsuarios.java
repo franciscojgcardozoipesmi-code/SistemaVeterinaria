@@ -3,24 +3,65 @@ package sistemaveterinaria;
 import controller.UsuarioController;
 public class VentanaUsuarios extends javax.swing.JFrame {
     private String rolUsuario;
-    private int idUsuario = -1;
-    
+   
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaUsuarios.class.getName());
 
    
     public VentanaUsuarios() {
         initComponents();
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
         cargarTabla();
+
+        configurarDiseñoUsuarios();
     }
 
     public VentanaUsuarios(String rolUsuario) {
         initComponents();
-        this.rolUsuario = rolUsuario;
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        cargarTabla();
-    }
 
+        this.rolUsuario = rolUsuario;
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
+        cargarTabla();
+
+        configurarDiseñoUsuarios();
+    }
+    
+    private void cargarTabla() {
+
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
+
+        modelo.addColumn("ID");
+        modelo.addColumn("Usuario");
+        modelo.addColumn("Rol");
+
+        for (Object[] fila : UsuarioController.listarUsuarios()) {
+
+            modelo.addRow(new Object[]{
+                fila[0],
+                fila[1],
+                fila[3]
+            });
+        }
+
+        tblUsuarios.setModel(modelo);
+    }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -192,32 +233,287 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         cargarTabla();
     
     }//GEN-LAST:event_btnEliminarUsuarioActionPerformed
+    private void configurarDiseñoUsuarios() {
 
-   
+        setTitle(
+                "Henry System Vet - Gestión de usuarios"
+        );
+
+        setIconImage(
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/HenrySystemVet.png"
+                        )
+                ).getImage()
+        );
+
+        getContentPane().removeAll();
+
+        getContentPane().setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        getContentPane().setLayout(
+                new java.awt.BorderLayout()
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "GESTIÓN DE USUARIOS"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+        javax.swing.JPanel tarjetaUsuarios =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        tarjetaUsuarios.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaUsuarios.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        Estilos.estilizarTabla(
+                tblUsuarios
+        );
+
+        jScrollPane1.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        jScrollPane1.setPreferredSize(
+                new java.awt.Dimension(
+                        0,
+                        400
+                )
+        );
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblUsuarios.getColumnModel()
+                .getColumn(0)
+                .setCellRenderer(centrado);
+
+        tblUsuarios.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        tarjetaUsuarios.add(
+                jScrollPane1,
+                java.awt.BorderLayout.CENTER
+        );
+
+        Estilos.estilizarBoton(
+                btnCrearUsuario
+        );
+
+        Estilos.estilizarBoton(
+                btnEditarUsuario
+        );
+
+        Estilos.estilizarBotonEliminar(
+                btnEliminarUsuario
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+        btnCrearUsuario.setPreferredSize(
+                new java.awt.Dimension(
+                        170,
+                        38
+                )
+        );
+
+        btnEditarUsuario.setPreferredSize(
+                new java.awt.Dimension(
+                        170,
+                        38
+                )
+        );
+
+        btnEliminarUsuario.setPreferredSize(
+                new java.awt.Dimension(
+                        180,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(
+                btnCrearUsuario
+        );
+
+        panelBotones.add(
+                btnEditarUsuario
+        );
+
+        panelBotones.add(
+                btnEliminarUsuario
+        );
+
+        tarjetaUsuarios.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        javax.swing.JPanel panelInferior =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInferior.setOpaque(false);
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        panelInferior.add(
+                btnVolver
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaUsuarios,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelInferior,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        getContentPane().add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        revalidate();
+        repaint();
+    }
     public static void main(String args[]) {
       
         java.awt.EventQueue.invokeLater(() -> new VentanaUsuarios().setVisible(true));
-    }
-    
-    private void cargarTabla() {
-
-        javax.swing.table.DefaultTableModel modelo =
-                new javax.swing.table.DefaultTableModel();
-
-        modelo.addColumn("ID");
-        modelo.addColumn("Usuario");
-        modelo.addColumn("Rol");
-
-        for (Object[] fila : UsuarioController.listarUsuarios()) {
-
-            modelo.addRow(new Object[]{
-                fila[0],
-                fila[1],
-                fila[3]
-            });
-        }
-
-        tblUsuarios.setModel(modelo);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

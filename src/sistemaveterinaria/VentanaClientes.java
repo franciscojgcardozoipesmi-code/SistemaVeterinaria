@@ -11,6 +11,7 @@ public class VentanaClientes extends javax.swing.JFrame {
     public VentanaClientes() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        configurarDiseñoClientes();
         cargarTabla();
     }
     
@@ -18,12 +19,23 @@ public class VentanaClientes extends javax.swing.JFrame {
         initComponents();
         this.rolUsuario = rolUsuario;
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        configurarDiseñoClientes();
         cargarTabla();
     }
 
     private void cargarTabla() {
 
-        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel();
+        javax.swing.table.DefaultTableModel modelo =
+            new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
 
         modelo.addColumn("ID");
         modelo.addColumn("Nombre");
@@ -38,7 +50,17 @@ public class VentanaClientes extends javax.swing.JFrame {
     
     private void buscarClientes(String filtro) {
 
-        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel();
+        javax.swing.table.DefaultTableModel modelo =
+            new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
 
         modelo.addColumn("ID");
         modelo.addColumn("Nombre");
@@ -239,7 +261,315 @@ public class VentanaClientes extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
-  
+    private void configurarDiseñoClientes() {
+
+        setTitle(
+                "Henry System Vet - Gestión de clientes"
+        );
+
+        setIconImage(
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/HenrySystemVet.png"
+                        )
+                ).getImage()
+        );
+
+        getContentPane().removeAll();
+
+        getContentPane().setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        getContentPane().setLayout(
+                new java.awt.BorderLayout()
+        );
+
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel();
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setLayout(
+                new java.awt.BorderLayout()
+        );
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        lblTitulo.setText(
+                "Gestión de clientes"
+        );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+        
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(lblTitulo);
+        
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        lblTitulo.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+
+        javax.swing.JPanel tarjetaClientes =
+                new javax.swing.JPanel();
+
+        tarjetaClientes.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaClientes.setLayout(
+                new java.awt.BorderLayout(
+                        0,
+                        20
+                )
+        );
+
+        tarjetaClientes.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+
+        Estilos.estilizarTabla(
+                tblClientes
+        );
+        
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblClientes.getColumnModel()
+                .getColumn(0)
+                .setCellRenderer(centrado);
+
+        tblClientes.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        scrollClientes.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        tarjetaClientes.add(
+                scrollClientes,
+                java.awt.BorderLayout.CENTER
+        );
+
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+
+        Estilos.estilizarBoton(
+                btnCrearCliente
+        );
+
+        Estilos.estilizarBoton(
+                btnEditarCliente
+        );
+
+        Estilos.estilizarBoton(
+                btnEliminarCliente
+        );
+
+        Estilos.estilizarBoton(
+                btnBuscarCliente
+        );
+
+        Estilos.estilizarBoton(
+                btnMostrarTodos
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+
+        java.awt.Dimension tamañoBoton =
+                new java.awt.Dimension(
+                        165,
+                        38
+                );
+
+        btnCrearCliente.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnEditarCliente.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnEliminarCliente.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnBuscarCliente.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnMostrarTodos.setPreferredSize(
+                tamañoBoton
+        );
+
+
+        panelBotones.add(
+                btnCrearCliente
+        );
+
+        panelBotones.add(
+                btnEditarCliente
+        );
+
+        panelBotones.add(
+                btnEliminarCliente
+        );
+
+        panelBotones.add(
+                btnBuscarCliente
+        );
+
+        panelBotones.add(
+                btnMostrarTodos
+        );
+
+
+        tarjetaClientes.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+
+        javax.swing.JPanel panelInferior =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInferior.setOpaque(false);
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        panelInferior.add(
+                btnVolver
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaClientes,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelInferior,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        getContentPane().add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        revalidate();
+        repaint();
+    }
     public static void main(String args[]) {
   
         java.awt.EventQueue.invokeLater(() -> new VentanaClientes().setVisible(true));

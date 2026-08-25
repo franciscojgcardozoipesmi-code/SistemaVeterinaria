@@ -6,20 +6,43 @@ public class VentanaProductos extends javax.swing.JFrame {
 
     public VentanaProductos() {
         initComponents();
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
         cargarTabla();
+
+        configurarDiseñoProductos();
     }
     
     public VentanaProductos(String rolUsuario) {
         initComponents();
+
         this.rolUsuario = rolUsuario;
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
         cargarTabla();
+
+        configurarDiseñoProductos();
     }
 
     private void cargarTabla() {
 
-        javax.swing.table.DefaultTableModel modelo = new javax.swing.table.DefaultTableModel();
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
 
         modelo.addColumn("ID");
         modelo.addColumn("Nombre");
@@ -202,7 +225,416 @@ public class VentanaProductos extends javax.swing.JFrame {
 
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
+    private void configurarDiseñoProductos() {
 
+        setTitle(
+                "Henry System Vet - Gestión de productos"
+        );
+
+        setIconImage(
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/HenrySystemVet.png"
+                        )
+                ).getImage()
+        );
+
+        getContentPane().removeAll();
+
+        getContentPane().setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        getContentPane().setLayout(
+                new java.awt.BorderLayout()
+        );
+
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel();
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setLayout(
+                new java.awt.BorderLayout()
+        );
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "GESTIÓN DE PRODUCTOS"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+
+        javax.swing.JPanel tarjetaProductos =
+                new javax.swing.JPanel();
+
+        tarjetaProductos.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaProductos.setLayout(
+                new java.awt.BorderLayout(
+                        0,
+                        20
+                )
+        );
+
+        tarjetaProductos.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+
+        Estilos.estilizarTabla(
+                tblProductos
+        );
+
+        scrollProductos.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        scrollProductos.setPreferredSize(
+                new java.awt.Dimension(
+                        0,
+                        400
+                )
+        );
+
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblProductos.getColumnModel()
+                .getColumn(0)
+                .setCellRenderer(centrado);
+
+        tblProductos.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        tblProductos.getColumnModel()
+                .getColumn(3)
+                .setCellRenderer(centrado);
+
+        tblProductos.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(centrado);
+
+
+        tarjetaProductos.add(
+                scrollProductos,
+                java.awt.BorderLayout.CENTER
+        );
+
+
+        Estilos.estilizarBoton(
+                btnCrearProducto
+        );
+
+        Estilos.estilizarBoton(
+                btnEditarProducto
+        );
+
+        Estilos.estilizarBoton(
+                btnEliminarProducto
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+
+        java.awt.Dimension tamañoBoton =
+                new java.awt.Dimension(
+                        175,
+                        38
+                );
+
+        btnCrearProducto.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnEditarProducto.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnEliminarProducto.setPreferredSize(
+                tamañoBoton
+        );
+
+
+        panelBotones.add(
+                btnCrearProducto
+        );
+
+        panelBotones.add(
+                btnEditarProducto
+        );
+
+        panelBotones.add(
+                btnEliminarProducto
+        );
+
+
+        tarjetaProductos.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+
+        javax.swing.JPanel panelInferior =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInferior.setOpaque(false);
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        panelInferior.add(
+                btnVolver
+        );
+
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaProductos,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelInferior,
+                java.awt.BorderLayout.SOUTH
+        );
+
+
+        getContentPane().add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+        aplicarColorVencimiento();
+        revalidate();
+        repaint();
+    }
+    
+    private void aplicarColorVencimiento() {
+
+        tblProductos.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(
+                        new javax.swing.table.DefaultTableCellRenderer() {
+
+            @Override
+            public java.awt.Component getTableCellRendererComponent(
+                    javax.swing.JTable tabla,
+                    Object valor,
+                    boolean seleccionado,
+                    boolean tieneFoco,
+                    int fila,
+                    int columna
+            ) {
+
+                java.awt.Component componente =
+                        super.getTableCellRendererComponent(
+                                tabla,
+                                valor,
+                                seleccionado,
+                                false,
+                                fila,
+                                columna
+                        );
+
+                setHorizontalAlignment(
+                        javax.swing.SwingConstants.CENTER
+                );
+
+                if (seleccionado) {
+                    componente.setBackground(
+                            Estilos.VERDE_OSCURO
+                    );
+
+                    componente.setForeground(
+                            Estilos.BLANCO
+                    );
+
+                    return componente;
+                }
+
+                componente.setBackground(
+                        Estilos.BLANCO
+                );
+
+                componente.setForeground(
+                        Estilos.VERDE_OSCURO
+                );
+
+                if (valor != null) {
+
+                    try {
+
+                        java.time.format.DateTimeFormatter formato =
+                                java.time.format.DateTimeFormatter.ofPattern(
+                                        "dd/MM/yyyy"
+                                );
+
+                        java.time.LocalDate fechaVencimiento =
+                                java.time.LocalDate.parse(
+                                        valor.toString(),
+                                        formato
+                                );
+
+                        java.time.LocalDate hoy =
+                                java.time.LocalDate.now();
+
+                        java.time.LocalDate limite =
+                                hoy.plusDays(7);
+
+                        if (fechaVencimiento.isBefore(hoy)) {
+
+                            componente.setBackground(
+                                    new java.awt.Color(
+                                            255,
+                                            153,
+                                            153
+                                    )
+                            );
+
+                        } else if (!fechaVencimiento.isAfter(limite)) {
+
+                            componente.setBackground(
+                                    new java.awt.Color(
+                                            255,
+                                            140,
+                                            0
+                                    )
+                            );
+                        }
+
+                    } catch (Exception e) {
+
+                        componente.setBackground(
+                                Estilos.BLANCO
+                        );
+                    }
+                }
+
+                return componente;
+            }
+        });
+    }
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(() -> new VentanaProductos().setVisible(true));

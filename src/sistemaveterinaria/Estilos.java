@@ -116,5 +116,197 @@ public class Estilos {
                         38
                 )
         );
+        boton.addMouseListener(
+            new java.awt.event.MouseAdapter() {
+
+                @Override
+                public void mouseEntered(
+                        java.awt.event.MouseEvent evt) {
+
+                    boton.setBackground(
+                            VERDE_PRINCIPAL
+                    );
+                }
+
+                @Override
+                public void mouseExited(
+                        java.awt.event.MouseEvent evt) {
+
+                    boton.setBackground(
+                            VERDE_OSCURO
+                    );
+                }
+            }
+        );
+    }
+    public static void estilizarBoton(
+            javax.swing.JButton boton
+    ) {
+
+        boton.setFont(
+                fuenteBoton()
+        );
+
+        boton.setBackground(
+                VERDE_OSCURO
+        );
+
+        boton.setForeground(
+                BLANCO
+        );
+
+        boton.setFocusPainted(false);
+        boton.setBorderPainted(false);
+
+        boton.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        boton.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(
+                            java.awt.event.MouseEvent evt) {
+
+                        boton.setBackground(
+                                VERDE_PRINCIPAL
+                        );
+                    }
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evt) {
+
+                        boton.setBackground(
+                                VERDE_OSCURO
+                        );
+                    }
+                }
+        );
+    }
+    public static void estilizarTabla(
+            javax.swing.JTable tabla
+    ) {
+
+        tabla.setFont(
+                fuenteNormal()
+        );
+
+        tabla.setForeground(
+                VERDE_OSCURO
+        );
+
+        tabla.setBackground(
+                BLANCO
+        );
+
+        tabla.setRowHeight(32);
+
+        tabla.setGridColor(
+                new java.awt.Color(
+                        220,
+                        235,
+                        228
+                )
+        );
+
+        tabla.setSelectionBackground(
+                VERDE_PRINCIPAL
+        );
+
+        tabla.setSelectionForeground(
+                VERDE_OSCURO
+        );
+
+        tabla.getTableHeader().setFont(
+                fuenteBoton()
+        );
+
+        tabla.getTableHeader().setBackground(
+                VERDE_OSCURO
+        );
+
+        tabla.getTableHeader().setForeground(
+                BLANCO
+        );
+
+        tabla.getTableHeader().setReorderingAllowed(
+                false
+        );
+        
+        tabla.setCellSelectionEnabled(false);
+
+        tabla.setColumnSelectionAllowed(false);
+
+        tabla.setRowSelectionAllowed(true);
+
+        tabla.setSelectionMode(
+                javax.swing.ListSelectionModel.SINGLE_SELECTION
+        );
+
+        tabla.setSelectionBackground(
+                VERDE_OSCURO
+        );
+
+        tabla.setSelectionForeground(
+                BLANCO
+        );                                   
+    }
+    public static void estilizarBotonEliminar(
+            javax.swing.JButton boton
+    ) {
+
+        java.awt.Color rojo =
+                new java.awt.Color(210, 70, 70);
+
+        java.awt.Color rojoHover =
+                new java.awt.Color(235, 95, 95);
+
+        boton.setFont(
+                fuenteBoton()
+        );
+
+        boton.setBackground(
+                rojo
+        );
+
+        boton.setForeground(
+                BLANCO
+        );
+
+        boton.setFocusPainted(false);
+        boton.setBorderPainted(false);
+
+        boton.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        boton.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(
+                            java.awt.event.MouseEvent evt
+                    ) {
+                        boton.setBackground(
+                                rojoHover
+                        );
+                    }
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evt
+                    ) {
+                        boton.setBackground(
+                                rojo
+                        );
+                    }
+                }
+        );
     }
 }

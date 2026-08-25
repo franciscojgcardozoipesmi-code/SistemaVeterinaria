@@ -685,6 +685,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         244
                 )
         );
+        
+        tarjetaTurnos.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                20,
+                                20,
+                                20,
+                                20
+                        )
+                )
+        );
 
         tarjetaTurnos.setLayout(
                 new java.awt.BorderLayout()
@@ -705,11 +721,18 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         );
 
         tarjetaTurnos.setBorder(
-                javax.swing.BorderFactory.createEmptyBorder(
-                        20,
-                        20,
-                        20,
-                        20
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                20,
+                                20,
+                                20,
+                                20
+                        )
                 )
         );
 
@@ -788,6 +811,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         20,
                         20,
                         20
+                )
+        );
+        
+        tarjetaProductos.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                20,
+                                20,
+                                20,
+                                20
+                        )
                 )
         );
 
