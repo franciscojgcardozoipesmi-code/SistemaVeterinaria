@@ -69,6 +69,14 @@ public class VentaController {
 
         ventaDAO.guardar(venta);
     }
+    
+    public static ArrayList<Object[]> buscarVentas(
+            String filtro
+    ) {
+        return ventaDAO.buscarVentas(
+                filtro
+        );
+    }
 
     public static void eliminarVenta(int idVenta) {
         ventaDAO.eliminar(idVenta);

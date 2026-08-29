@@ -121,7 +121,102 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
 
         return lista;
     }
+    public ArrayList<Usuario> buscarUsuarios(
+            String filtro
+    ) {
+        ArrayList<Usuario> lista =
+                new ArrayList<>();
 
+        Connection conn = null;
+
+        try {
+
+            conn =
+                    Conexion.getInstancia().conectar();
+
+            String sql =
+                    "SELECT * FROM usuarios "
+                    + "WHERE CAST(id_usuario AS TEXT) LIKE ? "
+                    + "OR LOWER(usuario) LIKE LOWER(?) "
+                    + "OR LOWER(rol) LIKE LOWER(?) "
+                    + "ORDER BY usuario";
+
+            PreparedStatement pst =
+                    conn.prepareStatement(
+                            sql
+                    );
+
+            String busqueda =
+                    "%" + filtro.trim() + "%";
+
+            pst.setString(
+                    1,
+                    busqueda
+            );
+
+            pst.setString(
+                    2,
+                    busqueda
+            );
+
+            pst.setString(
+                    3,
+                    busqueda
+            );
+
+            ResultSet rs =
+                    pst.executeQuery();
+
+            while (rs.next()) {
+
+                Usuario usuario =
+                        new Usuario(
+                                rs.getInt(
+                                        "id_usuario"
+                                ),
+                                rs.getString(
+                                        "usuario"
+                                ),
+                                rs.getString(
+                                        "password"
+                                )
+                        );
+
+                usuario.setRol(
+                        rs.getString(
+                                "rol"
+                        )
+                );
+
+                lista.add(
+                        usuario
+                );
+            }
+
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al buscar usuarios: " + e
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return lista;
+    }
     @Override
     public void eliminar(int idUsuario) {
 

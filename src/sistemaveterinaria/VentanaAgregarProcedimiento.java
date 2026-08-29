@@ -1,4 +1,3 @@
-
 package sistemaveterinaria;
 import controller.AnimalController;
 import controller.ProcedimientoMedicoController;
@@ -10,7 +9,7 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
     private String rolUsuario;
     private int idProcedimiento = -1;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaAgregarProcedimiento.class.getName());
-
+    private VentanaPrincipal ventanaPrincipal;
     public VentanaAgregarProcedimiento() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
@@ -24,6 +23,19 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
         cargarAnimales();
     }
     
+    public VentanaAgregarProcedimiento(
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
+
+        initComponents();
+
+        this.rolUsuario = rolUsuario;
+        this.ventanaPrincipal = ventanaPrincipal;
+
+        cargarAnimales();
+    }
+    
     public void cargarDatos(int idProcedimiento,
                             String tipo,
                             boolean emergencia,
@@ -33,7 +45,7 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
                             String descripcion) {
 
         this.idProcedimiento = idProcedimiento;
-
+                
         txtTipo.setText(tipo);
         chkEmergencia.setSelected(emergencia);
         txtMonto.setText(String.valueOf(monto));
@@ -250,7 +262,7 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
             int idAnimal = Integer.parseInt(
                     animalSeleccionado.split(" - ")[0]
             );
-
+            
             ProcedimientoMedicoController.guardarProcedimiento(
                     tipo,
                     emergencia,
@@ -261,17 +273,25 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
                     idProcedimiento
             );
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Operación exitosa",
                     "Procedimiento guardado correctamente"
             );
 
-            VentanaProcedimientosMedicos vp =
-                    new VentanaProcedimientosMedicos(rolUsuario);
+            if (ventanaPrincipal != null) {
 
-            vp.setVisible(true);
+                ventanaPrincipal.mostrarProcedimientos();
 
-            this.dispose();
+            } else {
+
+                VentanaProcedimientosMedicos vp =
+                        new VentanaProcedimientosMedicos(rolUsuario);
+
+                vp.setVisible(true);
+
+                this.dispose();
+            }
 
         } catch (NumberFormatException e) {
 
@@ -291,20 +311,258 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        VentanaProcedimientosMedicos vp =
-                new VentanaProcedimientosMedicos(rolUsuario);
+        if (ventanaPrincipal != null) {
 
-        vp.setVisible(true);
+            ventanaPrincipal.mostrarProcedimientos();
 
-        this.dispose();
-    
+        } else {
+
+            VentanaProcedimientosMedicos vp =
+                    new VentanaProcedimientosMedicos(rolUsuario);
+
+            vp.setVisible(true);
+
+            this.dispose();
+        }
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void txtTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTipoActionPerformed
 
+    public javax.swing.JPanel obtenerPanelCrearEditarProcedimiento() {
 
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panel.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        contenido.setOpaque(false);
+
+        javax.swing.JPanel tarjeta =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        tarjeta.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjeta.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                30,
+                                40,
+                                30,
+                                40
+                        )
+                )
+        );
+
+        java.awt.GridBagConstraints gbc =
+                new java.awt.GridBagConstraints();
+
+        gbc.insets =
+                new java.awt.Insets(
+                        8,
+                        8,
+                        8,
+                        8
+                );
+
+        gbc.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        javax.swing.JLabel lblTituloFormulario =
+                new javax.swing.JLabel(
+                        idProcedimiento == -1
+                                ? "NUEVO PROCEDIMIENTO"
+                                : "EDITAR PROCEDIMIENTO"
+                );
+
+        lblTituloFormulario.setFont(
+                Estilos.fuente(24f)
+        );
+
+        lblTituloFormulario.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor =
+                java.awt.GridBagConstraints.CENTER;
+
+        tarjeta.add(
+                lblTituloFormulario,
+                gbc
+        );
+
+        gbc.gridwidth = 1;
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        lblFecha.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblAnimal.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblTipo.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblEmergencia.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblMonto.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        jLabel1.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        tarjeta.add(lblFecha, gbc);
+
+        gbc.gridx = 1;
+        txtFecha.setPreferredSize(
+                new java.awt.Dimension(
+                        250,
+                        32
+                )
+        );
+        tarjeta.add(txtFecha, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        tarjeta.add(lblAnimal, gbc);
+
+        gbc.gridx = 1;
+        cmbAnimal.setPreferredSize(
+                new java.awt.Dimension(
+                        250,
+                        32
+                )
+        );
+        tarjeta.add(cmbAnimal, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        tarjeta.add(lblTipo, gbc);
+
+        gbc.gridx = 1;
+        txtTipo.setPreferredSize(
+                new java.awt.Dimension(
+                        250,
+                        32
+                )
+        );
+        tarjeta.add(txtTipo, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        tarjeta.add(lblEmergencia, gbc);
+
+        gbc.gridx = 1;
+        tarjeta.add(chkEmergencia, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        tarjeta.add(lblMonto, gbc);
+
+        gbc.gridx = 1;
+        txtMonto.setPreferredSize(
+                new java.awt.Dimension(
+                        250,
+                        32
+                )
+        );
+        tarjeta.add(txtMonto, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.anchor =
+                java.awt.GridBagConstraints.NORTHWEST;
+
+        tarjeta.add(jLabel1, gbc);
+
+        gbc.gridx = 1;
+
+        txtDescripcion.setLineWrap(true);
+        txtDescripcion.setWrapStyleWord(true);
+
+        jScrollPane1.setPreferredSize(
+                new java.awt.Dimension(
+                        250,
+                        100
+                )
+        );
+
+        tarjeta.add(jScrollPane1, gbc);
+
+        Estilos.estilizarBoton(
+                btnGuardar
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(btnGuardar);
+        panelBotones.add(btnVolver);
+
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.gridwidth = 2;
+        gbc.anchor =
+                java.awt.GridBagConstraints.CENTER;
+
+        tarjeta.add(
+                panelBotones,
+                gbc
+        );
+
+        contenido.add(tarjeta);
+
+        panel.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        return panel;
+    }
     public static void main(String args[]) {
   
         java.awt.EventQueue.invokeLater(() -> new VentanaAgregarProcedimiento().setVisible(true));

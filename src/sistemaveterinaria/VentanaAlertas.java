@@ -1,4 +1,3 @@
-
 package sistemaveterinaria;
 import controller.ProductoController;
 import controller.TurnoController;
@@ -494,6 +493,210 @@ public class VentanaAlertas extends javax.swing.JFrame {
         };
 
         tblAlertas.setModel(modelo);
+    }
+    public javax.swing.JPanel obtenerPanelAlertas() {
+
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panel.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "ALERTAS"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+        javax.swing.JPanel tarjetaAlertas =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        tarjetaAlertas.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaAlertas.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        Estilos.estilizarTabla(
+                tblAlertas
+        );
+
+        scrollAlertas.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        tarjetaAlertas.add(
+                scrollAlertas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        Estilos.estilizarBoton(
+                btnProductosVencer
+        );
+
+        Estilos.estilizarBoton(
+                btnTurnosProximos
+        );
+
+        btnProductosVencer.setText(
+                "Productos por vencer"
+        );
+
+        btnTurnosProximos.setText(
+                "Turnos próximos"
+        );
+
+        btnProductosVencer.setPreferredSize(
+                new java.awt.Dimension(
+                        220,
+                        38
+                )
+        );
+
+        btnTurnosProximos.setPreferredSize(
+                new java.awt.Dimension(
+                        170,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(
+                btnProductosVencer
+        );
+
+        panelBotones.add(
+                btnTurnosProximos
+        );
+
+        tarjetaAlertas.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaAlertas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panel.add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        return panel;
     }
     public static void main(String args[]) {
       

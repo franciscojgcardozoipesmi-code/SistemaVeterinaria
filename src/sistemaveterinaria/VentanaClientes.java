@@ -1,11 +1,10 @@
-
 package sistemaveterinaria;
 
 import controller.ClienteController;
 
 public class VentanaClientes extends javax.swing.JFrame {
     private String rolUsuario;
-    
+    private VentanaPrincipal ventanaPrincipal;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaClientes.class.getName());
 
     public VentanaClientes() {
@@ -21,6 +20,20 @@ public class VentanaClientes extends javax.swing.JFrame {
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         configurarDiseñoClientes();
         cargarTabla();
+    }
+    
+    public VentanaClientes(
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
+
+        initComponents();
+
+        this.rolUsuario = rolUsuario;
+        this.ventanaPrincipal = ventanaPrincipal;
+
+        cargarTabla();
+        configurarDiseñoClientes();
     }
 
     private void cargarTabla() {
@@ -188,18 +201,288 @@ public class VentanaClientes extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMostrarTodosActionPerformed
 
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-        String texto = javax.swing.JOptionPane.showInputDialog(this, "Buscar por nombre o DNI:");
+            java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(this);
 
-        if (texto != null && !texto.isEmpty()) {
-            buscarClientes(texto);
-        }        
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        "Buscar cliente",
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(true);
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        panelPrincipal.setBackground(
+                Estilos.BLANCO
+        );
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                2
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "BUSCAR CLIENTE",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(20f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        12,
+                        20,
+                        12,
+                        20
+                )
+        );
+
+        panelTitulo.add(
+                lblTitulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JPanel panelCentro =
+                new javax.swing.JPanel();
+
+        panelCentro.setOpaque(false);
+
+        panelCentro.setLayout(
+                new javax.swing.BoxLayout(
+                        panelCentro,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        javax.swing.JLabel lblBuscar =
+                new javax.swing.JLabel(
+                        "Buscar por nombre o DNI:"
+                );
+
+        lblBuscar.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblBuscar.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblBuscar.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        javax.swing.JTextField campoBuscar =
+                new javax.swing.JTextField();
+
+        campoBuscar.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        campoBuscar.setMaximumSize(
+                new java.awt.Dimension(
+                        Integer.MAX_VALUE,
+                        38
+                )
+        );
+
+        campoBuscar.setPreferredSize(
+                new java.awt.Dimension(
+                        280,
+                        34
+                )
+        );
+
+        campoBuscar.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        panelCentro.add(
+                lblBuscar
+        );
+
+        panelCentro.add(
+                javax.swing.Box.createVerticalStrut(10)
+        );
+
+        panelCentro.add(
+                campoBuscar
+        );
+
+        javax.swing.JButton btnBuscarDialogo =
+                new javax.swing.JButton(
+                        "Buscar"
+                );
+
+        javax.swing.JButton btnCancelarDialogo =
+                new javax.swing.JButton(
+                        "Cancelar"
+                );
+
+        Estilos.estilizarBoton(
+                btnBuscarDialogo
+        );
+
+        Estilos.estilizarBoton(
+                btnCancelarDialogo
+        );
+
+        btnBuscarDialogo.setPreferredSize(
+                new java.awt.Dimension(
+                        105,
+                        34
+                )
+        );
+
+        btnCancelarDialogo.setPreferredSize(
+                new java.awt.Dimension(
+                        105,
+                        34
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(
+                btnCancelarDialogo
+        );
+
+        panelBotones.add(
+                btnBuscarDialogo
+        );
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        contenido.setOpaque(false);
+
+        contenido.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        5,
+                        0,
+                        0,
+                        0
+                )
+        );
+
+        contenido.add(
+                panelCentro,
+                java.awt.BorderLayout.CENTER
+        );
+
+        contenido.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        btnCancelarDialogo.addActionListener(e ->
+                dialogo.dispose()
+        );
+
+        btnBuscarDialogo.addActionListener(e -> {
+
+            String texto =
+                    campoBuscar.getText().trim();
+
+            if (!texto.isEmpty()) {
+
+                buscarClientes(texto);
+
+                dialogo.dispose();
+            }
+        });
+
+        campoBuscar.addActionListener(e ->
+                btnBuscarDialogo.doClick()
+        );
+
+        dialogo.setContentPane(
+                panelPrincipal
+        );
+
+        dialogo.setSize(
+                370,
+                200
+        );
+
+        dialogo.setLocationRelativeTo(
+                ventanaPadre
+        );
+
+        campoBuscar.requestFocusInWindow();
+
+        dialogo.setVisible(true);       
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
         int fila = tblClientes.getSelectedRow();
 
         if (fila == -1) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccioná un cliente");
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "Seleccioná un cliente"
+            );
+
             return;
         }
 
@@ -230,26 +513,36 @@ public class VentanaClientes extends javax.swing.JFrame {
         int fila = tblClientes.getSelectedRow();
 
         if (fila == -1) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccioná un cliente");
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "Seleccioná un cliente"
+            );
+
             return;
         }
 
-        int id = Integer.parseInt(tblClientes.getValueAt(fila, 0).toString());
-        String nombre = tblClientes.getValueAt(fila, 1).toString();
-        String dni = tblClientes.getValueAt(fila, 2).toString();
+        int id = Integer.parseInt(
+                tblClientes.getValueAt(fila, 0).toString()
+        );
 
-        VentanaCrearCliente vcc = new VentanaCrearCliente(rolUsuario);
-        vcc.cargarDatos(id, nombre, dni);
-        vcc.setVisible(true);
+        String nombre =
+                tblClientes.getValueAt(fila, 1).toString();
 
-        this.dispose();
+        String dni =
+                tblClientes.getValueAt(fila, 2).toString();
+
+        ventanaPrincipal.mostrarEditarCliente(
+                id,
+                nombre,
+                dni
+        );
+    
     }//GEN-LAST:event_btnEditarClienteActionPerformed
 
     private void btnCrearClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearClienteActionPerformed
-        VentanaCrearCliente vcc = new VentanaCrearCliente(rolUsuario);
-        vcc.setVisible(true);
-
-        this.dispose();  
+            ventanaPrincipal.mostrarCrearCliente();
     }//GEN-LAST:event_btnCrearClienteActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -569,6 +862,252 @@ public class VentanaClientes extends javax.swing.JFrame {
 
         revalidate();
         repaint();
+    }
+    public javax.swing.JPanel obtenerPanelClientes() {
+
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panel.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        lblTitulo.setText(
+                "Gestión de clientes"
+        );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+        javax.swing.JPanel tarjetaClientes =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        tarjetaClientes.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaClientes.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        Estilos.estilizarTabla(
+                tblClientes
+        );
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblClientes.getColumnModel()
+                .getColumn(0)
+                .setCellRenderer(centrado);
+
+        tblClientes.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        scrollClientes.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        tarjetaClientes.add(
+                scrollClientes,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        Estilos.estilizarBoton(
+                btnCrearCliente
+        );
+
+        Estilos.estilizarBoton(
+                btnEditarCliente
+        );
+
+        Estilos.estilizarBotonEliminar(
+                btnEliminarCliente
+        );
+
+        Estilos.estilizarBoton(
+                btnBuscarCliente
+        );
+
+        Estilos.estilizarBoton(
+                btnMostrarTodos
+        );
+
+        java.awt.Dimension tamañoBoton =
+                new java.awt.Dimension(
+                        165,
+                        38
+                );
+
+        btnCrearCliente.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnEditarCliente.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnEliminarCliente.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnBuscarCliente.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnMostrarTodos.setPreferredSize(
+                tamañoBoton
+        );
+
+        panelBotones.add(
+                btnCrearCliente
+        );
+
+        panelBotones.add(
+                btnEditarCliente
+        );
+
+        panelBotones.add(
+                btnEliminarCliente
+        );
+
+        panelBotones.add(
+                btnBuscarCliente
+        );
+
+        panelBotones.add(
+                btnMostrarTodos
+        );
+
+        tarjetaClientes.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaClientes,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panel.add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        return panel;
     }
     public static void main(String args[]) {
   

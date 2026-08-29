@@ -1,11 +1,10 @@
-
 package sistemaveterinaria;
 import controller.UsuarioController;
 
 public class VentanaDatosUsuario extends javax.swing.JFrame {
     private int idUsuario = -1;
     private String rolUsuario;
-    
+    private VentanaPrincipal ventanaPrincipal;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaDatosUsuario.class.getName());
 
  
@@ -18,6 +17,41 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.rolUsuario = rolUsuario;
+    }
+    public VentanaDatosUsuario(
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
+
+        initComponents();
+
+        this.rolUsuario = rolUsuario;
+        this.ventanaPrincipal = ventanaPrincipal;
+
+        txtPassword.setText("");
+
+        configurarBotonCancelar();
+    }
+    
+    public VentanaDatosUsuario(
+            int idUsuario,
+            String usuario,
+            String rol,
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
+
+        initComponents();
+
+        this.idUsuario = idUsuario;
+        this.rolUsuario = rolUsuario;
+        this.ventanaPrincipal = ventanaPrincipal;
+
+        txtUsuario.setText(usuario);
+        txtPassword.setText("");
+        cmbRol.setSelectedItem(rol);
+
+        configurarBotonCancelar();
     }
     
     public VentanaDatosUsuario(int idUsuario,
@@ -133,9 +167,10 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
 
             if (usuario.isEmpty() || password.isEmpty()) {
 
-                javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
                         this,
-                        "Completar usuario y contraseña"
+                        "Atención",
+                        "Completá usuario y contraseña"
                 );
 
                 return;
@@ -149,8 +184,9 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
                         rol
                 );
 
-                javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
                         this,
+                        "Operación exitosa",
                         "Usuario creado correctamente"
                 );
 
@@ -163,18 +199,26 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
                         rol
                 );
 
-                javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
                         this,
+                        "Operación exitosa",
                         "Usuario editado correctamente"
                 );
             }
 
-            VentanaUsuarios vu =
-                    new VentanaUsuarios(rolUsuario);
+            if (ventanaPrincipal != null) {
 
-            vu.setVisible(true);
+                ventanaPrincipal.mostrarUsuarios();
 
-            this.dispose();
+            } else {
+
+                VentanaUsuarios vu =
+                        new VentanaUsuarios(rolUsuario);
+
+                vu.setVisible(true);
+
+                this.dispose();
+            }
 
         } catch (Exception e) {
 
@@ -184,29 +228,353 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
             );
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
+    public javax.swing.JPanel obtenerPanelDatosUsuario() {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panel.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                30
+                        )
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        String titulo;
+
+        if (idUsuario == -1) {
+            titulo = "CREAR USUARIO";
+        } else {
+            titulo = "EDITAR USUARIO";
         }
-        //</editor-fold>
 
-        /* Create and display the form */
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        titulo
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        javax.swing.JPanel tarjeta =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        tarjeta.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjeta.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                40,
+                                50,
+                                40,
+                                50
+                        )
+                )
+        );
+
+        jLabel1.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        jLabel2.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        jLabel3.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        jLabel1.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        jLabel2.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        jLabel3.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        txtUsuario.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtPassword.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbRol.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        java.awt.Dimension tamañoCampo =
+                new java.awt.Dimension(
+                        280,
+                        38
+                );
+
+        txtUsuario.setPreferredSize(
+                tamañoCampo
+        );
+
+        txtUsuario.setMinimumSize(
+                tamañoCampo
+        );
+
+        txtPassword.setPreferredSize(
+                tamañoCampo
+        );
+
+        txtPassword.setMinimumSize(
+                tamañoCampo
+        );
+
+        cmbRol.setPreferredSize(
+                tamañoCampo
+        );
+
+        cmbRol.setMinimumSize(
+                tamañoCampo
+        );
+
+        java.awt.GridBagConstraints gbc =
+                new java.awt.GridBagConstraints();
+
+        gbc.insets =
+                new java.awt.Insets(
+                        12,
+                        12,
+                        12,
+                        12
+                );
+
+        gbc.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0;
+
+        tarjeta.add(
+                jLabel1,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+
+        tarjeta.add(
+                txtUsuario,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+
+        tarjeta.add(
+                jLabel2,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+
+        tarjeta.add(
+                txtPassword,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0;
+
+        tarjeta.add(
+                jLabel3,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+
+        tarjeta.add(
+                cmbRol,
+                gbc
+        );
+
+        Estilos.estilizarBoton(
+                btnGuardar
+        );
+
+        Estilos.estilizarBoton(
+                btnCancelar
+        );
+
+        btnGuardar.setPreferredSize(
+                new java.awt.Dimension(
+                        140,
+                        38
+                )
+        );
+
+        btnCancelar.setPreferredSize(
+                new java.awt.Dimension(
+                        140,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(
+                btnGuardar
+        );
+
+        panelBotones.add(
+                btnCancelar
+        );
+
+        javax.swing.JPanel contenedorFormulario =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        contenedorFormulario.setOpaque(false);
+
+        java.awt.GridBagConstraints gbcFormulario =
+                new java.awt.GridBagConstraints();
+
+        gbcFormulario.fill =
+                java.awt.GridBagConstraints.NONE;
+
+        gbcFormulario.anchor =
+                java.awt.GridBagConstraints.CENTER;
+
+        contenedorFormulario.add(
+                tarjeta,
+                gbcFormulario
+        );
+
+        panelPrincipal.add(
+                contenedorTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenedorFormulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panel.add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        return panel;
+    }
+    private void configurarBotonCancelar() {
+
+        btnCancelar.addActionListener(e -> {
+
+            if (ventanaPrincipal != null) {
+
+                ventanaPrincipal.mostrarUsuarios();
+
+            } else {
+
+                VentanaUsuarios vu =
+                        new VentanaUsuarios(rolUsuario);
+
+                vu.setVisible(true);
+
+                this.dispose();
+            }
+        });
+    }
+    public static void main(String args[]) {
+   
         java.awt.EventQueue.invokeLater(() -> new VentanaDatosUsuario().setVisible(true));
     }
 

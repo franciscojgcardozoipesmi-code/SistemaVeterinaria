@@ -3,9 +3,12 @@ import controller.ProductoController;
 public class VentanaProductos extends javax.swing.JFrame {
     private String rolUsuario;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaProductos.class.getName());
-
+    private VentanaPrincipal ventanaPrincipal;
+    private javax.swing.JButton btnBuscarProducto;
+    private javax.swing.JButton btnMostrarTodos;
     public VentanaProductos() {
         initComponents();
+        inicializarBotonesProductos();
 
         setExtendedState(
                 javax.swing.JFrame.MAXIMIZED_BOTH
@@ -16,14 +19,35 @@ public class VentanaProductos extends javax.swing.JFrame {
         configurarDiseñoProductos();
     }
     
-    public VentanaProductos(String rolUsuario) {
+    public VentanaProductos(
+            String rolUsuario
+    ) {
         initComponents();
+        inicializarBotonesProductos();
 
-        this.rolUsuario = rolUsuario;
+        this.rolUsuario =
+                rolUsuario;
 
         setExtendedState(
                 javax.swing.JFrame.MAXIMIZED_BOTH
         );
+
+        cargarTabla();
+
+        configurarDiseñoProductos();
+    }
+    public VentanaProductos(
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
+        initComponents();
+        inicializarBotonesProductos();
+
+        this.rolUsuario =
+                rolUsuario;
+
+        this.ventanaPrincipal =
+                ventanaPrincipal;
 
         cargarTabla();
 
@@ -55,6 +79,54 @@ public class VentanaProductos extends javax.swing.JFrame {
         }
 
         tblProductos.setModel(modelo);
+    }
+    
+    private void buscarProductos(
+            String filtro
+    ) {
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
+
+        modelo.addColumn(
+                "ID"
+        );
+
+        modelo.addColumn(
+                "Nombre"
+        );
+
+        modelo.addColumn(
+                "Precio"
+        );
+
+        modelo.addColumn(
+                "Stock"
+        );
+
+        modelo.addColumn(
+                "Fecha vencimiento"
+        );
+
+        for (Object[] fila
+                : ProductoController.buscarProductos(filtro)) {
+
+            modelo.addRow(
+                    fila
+            );
+        }
+
+        tblProductos.setModel(
+                modelo
+        );
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -135,20 +207,20 @@ public class VentanaProductos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCrearProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearProductoActionPerformed
-        VentanaCrearProducto vcp = new VentanaCrearProducto(rolUsuario);
-        vcp.setVisible(true);
-
-        this.dispose();
+          ventanaPrincipal.mostrarCrearProducto();
     }//GEN-LAST:event_btnCrearProductoActionPerformed
 
     private void btnEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProductoActionPerformed
             int fila = tblProductos.getSelectedRow();
 
             if (fila == -1) {
-                javax.swing.JOptionPane.showMessageDialog(
+
+                Estilos.mostrarAdvertencia(
                         this,
+                        "Atención",
                         "Seleccioná un producto"
                 );
+
                 return;
             }
 
@@ -181,10 +253,13 @@ public class VentanaProductos extends javax.swing.JFrame {
         int fila = tblProductos.getSelectedRow();
 
         if (fila == -1) {
-            javax.swing.JOptionPane.showMessageDialog(
+
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Atención",
                     "Seleccioná un producto"
             );
+
             return;
         }
 
@@ -192,7 +267,8 @@ public class VentanaProductos extends javax.swing.JFrame {
                 tblProductos.getValueAt(fila, 0).toString()
         );
 
-        String nombre = tblProductos.getValueAt(fila, 1).toString();
+        String nombre =
+                tblProductos.getValueAt(fila, 1).toString();
 
         double precio = Double.parseDouble(
                 tblProductos.getValueAt(fila, 2).toString()
@@ -201,22 +277,24 @@ public class VentanaProductos extends javax.swing.JFrame {
         int stock = Integer.parseInt(
                 tblProductos.getValueAt(fila, 3).toString()
         );
-        
-        Object valorFecha = tblProductos.getValueAt(fila, 4);
+
+        Object valorFecha =
+                tblProductos.getValueAt(fila, 4);
 
         String fechaVencimiento = "";
 
         if (valorFecha != null) {
-            fechaVencimiento = valorFecha.toString();
+            fechaVencimiento =
+                    valorFecha.toString();
         }
 
-        VentanaCrearProducto vcp = new VentanaCrearProducto(rolUsuario);
-
-        vcp.cargarDatos(idProducto, nombre, precio, stock, fechaVencimiento);
-
-        vcp.setVisible(true);
-
-        this.dispose();
+        ventanaPrincipal.mostrarEditarProducto(
+                idProducto,
+                nombre,
+                precio,
+                stock,
+                fechaVencimiento
+        );
     }//GEN-LAST:event_btnEditarProductoActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -635,10 +713,584 @@ public class VentanaProductos extends javax.swing.JFrame {
             }
         });
     }
+    
+    public javax.swing.JPanel obtenerPanelProductos() {
+
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panel.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "GESTIÓN DE PRODUCTOS"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+        javax.swing.JPanel tarjetaProductos =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        tarjetaProductos.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaProductos.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        Estilos.estilizarTabla(
+                tblProductos
+        );
+
+        scrollProductos.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblProductos.getColumnModel()
+                .getColumn(0)
+                .setCellRenderer(centrado);
+
+        tblProductos.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        tblProductos.getColumnModel()
+                .getColumn(3)
+                .setCellRenderer(centrado);
+
+        tblProductos.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(centrado);
+
+        tarjetaProductos.add(
+                scrollProductos,
+                java.awt.BorderLayout.CENTER
+        );
+
+        Estilos.estilizarBoton(
+            btnCrearProducto
+        );
+
+        Estilos.estilizarBoton(
+                btnEditarProducto
+        );
+
+        Estilos.estilizarBotonEliminar(
+                btnEliminarProducto
+        );
+
+        Estilos.estilizarBoton(
+                btnBuscarProducto
+        );
+
+        Estilos.estilizarBoton(
+                btnMostrarTodos
+        );
+
+        java.awt.Dimension tamañoBoton =
+                new java.awt.Dimension(
+                        175,
+                        38
+                );
+
+        btnCrearProducto.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnEditarProducto.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnEliminarProducto.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnBuscarProducto.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnMostrarTodos.setPreferredSize(
+                tamañoBoton
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(
+                false
+        );
+
+        panelBotones.add(
+                btnCrearProducto
+        );
+
+        panelBotones.add(
+                btnEditarProducto
+        );
+
+        panelBotones.add(
+                btnEliminarProducto
+        );
+
+        panelBotones.add(
+                btnBuscarProducto
+        );
+
+        panelBotones.add(
+                btnMostrarTodos
+        );
+
+        tarjetaProductos.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaProductos,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panel.add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        aplicarColorVencimiento();
+
+        return panel;
+    }
+    
+    private void inicializarBotonesProductos() {
+
+            btnBuscarProducto =
+                    new javax.swing.JButton(
+                            "Buscar"
+                    );
+
+            btnMostrarTodos =
+                    new javax.swing.JButton(
+                            "Mostrar todos"
+                    );
+
+            btnBuscarProducto.addActionListener(e ->
+                    mostrarDialogoBuscarProductos()
+            );
+
+            btnMostrarTodos.addActionListener(e ->
+                    cargarTabla()
+            );
+        }
+        private void mostrarDialogoBuscarProductos() {
+
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(
+                        this
+                );
+
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        "Buscar producto",
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(
+                true
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        panelPrincipal.setBackground(
+                Estilos.BLANCO
+        );
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                2
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "BUSCAR PRODUCTO",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(20f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        12,
+                        20,
+                        12,
+                        20
+                )
+        );
+
+        panelTitulo.add(
+                lblTitulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JLabel lblBuscar =
+                new javax.swing.JLabel(
+                        "Buscar por ID o nombre:"
+                );
+
+        lblBuscar.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblBuscar.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblBuscar.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        javax.swing.JTextField campoBuscar =
+                new javax.swing.JTextField();
+
+        campoBuscar.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        campoBuscar.setMaximumSize(
+                new java.awt.Dimension(
+                        Integer.MAX_VALUE,
+                        38
+                )
+        );
+
+        campoBuscar.setPreferredSize(
+                new java.awt.Dimension(
+                        280,
+                        34
+                )
+        );
+
+        campoBuscar.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        javax.swing.JPanel panelCentro =
+                new javax.swing.JPanel();
+
+        panelCentro.setOpaque(
+                false
+        );
+
+        panelCentro.setLayout(
+                new javax.swing.BoxLayout(
+                        panelCentro,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        panelCentro.add(
+                lblBuscar
+        );
+
+        panelCentro.add(
+                javax.swing.Box.createVerticalStrut(
+                        10
+                )
+        );
+
+        panelCentro.add(
+                campoBuscar
+        );
+
+        javax.swing.JButton btnBuscarDialogo =
+                new javax.swing.JButton(
+                        "Buscar"
+                );
+
+        javax.swing.JButton btnCancelarDialogo =
+                new javax.swing.JButton(
+                        "Cancelar"
+                );
+
+        Estilos.estilizarBoton(
+                btnBuscarDialogo
+        );
+
+        Estilos.estilizarBoton(
+                btnCancelarDialogo
+        );
+
+        btnBuscarDialogo.setPreferredSize(
+                new java.awt.Dimension(
+                        105,
+                        34
+                )
+        );
+
+        btnCancelarDialogo.setPreferredSize(
+                new java.awt.Dimension(
+                        105,
+                        34
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(
+                false
+        );
+
+        panelBotones.add(
+                btnCancelarDialogo
+        );
+
+        panelBotones.add(
+                btnBuscarDialogo
+        );
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        contenido.setOpaque(
+                false
+        );
+
+        contenido.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        5,
+                        0,
+                        0,
+                        0
+                )
+        );
+
+        contenido.add(
+                panelCentro,
+                java.awt.BorderLayout.CENTER
+        );
+
+        contenido.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        btnCancelarDialogo.addActionListener(e ->
+                dialogo.dispose()
+        );
+
+        btnBuscarDialogo.addActionListener(e -> {
+
+            String texto =
+                    campoBuscar.getText().trim();
+
+            if (!texto.isEmpty()) {
+
+                buscarProductos(
+                        texto
+                );
+
+                dialogo.dispose();
+            }
+        });
+
+        campoBuscar.addActionListener(e ->
+                btnBuscarDialogo.doClick()
+        );
+
+        dialogo.getRootPane().setDefaultButton(
+                btnBuscarDialogo
+        );
+
+        dialogo.setContentPane(
+                panelPrincipal
+        );
+
+        dialogo.setSize(
+                370,
+                200
+        );
+
+        dialogo.setLocationRelativeTo(
+                ventanaPadre
+        );
+
+        dialogo.setVisible(
+                true
+        );
+    }
+    
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(() -> new VentanaProductos().setVisible(true));
     }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCrearProducto;

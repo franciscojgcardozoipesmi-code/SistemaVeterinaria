@@ -43,6 +43,28 @@ public class UsuarioController {
 
         return lista;
     }
+    
+    public static ArrayList<Object[]> buscarUsuarios(
+            String filtro
+    ) {
+        ArrayList<Object[]> lista =
+                new ArrayList<>();
+
+        for (Usuario usuario
+                : usuarioDAO.buscarUsuarios(filtro)) {
+
+            lista.add(
+                    new Object[]{
+                        usuario.getIdUsuario(),
+                        usuario.getUsuario(),
+                        usuario.getPassword(),
+                        usuario.getRol()
+                    }
+            );
+        }
+
+        return lista;
+    }
 
     public static void editarUsuario(int idUsuario,
                                      String nombreUsuario,

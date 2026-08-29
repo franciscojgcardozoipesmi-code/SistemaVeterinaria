@@ -1,15 +1,16 @@
-
 package sistemaveterinaria;
 import controller.UsuarioController;
 public class VentanaUsuarios extends javax.swing.JFrame {
     private String rolUsuario;
-   
+    private VentanaPrincipal ventanaPrincipal;
+    private javax.swing.JButton btnBuscarUsuario;
+    private javax.swing.JButton btnMostrarTodos;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaUsuarios.class.getName());
 
    
     public VentanaUsuarios() {
         initComponents();
-
+        inicializarBotonesUsuarios();
         setExtendedState(
                 javax.swing.JFrame.MAXIMIZED_BOTH
         );
@@ -21,7 +22,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
     public VentanaUsuarios(String rolUsuario) {
         initComponents();
-
+        inicializarBotonesUsuarios();
         this.rolUsuario = rolUsuario;
 
         setExtendedState(
@@ -32,7 +33,18 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
         configurarDiseñoUsuarios();
     }
-    
+    public VentanaUsuarios(
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
+
+        initComponents();
+        inicializarBotonesUsuarios();
+        this.rolUsuario = rolUsuario;
+        this.ventanaPrincipal = ventanaPrincipal;
+
+        cargarTabla();
+    }
     private void cargarTabla() {
 
         javax.swing.table.DefaultTableModel modelo =
@@ -61,6 +73,50 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         }
 
         tblUsuarios.setModel(modelo);
+    }
+    
+    private void buscarUsuarios(
+            String filtro
+    ) {
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
+
+        modelo.addColumn(
+                "ID"
+        );
+
+        modelo.addColumn(
+                "Usuario"
+        );
+
+        modelo.addColumn(
+                "Rol"
+        );
+
+        for (Object[] fila
+                : UsuarioController.buscarUsuarios(filtro)) {
+
+            modelo.addRow(
+                    new Object[]{
+                        fila[0],
+                        fila[1],
+                        fila[3]
+                    }
+            );
+        }
+
+        tblUsuarios.setModel(
+                modelo
+        );
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -155,8 +211,9 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
         if (fila == -1) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Atención",
                     "Seleccioná un usuario"
             );
 
@@ -164,35 +221,33 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         }
 
         int idUsuario = Integer.parseInt(
-                tblUsuarios.getValueAt(fila, 0).toString()
+                tblUsuarios.getValueAt(
+                        fila,
+                        0
+                ).toString()
         );
 
         String usuario =
-                tblUsuarios.getValueAt(fila, 1).toString();
+                tblUsuarios.getValueAt(
+                        fila,
+                        1
+                ).toString();
 
         String rol =
-                tblUsuarios.getValueAt(fila, 2).toString();
+                tblUsuarios.getValueAt(
+                        fila,
+                        2
+                ).toString();
 
-        VentanaDatosUsuario vdu =
-                new VentanaDatosUsuario(
-                        idUsuario,
-                        usuario,
-                        rol,
-                        rolUsuario
-                );
-
-        vdu.setVisible(true);
-
-        this.dispose();
+        ventanaPrincipal.mostrarEditarUsuario(
+                idUsuario,
+                usuario,
+                rol
+        );
     }//GEN-LAST:event_btnEditarUsuarioActionPerformed
 
     private void btnCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearUsuarioActionPerformed
-        VentanaDatosUsuario vdu =
-                new VentanaDatosUsuario(rolUsuario);
-
-        vdu.setVisible(true);
-
-        this.dispose();
+            ventanaPrincipal.mostrarCrearUsuario();
     }//GEN-LAST:event_btnCrearUsuarioActionPerformed
 
     private void btnEliminarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarUsuarioActionPerformed
@@ -200,8 +255,9 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
         if (fila == -1) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Atención",
                     "Seleccioná un usuario"
             );
 
@@ -510,6 +566,575 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
         revalidate();
         repaint();
+    }
+    public javax.swing.JPanel obtenerPanelUsuarios() {
+
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panel.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "GESTIÓN DE USUARIOS"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+        javax.swing.JPanel tarjetaUsuarios =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        tarjetaUsuarios.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaUsuarios.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        Estilos.estilizarTabla(
+                tblUsuarios
+        );
+
+        jScrollPane1.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblUsuarios.getColumnModel()
+                .getColumn(0)
+                .setCellRenderer(centrado);
+
+        tblUsuarios.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        tarjetaUsuarios.add(
+                jScrollPane1,
+                java.awt.BorderLayout.CENTER
+        );
+
+        Estilos.estilizarBoton(
+                btnCrearUsuario
+        );
+
+        Estilos.estilizarBoton(
+                btnEditarUsuario
+        );
+
+        Estilos.estilizarBotonEliminar(
+                btnEliminarUsuario
+        );
+
+        Estilos.estilizarBoton(
+                btnBuscarUsuario
+        );
+
+        Estilos.estilizarBoton(
+                btnMostrarTodos
+        );
+
+        btnCrearUsuario.setPreferredSize(
+                new java.awt.Dimension(
+                        170,
+                        38
+                )
+        );
+
+        btnEditarUsuario.setPreferredSize(
+                new java.awt.Dimension(
+                        170,
+                        38
+                )
+        );
+
+        btnEliminarUsuario.setPreferredSize(
+                new java.awt.Dimension(
+                        180,
+                        38
+                )
+        );
+
+        btnBuscarUsuario.setPreferredSize(
+                new java.awt.Dimension(
+                        160,
+                        38
+                )
+        );
+
+        btnMostrarTodos.setPreferredSize(
+                new java.awt.Dimension(
+                        160,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(
+                false
+        );
+
+        panelBotones.add(
+                btnCrearUsuario
+        );
+
+        panelBotones.add(
+                btnEditarUsuario
+        );
+
+        panelBotones.add(
+                btnEliminarUsuario
+        );
+
+        panelBotones.add(
+                btnBuscarUsuario
+        );
+
+        panelBotones.add(
+                btnMostrarTodos
+        );
+
+        tarjetaUsuarios.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaUsuarios,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panel.add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        return panel;
+    }
+    private void inicializarBotonesUsuarios() {
+
+        btnBuscarUsuario =
+                new javax.swing.JButton(
+                        "Buscar"
+                );
+
+        btnMostrarTodos =
+                new javax.swing.JButton(
+                        "Mostrar todos"
+                );
+
+        btnBuscarUsuario.addActionListener(e ->
+                mostrarDialogoBuscarUsuarios()
+        );
+
+        btnMostrarTodos.addActionListener(e ->
+                cargarTabla()
+        );
+    }
+    
+    private void mostrarDialogoBuscarUsuarios() {
+
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(
+                        this
+                );
+
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        "Buscar usuario",
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(
+                true
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        panelPrincipal.setBackground(
+                Estilos.BLANCO
+        );
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                2
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "BUSCAR USUARIO",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(20f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        12,
+                        20,
+                        12,
+                        20
+                )
+        );
+
+        panelTitulo.add(
+                lblTitulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JLabel lblBuscar =
+                new javax.swing.JLabel(
+                        "Buscar por ID, usuario o rol:"
+                );
+
+        lblBuscar.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblBuscar.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblBuscar.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        javax.swing.JTextField campoBuscar =
+                new javax.swing.JTextField();
+
+        campoBuscar.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        campoBuscar.setMaximumSize(
+                new java.awt.Dimension(
+                        Integer.MAX_VALUE,
+                        38
+                )
+        );
+
+        campoBuscar.setPreferredSize(
+                new java.awt.Dimension(
+                        280,
+                        34
+                )
+        );
+
+        campoBuscar.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        javax.swing.JPanel panelCentro =
+                new javax.swing.JPanel();
+
+        panelCentro.setOpaque(
+                false
+        );
+
+        panelCentro.setLayout(
+                new javax.swing.BoxLayout(
+                        panelCentro,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        panelCentro.add(
+                lblBuscar
+        );
+
+        panelCentro.add(
+                javax.swing.Box.createVerticalStrut(
+                        10
+                )
+        );
+
+        panelCentro.add(
+                campoBuscar
+        );
+
+        javax.swing.JButton btnBuscarDialogo =
+                new javax.swing.JButton(
+                        "Buscar"
+                );
+
+        javax.swing.JButton btnCancelarDialogo =
+                new javax.swing.JButton(
+                        "Cancelar"
+                );
+
+        Estilos.estilizarBoton(
+                btnBuscarDialogo
+        );
+
+        Estilos.estilizarBoton(
+                btnCancelarDialogo
+        );
+
+        btnBuscarDialogo.setPreferredSize(
+                new java.awt.Dimension(
+                        105,
+                        34
+                )
+        );
+
+        btnCancelarDialogo.setPreferredSize(
+                new java.awt.Dimension(
+                        105,
+                        34
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(
+                false
+        );
+
+        panelBotones.add(
+                btnCancelarDialogo
+        );
+
+        panelBotones.add(
+                btnBuscarDialogo
+        );
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        contenido.setOpaque(
+                false
+        );
+
+        contenido.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        5,
+                        0,
+                        0,
+                        0
+                )
+        );
+
+        contenido.add(
+                panelCentro,
+                java.awt.BorderLayout.CENTER
+        );
+
+        contenido.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        btnCancelarDialogo.addActionListener(e ->
+                dialogo.dispose()
+        );
+
+        btnBuscarDialogo.addActionListener(e -> {
+
+            String texto =
+                    campoBuscar.getText().trim();
+
+            if (!texto.isEmpty()) {
+
+                buscarUsuarios(
+                        texto
+                );
+
+                dialogo.dispose();
+            }
+        });
+
+        campoBuscar.addActionListener(e ->
+                btnBuscarDialogo.doClick()
+        );
+
+        dialogo.getRootPane().setDefaultButton(
+                btnBuscarDialogo
+        );
+
+        dialogo.setContentPane(
+                panelPrincipal
+        );
+
+        dialogo.setSize(
+                380,
+                200
+        );
+
+        dialogo.setLocationRelativeTo(
+                ventanaPadre
+        );
+
+        dialogo.setVisible(
+                true
+        );
     }
     public static void main(String args[]) {
       

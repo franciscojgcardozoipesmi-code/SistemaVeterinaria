@@ -14,7 +14,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblRolSesion;
     private javax.swing.JPanel panelBienvenida;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
-
+    private VentanaPrincipal ventanaPrincipal;
     public VentanaPrincipal() {
 
         initComponents();
@@ -40,7 +40,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         revisarAlertasProductos();
         revisarAlertasTurnos();
     }
-    
     
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -196,31 +195,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTurnosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTurnosActionPerformed
-        VentanaTurnos vt = new VentanaTurnos(rolUsuario);
-        vt.setVisible(true);
-    
-        this.dispose();
+        mostrarTurnos();
     }//GEN-LAST:event_btnTurnosActionPerformed
 
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
-        VentanaClientes vc = new VentanaClientes(rolUsuario);
-        vc.setVisible(true);
-
-        this.dispose();
+           mostrarClientes();
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
-        VentanaProductos vp = new VentanaProductos(rolUsuario);
-        vp.setVisible(true);
-
-        this.dispose();     
+        mostrarProductos();
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentasActionPerformed
-        VentanaVentas vv = new VentanaVentas(rolUsuario);
-        vv.setVisible(true);
-
-        this.dispose();
+        mostrarVentas();
     }//GEN-LAST:event_btnVentasActionPerformed
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
@@ -232,10 +219,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 );
             }
 
-            VentanaUsuarios vu = new VentanaUsuarios(rolUsuario);
-            vu.setVisible(true);
-
-            this.dispose();
+            mostrarUsuarios();
 
         } catch (UsuarioNoAutorizadoException e) {
 
@@ -247,41 +231,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnAnimalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnimalesActionPerformed
- 
-    VentanaAnimales va =
-            new VentanaAnimales(rolUsuario);
-
-    va.setVisible(true);
-
-    this.dispose();
-
+        mostrarAnimales();
     }//GEN-LAST:event_btnAnimalesActionPerformed
 
     private void btnProcedimientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcedimientosActionPerformed
-        VentanaProcedimientosMedicos vp =
-                new VentanaProcedimientosMedicos(rolUsuario);
-
-        vp.setVisible(true);
-
-        this.dispose();
+         mostrarProcedimientos();
     }//GEN-LAST:event_btnProcedimientosActionPerformed
 
     private void btnAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlertasActionPerformed
-        VentanaAlertas va =
-                new VentanaAlertas(rolUsuario);
-
-        va.setVisible(true);
-
-        this.dispose();
+        mostrarAlertas();
     }//GEN-LAST:event_btnAlertasActionPerformed
 
     private void btnReportesVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesVentasActionPerformed
-        VentanaReportesVentas vrv =
-                new VentanaReportesVentas(rolUsuario);
-
-        vrv.setVisible(true);
-
-        this.dispose();
+           mostrarReportes();
     }//GEN-LAST:event_btnReportesVentasActionPerformed
     
     private void revisarAlertasProductos() {
@@ -498,6 +460,62 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         );
 
         panelMenu.add(btnUsuarios);
+        panelMenu.add(
+                javax.swing.Box.createVerticalStrut(
+                        8
+                )
+        );
+
+        javax.swing.JButton btnCerrarSesion =
+                new javax.swing.JButton(
+                        "Cerrar sesión"
+                );
+
+        Estilos.estilizarBotonEliminar(
+                btnCerrarSesion
+        );
+
+        java.awt.Dimension tamañoCerrarSesion =
+                new java.awt.Dimension(
+                        190,
+                        38
+                );
+
+        btnCerrarSesion.setPreferredSize(
+                tamañoCerrarSesion
+        );
+
+        btnCerrarSesion.setMaximumSize(
+                tamañoCerrarSesion
+        );
+
+        btnCerrarSesion.setMinimumSize(
+                tamañoCerrarSesion
+        );
+
+        btnCerrarSesion.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        btnCerrarSesion.addActionListener(e -> {
+
+            VentanaLogin ventanaLogin =
+                    new VentanaLogin();
+
+            ventanaLogin.setLocationRelativeTo(
+                    null
+            );
+
+            ventanaLogin.setVisible(
+                    true
+            );
+
+            dispose();
+        });
+
+        panelMenu.add(
+                btnCerrarSesion
+        );
         panelContenido = new javax.swing.JPanel();
 
         panelContenido.setBackground(
@@ -904,6 +922,645 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         revalidate();
         repaint();
     }
+    
+    public void mostrarClientes() {
+
+        VentanaClientes ventanaClientes =
+                new VentanaClientes(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel clientes =
+                ventanaClientes.obtenerPanelClientes();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                clientes,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarCrearCliente() {
+
+        VentanaCrearCliente ventanaCrearCliente =
+                new VentanaCrearCliente(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel formulario =
+                ventanaCrearCliente.obtenerPanelCrearEditarCliente();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarEditarCliente(
+            int id,
+            String nombre,
+            String dni
+    ) {
+
+        VentanaCrearCliente ventanaCrearCliente =
+                new VentanaCrearCliente(
+                        rolUsuario,
+                        this
+                );
+
+        ventanaCrearCliente.cargarDatos(
+                id,
+                nombre,
+                dni
+        );
+
+        javax.swing.JPanel formulario =
+                ventanaCrearCliente.obtenerPanelCrearEditarCliente();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarAnimales() {
+
+        VentanaAnimales ventanaAnimales =
+                new VentanaAnimales(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel animales =
+                ventanaAnimales.obtenerPanelAnimales();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                animales,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarCrearAnimal() {
+
+        VentanaAgregarAnimal ventanaAgregarAnimal =
+                new VentanaAgregarAnimal(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel formulario =
+                ventanaAgregarAnimal.obtenerPanelCrearEditarAnimal();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarEditarAnimal(
+            int idAnimal,
+            String nombre,
+            String especie,
+            String raza,
+            int edad,
+            int idCliente
+    ) {
+
+        VentanaAgregarAnimal ventanaAgregarAnimal =
+                new VentanaAgregarAnimal(
+                        rolUsuario,
+                        this
+                );
+
+        ventanaAgregarAnimal.cargarDatos(
+                idAnimal,
+                nombre,
+                especie,
+                raza,
+                edad,
+                idCliente
+        );
+
+        javax.swing.JPanel formulario =
+                ventanaAgregarAnimal.obtenerPanelCrearEditarAnimal();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarHistorialMedico(
+            int idAnimal,
+            String nombreAnimal
+    ) {
+
+        VentanaHistorialMedico ventana =
+                new VentanaHistorialMedico(
+                        idAnimal,
+                        nombreAnimal,
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel historial =
+                ventana.obtenerPanelHistorialMedico();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                historial,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarTurnos(){
+            VentanaTurnos ventanaTurnos =
+                new VentanaTurnos(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel turnos =
+                ventanaTurnos.obtenerPanelTurnos();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                turnos,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarCrearTurno() {
+        VentanaCrearTurno ventanaCrearTurno =
+                new VentanaCrearTurno(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel formulario =
+                ventanaCrearTurno.obtenerPanelCrearEditarTurno();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarEditarTurno(
+            int id,
+            String dueno,
+            String animal,
+            String fecha,
+            String hora,
+            String motivo,
+            String dni
+    ) {
+
+        VentanaCrearTurno ventanaCrearTurno =
+                new VentanaCrearTurno(
+                        rolUsuario,
+                        this
+                );
+
+        ventanaCrearTurno.cargarDatos(
+                id,
+                dueno,
+                animal,
+                fecha,
+                hora,
+                motivo,
+                dni
+        );
+
+        javax.swing.JPanel formulario =
+                ventanaCrearTurno.obtenerPanelCrearEditarTurno();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarTurnosVencidos() {
+
+        VentanaTurnosVencidos ventana =
+                new VentanaTurnosVencidos(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel turnosVencidos =
+                ventana.obtenerPanelTurnosVencidos();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                turnosVencidos,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarReprogramarTurno(
+            int id,
+            String dueno,
+            String animal,
+            String fecha,
+            String hora,
+            String motivo,
+            String dni
+    ) {
+
+        VentanaCrearTurno ventanaCrearTurno =
+                new VentanaCrearTurno(
+                        rolUsuario,
+                        this
+                );
+
+        ventanaCrearTurno.cargarDatosReprogramacion(
+                id,
+                dueno,
+                animal,
+                fecha,
+                hora,
+                motivo,
+                dni
+        );
+
+        javax.swing.JPanel formulario =
+                ventanaCrearTurno.obtenerPanelCrearEditarTurno();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarProcedimientos() {
+
+        VentanaProcedimientosMedicos ventanaProcedimientos =
+                new VentanaProcedimientosMedicos(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel procedimientos =
+                ventanaProcedimientos.obtenerPanelProcedimientos();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                procedimientos,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarCrearProcedimiento() {
+
+        VentanaAgregarProcedimiento ventana =
+                new VentanaAgregarProcedimiento(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel formulario =
+                ventana.obtenerPanelCrearEditarProcedimiento();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarEditarProcedimiento(
+            int idProcedimiento,
+            String tipo,
+            boolean emergencia,
+            double monto,
+            int idAnimal,
+            String fecha,
+            String descripcion
+    ) {
+
+        VentanaAgregarProcedimiento ventana =
+                new VentanaAgregarProcedimiento(
+                        rolUsuario,
+                        this
+                );
+
+        ventana.cargarDatos(
+                idProcedimiento,
+                tipo,
+                emergencia,
+                monto,
+                idAnimal,
+                fecha,
+                descripcion
+        );
+
+        javax.swing.JPanel formulario =
+                ventana.obtenerPanelCrearEditarProcedimiento();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarProductos() {
+
+        VentanaProductos ventanaProductos =
+                new VentanaProductos(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel productos =
+                ventanaProductos.obtenerPanelProductos();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                productos,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarCrearProducto() {
+
+        VentanaCrearProducto ventana =
+                new VentanaCrearProducto(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel formulario =
+                ventana.obtenerPanelCrearEditarProducto();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarEditarProducto(
+            int idProducto,
+            String nombre,
+            double precio,
+            int stock,
+            String fechaVencimiento
+    ) {
+
+        VentanaCrearProducto ventana =
+                new VentanaCrearProducto(
+                        rolUsuario,
+                        this
+                );
+
+        ventana.cargarDatos(
+                idProducto,
+                nombre,
+                precio,
+                stock,
+                fechaVencimiento
+        );
+
+        javax.swing.JPanel formulario =
+                ventana.obtenerPanelCrearEditarProducto();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarVentas() {
+
+        VentanaVentas ventanaVentas =
+                new VentanaVentas(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel ventas =
+                ventanaVentas.obtenerPanelVentas();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                ventas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarCrearVenta() {
+
+        VentanaCrearVenta ventana =
+                new VentanaCrearVenta(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel formulario =
+                ventana.obtenerPanelCrearVenta();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarReportes() {
+
+        VentanaReportesVentas ventanaReportes =
+                new VentanaReportesVentas(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel panel =
+                ventanaReportes.obtenerPanelReportes();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                panel,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarAlertas() {
+
+        VentanaAlertas ventanaAlertas =
+                new VentanaAlertas(rolUsuario);
+
+        javax.swing.JPanel alertas =
+                ventanaAlertas.obtenerPanelAlertas();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                alertas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarUsuarios() {
+
+        VentanaUsuarios ventanaUsuarios =
+                new VentanaUsuarios(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel usuarios =
+                ventanaUsuarios.obtenerPanelUsuarios();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                usuarios,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    public void mostrarCrearUsuario() {
+
+        VentanaDatosUsuario ventana =
+                new VentanaDatosUsuario(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel formulario =
+                ventana.obtenerPanelDatosUsuario();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarEditarUsuario(
+            int idUsuario,
+            String usuario,
+            String rol
+    ) {
+
+        VentanaDatosUsuario ventana =
+                new VentanaDatosUsuario(
+                        idUsuario,
+                        usuario,
+                        rol,
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel formulario =
+                ventana.obtenerPanelDatosUsuario();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
     
     public static void main(String args[]) {
 

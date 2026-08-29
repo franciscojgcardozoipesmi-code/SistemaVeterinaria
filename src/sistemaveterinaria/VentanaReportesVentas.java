@@ -1,10 +1,9 @@
-
 package sistemaveterinaria;
 import controller.VentaController;
 public class VentanaReportesVentas extends javax.swing.JFrame {
     private String rolUsuario;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaReportesVentas.class.getName());
-
+    private VentanaPrincipal ventanaPrincipal;
   
     public VentanaReportesVentas() {
         initComponents();
@@ -29,8 +28,22 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
         configurarDiseñoReportes();
         prepararTablaVacia();
     }
+    
+    public VentanaReportesVentas(
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
+
+        initComponents();
+
+        this.rolUsuario = rolUsuario;
+        this.ventanaPrincipal = ventanaPrincipal;
+
+        prepararTablaVacia();
+    }
 
     @SuppressWarnings("unchecked")
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -723,6 +736,282 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
         Estilos.estilizarTabla(
                 tblReporteVentas
         );
+    }
+    public javax.swing.JPanel obtenerPanelReportes() {
+
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panel.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "REPORTES DE VENTAS"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+        contenedorTitulo.add(panelTitulo);
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+        javax.swing.JPanel tarjetaReporte =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        tarjetaReporte.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaReporte.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        javax.swing.JPanel panelFiltros =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                12,
+                                0
+                        )
+                );
+
+        panelFiltros.setOpaque(false);
+
+        lblDesde.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblHasta.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblDesde.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblHasta.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        txtDesde.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtHasta.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtDesde.setPreferredSize(
+                new java.awt.Dimension(
+                        150,
+                        35
+                )
+        );
+
+        txtHasta.setPreferredSize(
+                new java.awt.Dimension(
+                        150,
+                        35
+                )
+        );
+
+        Estilos.estilizarBoton(
+                btnGenerarReporte
+        );
+
+        btnGenerarReporte.setPreferredSize(
+                new java.awt.Dimension(
+                        175,
+                        38
+                )
+        );
+
+        panelFiltros.add(lblDesde);
+        panelFiltros.add(txtDesde);
+        panelFiltros.add(lblHasta);
+        panelFiltros.add(txtHasta);
+        panelFiltros.add(btnGenerarReporte);
+
+        tarjetaReporte.add(
+                panelFiltros,
+                java.awt.BorderLayout.NORTH
+        );
+
+        Estilos.estilizarTabla(
+                tblReporteVentas
+        );
+
+        scrollReporteVentas.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        tarjetaReporte.add(
+                scrollReporteVentas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JPanel panelResumen =
+                new javax.swing.JPanel();
+
+        panelResumen.setOpaque(false);
+
+        panelResumen.setLayout(
+                new java.awt.GridLayout(
+                        3,
+                        2,
+                        20,
+                        12
+                )
+        );
+
+        javax.swing.JLabel[] indicadores = {
+            lblTotalVendido,
+            lblCantidadVentas,
+            lblProductoMasVendido,
+            lblCantidadMasVendida,
+            lblMedioPagoMasUtilizado
+        };
+
+        for (javax.swing.JLabel indicador : indicadores) {
+
+            indicador.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            indicador.setForeground(
+                    Estilos.VERDE_OSCURO
+            );
+        }
+
+        panelResumen.add(
+                lblTotalVendido
+        );
+
+        panelResumen.add(
+                lblCantidadVentas
+        );
+
+        panelResumen.add(
+                lblProductoMasVendido
+        );
+
+        panelResumen.add(
+                lblCantidadMasVendida
+        );
+
+        panelResumen.add(
+                lblMedioPagoMasUtilizado
+        );
+
+        tarjetaReporte.add(
+                panelResumen,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaReporte,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panel.add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        return panel;
     }
     public static void main(String args[]) {
       

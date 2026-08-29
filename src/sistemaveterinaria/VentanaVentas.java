@@ -1,11 +1,12 @@
-
 package sistemaveterinaria;
 import controller.VentaController;
 
 public class VentanaVentas extends javax.swing.JFrame {
     private String rolUsuario;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaVentas.class.getName());
-
+    private VentanaPrincipal ventanaPrincipal;
+    private javax.swing.JButton btnBuscarVenta;
+    private javax.swing.JButton btnMostrarTodos;
     public VentanaVentas() {
         initComponents();
 
@@ -16,6 +17,7 @@ public class VentanaVentas extends javax.swing.JFrame {
         cargarVentas();
 
         configurarDiseñoVentas();
+        inicializarBotonesVentas();
     }
     public VentanaVentas(String rolUsuario) {
         initComponents();
@@ -29,6 +31,20 @@ public class VentanaVentas extends javax.swing.JFrame {
         cargarVentas();
 
         configurarDiseñoVentas();
+        inicializarBotonesVentas();
+    }
+    public VentanaVentas(
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
+
+        initComponents();
+
+        this.rolUsuario = rolUsuario;
+        this.ventanaPrincipal = ventanaPrincipal;
+
+        cargarVentas();
+        inicializarBotonesVentas();
     }
     private void cargarVentas() {
             javax.swing.table.DefaultTableModel modelo =
@@ -128,9 +144,7 @@ public class VentanaVentas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCrearVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearVentaActionPerformed
-        VentanaCrearVenta vcv = new VentanaCrearVenta(rolUsuario);
-        vcv.setVisible(true);
-        this.dispose();
+        ventanaPrincipal.mostrarCrearVenta();
     }//GEN-LAST:event_btnCrearVentaActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -146,10 +160,13 @@ public class VentanaVentas extends javax.swing.JFrame {
         int fila = tblVentas.getSelectedRow();
 
         if (fila == -1) {
-            javax.swing.JOptionPane.showMessageDialog(
+
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Seleccione una venta para anular."
+                    "Atención",
+                    "Seleccioná una venta para anular"
             );
+
             return;
         }
 
@@ -490,6 +507,634 @@ public class VentanaVentas extends javax.swing.JFrame {
 
         revalidate();
         repaint();
+    }
+    public javax.swing.JPanel obtenerPanelVentas() {
+
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panel.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "GESTIÓN DE VENTAS"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+        javax.swing.JPanel tarjetaVentas =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        tarjetaVentas.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaVentas.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        Estilos.estilizarTabla(
+                tblVentas
+        );
+
+        scrollVentas.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblVentas.getColumnModel()
+                .getColumn(0)
+                .setCellRenderer(centrado);
+
+        tblVentas.getColumnModel()
+                .getColumn(1)
+                .setCellRenderer(centrado);
+
+        tblVentas.getColumnModel()
+                .getColumn(3)
+                .setCellRenderer(centrado);
+
+        tblVentas.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(centrado);
+
+        tblVentas.getColumnModel()
+                .getColumn(5)
+                .setCellRenderer(centrado);
+
+        tblVentas.getColumnModel()
+                .getColumn(6)
+                .setCellRenderer(centrado);
+
+        tblVentas.getColumnModel()
+                .getColumn(7)
+                .setCellRenderer(centrado);
+
+        tarjetaVentas.add(
+                scrollVentas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        Estilos.estilizarBoton(
+                btnCrearVenta
+        );
+
+        Estilos.estilizarBotonEliminar(
+                btnEliminarVenta
+        );
+
+        Estilos.estilizarBoton(
+                btnBuscarVenta
+        );
+
+        Estilos.estilizarBoton(
+                btnMostrarTodos
+        );
+
+        java.awt.Dimension tamañoBoton =
+                new java.awt.Dimension(
+                        160,
+                        38
+                );
+
+        btnCrearVenta.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnEliminarVenta.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnBuscarVenta.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnMostrarTodos.setPreferredSize(
+                tamañoBoton
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(
+                false
+        );
+
+        panelBotones.add(
+                btnCrearVenta
+        );
+
+        panelBotones.add(
+                btnEliminarVenta
+        );
+
+        panelBotones.add(
+                btnBuscarVenta
+        );
+
+        panelBotones.add(
+                btnMostrarTodos
+        );
+
+        tarjetaVentas.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaVentas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panel.add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        return panel;
+    }
+    
+    private void buscarVentas(
+            String filtro
+    ) {
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
+
+        modelo.addColumn(
+                "ID"
+        );
+
+        modelo.addColumn(
+                "Fecha"
+        );
+
+        modelo.addColumn(
+                "Producto"
+        );
+
+        modelo.addColumn(
+                "Cantidad"
+        );
+
+        modelo.addColumn(
+                "Precio"
+        );
+
+        modelo.addColumn(
+                "Subtotal"
+        );
+
+        modelo.addColumn(
+                "Total"
+        );
+
+        modelo.addColumn(
+                "Medio de pago"
+        );
+
+        for (Object[] fila
+                : VentaController.buscarVentas(filtro)) {
+
+            modelo.addRow(
+                    fila
+            );
+        }
+
+        tblVentas.setModel(
+                modelo
+        );
+    }
+    private void inicializarBotonesVentas() {
+
+        btnBuscarVenta =
+                new javax.swing.JButton(
+                        "Buscar"
+                );
+
+        btnMostrarTodos =
+                new javax.swing.JButton(
+                        "Mostrar todos"
+                );
+
+        btnBuscarVenta.addActionListener(e ->
+                mostrarDialogoBuscarVentas()
+        );
+
+        btnMostrarTodos.addActionListener(e ->
+                cargarVentas()
+        );
+    }
+    
+    private void mostrarDialogoBuscarVentas() {
+
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(
+                        this
+                );
+
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        "Buscar venta",
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(
+                true
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        panelPrincipal.setBackground(
+                Estilos.BLANCO
+        );
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                2
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "BUSCAR VENTA",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(20f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        12,
+                        20,
+                        12,
+                        20
+                )
+        );
+
+        panelTitulo.add(
+                lblTitulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JLabel lblBuscar =
+                new javax.swing.JLabel(
+                        "Buscar por ID, fecha, producto o medio de pago:"
+                );
+
+        lblBuscar.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblBuscar.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblBuscar.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        javax.swing.JTextField campoBuscar =
+                new javax.swing.JTextField();
+
+        campoBuscar.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        campoBuscar.setMaximumSize(
+                new java.awt.Dimension(
+                        Integer.MAX_VALUE,
+                        38
+                )
+        );
+
+        campoBuscar.setPreferredSize(
+                new java.awt.Dimension(
+                        320,
+                        34
+                )
+        );
+
+        campoBuscar.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        javax.swing.JPanel panelCentro =
+                new javax.swing.JPanel();
+
+        panelCentro.setOpaque(
+                false
+        );
+
+        panelCentro.setLayout(
+                new javax.swing.BoxLayout(
+                        panelCentro,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        panelCentro.add(
+                lblBuscar
+        );
+
+        panelCentro.add(
+                javax.swing.Box.createVerticalStrut(
+                        10
+                )
+        );
+
+        panelCentro.add(
+                campoBuscar
+        );
+
+        javax.swing.JButton btnBuscarDialogo =
+                new javax.swing.JButton(
+                        "Buscar"
+                );
+
+        javax.swing.JButton btnCancelarDialogo =
+                new javax.swing.JButton(
+                        "Cancelar"
+                );
+
+        Estilos.estilizarBoton(
+                btnBuscarDialogo
+        );
+
+        Estilos.estilizarBoton(
+                btnCancelarDialogo
+        );
+
+        btnBuscarDialogo.setPreferredSize(
+                new java.awt.Dimension(
+                        105,
+                        34
+                )
+        );
+
+        btnCancelarDialogo.setPreferredSize(
+                new java.awt.Dimension(
+                        105,
+                        34
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(
+                false
+        );
+
+        panelBotones.add(
+                btnCancelarDialogo
+        );
+
+        panelBotones.add(
+                btnBuscarDialogo
+        );
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        contenido.setOpaque(
+                false
+        );
+
+        contenido.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        5,
+                        0,
+                        0,
+                        0
+                )
+        );
+
+        contenido.add(
+                panelCentro,
+                java.awt.BorderLayout.CENTER
+        );
+
+        contenido.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        btnCancelarDialogo.addActionListener(e ->
+                dialogo.dispose()
+        );
+
+        btnBuscarDialogo.addActionListener(e -> {
+
+            String texto =
+                    campoBuscar.getText().trim();
+
+            if (!texto.isEmpty()) {
+
+                buscarVentas(
+                        texto
+                );
+
+                dialogo.dispose();
+            }
+        });
+
+        campoBuscar.addActionListener(e ->
+                btnBuscarDialogo.doClick()
+        );
+
+        dialogo.getRootPane().setDefaultButton(
+                btnBuscarDialogo
+        );
+
+        dialogo.setContentPane(
+                panelPrincipal
+        );
+
+        dialogo.setSize(
+                430,
+                200
+        );
+
+        dialogo.setLocationRelativeTo(
+                ventanaPadre
+        );
+
+        dialogo.setVisible(
+                true
+        );
     }
     public static void main(String args[]) {
     

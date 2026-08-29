@@ -1,11 +1,11 @@
-
 package sistemaveterinaria;
 import controller.ClienteController;
 import controller.AnimalController;
 public class VentanaAgregarAnimal extends javax.swing.JFrame {
     private String rolUsuario;
     private int idAnimal = -1;
-    
+    private javax.swing.JLabel lblTituloFormulario;
+    private VentanaPrincipal ventanaPrincipal;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaAgregarAnimal.class.getName());
 
     
@@ -13,6 +13,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarClientes();
+        aplicarDiseñoCrearEditarAnimales();
     }
 
     public VentanaAgregarAnimal(String rolUsuario) {
@@ -20,6 +21,21 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         this.rolUsuario = rolUsuario;
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarClientes();
+        aplicarDiseñoCrearEditarAnimales();
+    }
+    
+    public VentanaAgregarAnimal(
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
+
+        initComponents();
+
+        this.rolUsuario = rolUsuario;
+        this.ventanaPrincipal = ventanaPrincipal;
+
+        cargarClientes();
+        aplicarDiseñoCrearEditarAnimales();
     }
   
     @SuppressWarnings("unchecked")
@@ -166,17 +182,25 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
                     idAnimal
             );
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Operación exitosa",
                     "Animal guardado correctamente"
             );
 
-            VentanaAnimales va =
-                    new VentanaAnimales(rolUsuario);
+            if (ventanaPrincipal != null) {
 
-            va.setVisible(true);
+                ventanaPrincipal.mostrarAnimales();
 
-            this.dispose();
+            } else {
+
+                VentanaAnimales va =
+                        new VentanaAnimales(rolUsuario);
+
+                va.setVisible(true);
+
+                this.dispose();
+            }
 
         } catch (NumberFormatException e) {
 
@@ -195,14 +219,19 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+            if (ventanaPrincipal != null) {
 
-        VentanaAnimales va =
-                new VentanaAnimales(rolUsuario);
+            ventanaPrincipal.mostrarAnimales();
 
-        va.setVisible(true);
+        } else {
 
-        this.dispose();
-    
+            VentanaAnimales va =
+                    new VentanaAnimales(rolUsuario);
+
+            va.setVisible(true);
+
+            this.dispose();
+        }
     }//GEN-LAST:event_btnVolverActionPerformed
     private void cargarClientes() {
 
@@ -246,8 +275,685 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
                 break;
             }
         }
+        for (int i = 0; i < cmbCliente.getItemCount(); i++) {
+
+            String item = cmbCliente.getItemAt(i);
+
+            if (item.startsWith(idCliente + " - ")) {
+                cmbCliente.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        if (lblTituloFormulario != null) {
+            lblTituloFormulario.setText("EDITAR ANIMAL");
+        }
+
+        setTitle("Henry System Vet - Editar animal");
     }
-   
+    private void aplicarDiseñoCrearEditarAnimales() {
+
+        setTitle(
+                "Henry System Vet - Nuevo animal"
+        );
+
+        setIconImage(
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/HenrySystemVet.png"
+                        )
+                ).getImage()
+        );
+
+        getContentPane().removeAll();
+
+        getContentPane().setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        getContentPane().setLayout(
+                new java.awt.BorderLayout()
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        lblTituloFormulario =
+                new javax.swing.JLabel(
+                        "NUEVO ANIMAL"
+                );
+
+        lblTituloFormulario.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTituloFormulario.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTituloFormulario
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(30)
+        );
+
+        javax.swing.JPanel contenedorFormulario =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        contenedorFormulario.setOpaque(false);
+
+        javax.swing.JPanel tarjetaFormulario =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        tarjetaFormulario.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaFormulario.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                40,
+                                50,
+                                40,
+                                50
+                        )
+                )
+        );
+
+        java.awt.GridBagConstraints gbc =
+                new java.awt.GridBagConstraints();
+
+        gbc.insets =
+                new java.awt.Insets(
+                        10,
+                        10,
+                        10,
+                        10
+                );
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        javax.swing.JLabel[] etiquetas = {
+            lblNombre,
+            lblEspecie,
+            lblRaza,
+            lblEdad,
+            lblCliente
+        };
+
+        for (javax.swing.JLabel etiqueta : etiquetas) {
+            etiqueta.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            etiqueta.setForeground(
+                    Estilos.VERDE_OSCURO
+            );
+        }
+
+        javax.swing.JTextField[] campos = {
+            txtNombre,
+            txtEspecie,
+            txtRaza,
+            txtEdad
+        };
+
+        for (javax.swing.JTextField campo : campos) {
+            campo.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            campo.setPreferredSize(
+                    new java.awt.Dimension(
+                            300,
+                            38
+                    )
+            );
+        }
+
+        cmbCliente.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbCliente.setPreferredSize(
+                new java.awt.Dimension(
+                        300,
+                        38
+                )
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        tarjetaFormulario.add(
+                lblNombre,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        tarjetaFormulario.add(
+                txtNombre,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+
+        tarjetaFormulario.add(
+                lblEspecie,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        tarjetaFormulario.add(
+                txtEspecie,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+
+        tarjetaFormulario.add(
+                lblRaza,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        tarjetaFormulario.add(
+                txtRaza,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+
+        tarjetaFormulario.add(
+                lblEdad,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        tarjetaFormulario.add(
+                txtEdad,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+
+        tarjetaFormulario.add(
+                lblCliente,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        tarjetaFormulario.add(
+                cmbCliente,
+                gbc
+        );
+
+        Estilos.estilizarBoton(
+                btnGuardar
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+        btnGuardar.setPreferredSize(
+                new java.awt.Dimension(
+                        140,
+                        38
+                )
+        );
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(
+                btnGuardar
+        );
+
+        panelBotones.add(
+                btnVolver
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.CENTER;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        25,
+                        10,
+                        0,
+                        10
+                );
+
+        tarjetaFormulario.add(
+                panelBotones,
+                gbc
+        );
+
+        contenedorFormulario.add(
+                tarjetaFormulario
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenedorFormulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        getContentPane().add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        revalidate();
+        repaint();
+    }
+    public javax.swing.JPanel obtenerPanelCrearEditarAnimal() {
+
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panel.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        if (lblTituloFormulario == null) {
+
+            lblTituloFormulario =
+                    new javax.swing.JLabel();
+        }
+
+        lblTituloFormulario.setText(
+                idAnimal == -1
+                        ? "NUEVO ANIMAL"
+                        : "EDITAR ANIMAL"
+        );
+
+        lblTituloFormulario.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTituloFormulario.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTituloFormulario
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+        contenedorTitulo.add(panelTitulo);
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(30)
+        );
+
+        javax.swing.JPanel contenedorFormulario =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        contenedorFormulario.setOpaque(false);
+
+        javax.swing.JPanel tarjetaFormulario =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        tarjetaFormulario.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaFormulario.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                40,
+                                50,
+                                40,
+                                50
+                        )
+                )
+        );
+
+        java.awt.GridBagConstraints gbc =
+                new java.awt.GridBagConstraints();
+
+        gbc.insets =
+                new java.awt.Insets(
+                        10,
+                        10,
+                        10,
+                        10
+                );
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        javax.swing.JLabel[] etiquetas = {
+            lblNombre,
+            lblEspecie,
+            lblRaza,
+            lblEdad,
+            lblCliente
+        };
+
+        for (javax.swing.JLabel etiqueta : etiquetas) {
+
+            etiqueta.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            etiqueta.setForeground(
+                    Estilos.VERDE_OSCURO
+            );
+        }
+
+        javax.swing.JTextField[] campos = {
+            txtNombre,
+            txtEspecie,
+            txtRaza,
+            txtEdad
+        };
+
+        for (javax.swing.JTextField campo : campos) {
+
+            campo.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            campo.setPreferredSize(
+                    new java.awt.Dimension(
+                            300,
+                            38
+                    )
+            );
+        }
+
+        cmbCliente.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbCliente.setPreferredSize(
+                new java.awt.Dimension(
+                        300,
+                        38
+                )
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        tarjetaFormulario.add(lblNombre, gbc);
+
+        gbc.gridx = 1;
+        tarjetaFormulario.add(txtNombre, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        tarjetaFormulario.add(lblEspecie, gbc);
+
+        gbc.gridx = 1;
+        tarjetaFormulario.add(txtEspecie, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        tarjetaFormulario.add(lblRaza, gbc);
+
+        gbc.gridx = 1;
+        tarjetaFormulario.add(txtRaza, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        tarjetaFormulario.add(lblEdad, gbc);
+
+        gbc.gridx = 1;
+        tarjetaFormulario.add(txtEdad, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        tarjetaFormulario.add(lblCliente, gbc);
+
+        gbc.gridx = 1;
+        tarjetaFormulario.add(cmbCliente, gbc);
+
+        Estilos.estilizarBoton(
+                btnGuardar
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+        btnGuardar.setPreferredSize(
+                new java.awt.Dimension(
+                        140,
+                        38
+                )
+        );
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(btnGuardar);
+        panelBotones.add(btnVolver);
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.CENTER;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        25,
+                        10,
+                        0,
+                        10
+                );
+
+        tarjetaFormulario.add(
+                panelBotones,
+                gbc
+        );
+
+        contenedorFormulario.add(
+                tarjetaFormulario
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenedorFormulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panel.add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        return panel;
+    }
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(() -> new VentanaAgregarAnimal().setVisible(true));

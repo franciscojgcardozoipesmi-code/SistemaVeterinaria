@@ -38,6 +38,52 @@ public class ProductoController {
 
         return lista;
     }
+    
+    public static ArrayList<Object[]> buscarProductos(
+            String filtro
+    ) {
+        ArrayList<Object[]> lista =
+                new ArrayList<>();
+
+        for (Producto producto
+                : productoDAO.buscarProductos(filtro)) {
+
+            String fechaMostrar =
+                    producto.getFechaVencimiento();
+
+            if (fechaMostrar != null
+                    && !fechaMostrar.isEmpty()) {
+
+                java.time.LocalDate fecha =
+                        java.time.LocalDate.parse(
+                                fechaMostrar
+                        );
+
+                java.time.format.DateTimeFormatter formato =
+                        java.time.format.DateTimeFormatter
+                                .ofPattern(
+                                        "dd/MM/yyyy"
+                                );
+
+                fechaMostrar =
+                        fecha.format(
+                                formato
+                        );
+            }
+
+            lista.add(
+                    new Object[]{
+                        producto.getIdProducto(),
+                        producto.getNombre(),
+                        producto.getPrecio(),
+                        producto.getStock(),
+                        fechaMostrar
+                    }
+            );
+        }
+
+        return lista;
+    }
 
     public static void guardarProducto(String nombre,
                                        double precio,

@@ -199,6 +199,130 @@ public class VentaDAO implements CrudDAO<Venta> {
 
         return lista;
     }
+    
+    public ArrayList<Object[]> buscarVentas(
+            String filtro
+    ) {
+        ArrayList<Object[]> lista =
+                new ArrayList<>();
+
+        Connection conn = null;
+
+        try {
+
+            conn =
+                    Conexion.getInstancia().conectar();
+
+            String sql = """
+                    SELECT v.id_venta,
+                           v.fecha,
+                           p.nombre AS producto,
+                           d.cantidad,
+                           d.precio,
+                           (d.cantidad * d.precio) AS subtotal,
+                           v.total,
+                           v.medio_pago
+                    FROM ventas v
+                    JOIN detalle_venta d
+                        ON v.id_venta = d.id_venta
+                    JOIN productos p
+                        ON d.id_producto = p.id_producto
+                    WHERE CAST(v.id_venta AS TEXT) LIKE ?
+                       OR v.fecha LIKE ?
+                       OR LOWER(p.nombre) LIKE LOWER(?)
+                       OR LOWER(v.medio_pago) LIKE LOWER(?)
+                    ORDER BY v.id_venta DESC
+                    """;
+
+            PreparedStatement pst =
+                    conn.prepareStatement(
+                            sql
+                    );
+
+            String busqueda =
+                    "%" + filtro.trim() + "%";
+
+            pst.setString(
+                    1,
+                    busqueda
+            );
+
+            pst.setString(
+                    2,
+                    busqueda
+            );
+
+            pst.setString(
+                    3,
+                    busqueda
+            );
+
+            pst.setString(
+                    4,
+                    busqueda
+            );
+
+            ResultSet rs =
+                    pst.executeQuery();
+
+            while (rs.next()) {
+
+                lista.add(
+                        new Object[]{
+                            rs.getInt(
+                                    "id_venta"
+                            ),
+                            rs.getString(
+                                    "fecha"
+                            ),
+                            rs.getString(
+                                    "producto"
+                            ),
+                            rs.getInt(
+                                    "cantidad"
+                            ),
+                            rs.getDouble(
+                                    "precio"
+                            ),
+                            rs.getDouble(
+                                    "subtotal"
+                            ),
+                            rs.getDouble(
+                                    "total"
+                            ),
+                            rs.getString(
+                                    "medio_pago"
+                            )
+                        }
+                );
+            }
+
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+
+            throw new RuntimeException(
+                    "Error al buscar ventas: "
+                    + e.getMessage(),
+                    e
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return lista;
+    }
 
     @Override
     public void eliminar(int idVenta) {

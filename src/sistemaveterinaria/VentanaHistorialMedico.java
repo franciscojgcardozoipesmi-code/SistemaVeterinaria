@@ -1,4 +1,3 @@
-
 package sistemaveterinaria;
 import controller.ProcedimientoMedicoController;
 public class VentanaHistorialMedico extends javax.swing.JFrame {
@@ -6,26 +5,51 @@ public class VentanaHistorialMedico extends javax.swing.JFrame {
     private String nombreAnimal;
     private String rolUsuario;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaHistorialMedico.class.getName());
-
+    private VentanaPrincipal ventanaPrincipal;
     public VentanaHistorialMedico() {
         initComponents();
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
+        setExtendedState(
+                javax.swing.JFrame.MAXIMIZED_BOTH
+        );
+
+        aplicarDiseñoHistorialMedico();
     }
     public VentanaHistorialMedico(
+                int idAnimal,
+                String nombreAnimal,
+                String rolUsuario
+        ) {
+
+            initComponents();
+
+            this.idAnimal = idAnimal;
+            this.nombreAnimal = nombreAnimal;
+            this.rolUsuario = rolUsuario;
+
+            setExtendedState(
+                    javax.swing.JFrame.MAXIMIZED_BOTH
+            );
+
+            cargarHistorial();
+
+            aplicarDiseñoHistorialMedico();
+        }
+
+        public VentanaHistorialMedico(
             int idAnimal,
             String nombreAnimal,
-            String rolUsuario) {
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
 
         initComponents();
 
         this.idAnimal = idAnimal;
         this.nombreAnimal = nombreAnimal;
         this.rolUsuario = rolUsuario;
+        this.ventanaPrincipal = ventanaPrincipal;
 
-        lblAnimal.setText(
-                "Historial médico de: " + nombreAnimal
-        );
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarHistorial();
     }
     
@@ -92,21 +116,34 @@ public class VentanaHistorialMedico extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+    if (ventanaPrincipal != null) {
 
+            ventanaPrincipal.mostrarAnimales();
 
-        VentanaAnimales va =
-                new VentanaAnimales(rolUsuario);
+        } else {
 
-        va.setVisible(true);
+            VentanaAnimales va =
+                    new VentanaAnimales(rolUsuario);
 
-        this.dispose();
-    
+            va.setVisible(true);
+
+            this.dispose();
+        }   
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void cargarHistorial() {
 
         javax.swing.table.DefaultTableModel modelo =
-                new javax.swing.table.DefaultTableModel();
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return false;
+            }
+        };
 
         modelo.addColumn("Fecha");
         modelo.addColumn("Tipo");
@@ -122,25 +159,463 @@ public class VentanaHistorialMedico extends javax.swing.JFrame {
 
         tblHistorial.setModel(modelo);
     }
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void aplicarDiseñoHistorialMedico() {
 
-        /* Create and display the form */
+        setTitle(
+                "Henry System Vet - Historial médico"
+        );
+
+        setIconImage(
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/HenrySystemVet.png"
+                        )
+                ).getImage()
+        );
+
+        getContentPane().removeAll();
+
+        getContentPane().setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        getContentPane().setLayout(
+                new java.awt.BorderLayout()
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        String titulo;
+
+        if (nombreAnimal != null
+                && !nombreAnimal.trim().isEmpty()) {
+
+            titulo =
+                    "HISTORIAL MÉDICO - "
+                    + nombreAnimal.toUpperCase();
+
+        } else {
+
+            titulo =
+                    "HISTORIAL MÉDICO";
+        }
+
+        lblAnimal.setText(
+                titulo
+        );
+
+        lblAnimal.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblAnimal.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblAnimal
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+        javax.swing.JPanel tarjetaHistorial =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        tarjetaHistorial.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaHistorial.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        Estilos.estilizarTabla(
+                tblHistorial
+        );
+
+        jScrollPane1.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        jScrollPane1.setPreferredSize(
+                new java.awt.Dimension(
+                        0,
+                        400
+                )
+        );
+
+        if (tblHistorial.getColumnCount() >= 5) {
+
+            javax.swing.table.DefaultTableCellRenderer centrado =
+                    new javax.swing.table.DefaultTableCellRenderer();
+
+            centrado.setHorizontalAlignment(
+                    javax.swing.SwingConstants.CENTER
+            );
+
+            tblHistorial.getColumnModel()
+                    .getColumn(0)
+                    .setCellRenderer(centrado);
+
+            tblHistorial.getColumnModel()
+                    .getColumn(2)
+                    .setCellRenderer(centrado);
+
+            tblHistorial.getColumnModel()
+                    .getColumn(4)
+                    .setCellRenderer(centrado);
+        }
+
+        tarjetaHistorial.add(
+                jScrollPane1,
+                java.awt.BorderLayout.CENTER
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelInferior =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInferior.setOpaque(false);
+
+        panelInferior.add(
+                btnVolver
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaHistorial,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelInferior,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        getContentPane().add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        revalidate();
+        repaint();
+    }
+    
+    public javax.swing.JPanel obtenerPanelHistorialMedico() {
+
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panel.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        String titulo;
+
+        if (nombreAnimal != null
+                && !nombreAnimal.trim().isEmpty()) {
+
+            titulo =
+                    "HISTORIAL MÉDICO - "
+                    + nombreAnimal.toUpperCase();
+
+        } else {
+
+            titulo = "HISTORIAL MÉDICO";
+        }
+
+        lblAnimal.setText(
+                titulo
+        );
+
+        lblAnimal.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblAnimal.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblAnimal
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        javax.swing.JPanel panelEncabezado =
+                new javax.swing.JPanel();
+
+        panelEncabezado.setOpaque(false);
+
+        panelEncabezado.setLayout(
+                new javax.swing.BoxLayout(
+                        panelEncabezado,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        panelEncabezado.add(
+                contenedorTitulo
+        );
+
+        panelEncabezado.add(
+                javax.swing.Box.createVerticalStrut(25)
+        );
+
+        javax.swing.JPanel tarjetaHistorial =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                20
+                        )
+                );
+
+        tarjetaHistorial.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaHistorial.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        Estilos.estilizarTabla(
+                tblHistorial
+        );
+
+        jScrollPane1.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        if (tblHistorial.getColumnCount() >= 5) {
+
+            javax.swing.table.DefaultTableCellRenderer centrado =
+                    new javax.swing.table.DefaultTableCellRenderer();
+
+            centrado.setHorizontalAlignment(
+                    javax.swing.SwingConstants.CENTER
+            );
+
+            tblHistorial.getColumnModel()
+                    .getColumn(0)
+                    .setCellRenderer(centrado);
+
+            tblHistorial.getColumnModel()
+                    .getColumn(2)
+                    .setCellRenderer(centrado);
+
+            tblHistorial.getColumnModel()
+                    .getColumn(4)
+                    .setCellRenderer(centrado);
+        }
+
+        tarjetaHistorial.add(
+                jScrollPane1,
+                java.awt.BorderLayout.CENTER
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelInferior =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInferior.setOpaque(false);
+
+        panelInferior.add(
+                btnVolver
+        );
+
+        panelPrincipal.add(
+                panelEncabezado,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                tarjetaHistorial,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelInferior,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panel.add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        return panel;
+    }
+    public static void main(String args[]) {
+
         java.awt.EventQueue.invokeLater(() -> new VentanaHistorialMedico().setVisible(true));
     }
 

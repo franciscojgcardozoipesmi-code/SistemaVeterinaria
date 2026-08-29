@@ -1,4 +1,3 @@
-
 package sistemaveterinaria;
 
 import controller.ProductoController;
@@ -12,9 +11,10 @@ import java.time.LocalDate;
 public class VentanaCrearVenta extends javax.swing.JFrame {
     private String rolUsuario;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaCrearVenta.class.getName());
-
+    private VentanaPrincipal ventanaPrincipal;
     public VentanaCrearVenta() {
         initComponents();
+
         modelo = new javax.swing.table.DefaultTableModel();
 
         modelo.addColumn("Producto");
@@ -23,13 +23,20 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         modelo.addColumn("Subtotal");
 
         tblDetalle.setModel(modelo);
+
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
         cargarProductos();
-            mapaPrecios = ProductoController.obtenerMapaPrecios();
+
+        mapaPrecios =
+                ProductoController.obtenerMapaPrecios();
+
+        aplicarDiseñoCrearVenta();
     }
     
     public VentanaCrearVenta(String rolUsuario) {
         initComponents();
+
         this.rolUsuario = rolUsuario;
 
         modelo = new javax.swing.table.DefaultTableModel();
@@ -40,9 +47,39 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         modelo.addColumn("Subtotal");
 
         tblDetalle.setModel(modelo);
+
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
         cargarProductos();
-        mapaPrecios = ProductoController.obtenerMapaPrecios();
+
+        mapaPrecios =
+                ProductoController.obtenerMapaPrecios();
+
+        aplicarDiseñoCrearVenta();
+    }
+    public VentanaCrearVenta(
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
+
+        initComponents();
+
+        this.rolUsuario = rolUsuario;
+        this.ventanaPrincipal = ventanaPrincipal;
+
+        modelo = new javax.swing.table.DefaultTableModel();
+
+        modelo.addColumn("Producto");
+        modelo.addColumn("Cantidad");
+        modelo.addColumn("Precio");
+        modelo.addColumn("Subtotal");
+
+        tblDetalle.setModel(modelo);
+
+        cargarProductos();
+
+        mapaPrecios =
+                ProductoController.obtenerMapaPrecios();
     }
     
     private javax.swing.table.DefaultTableModel modelo;
@@ -241,8 +278,9 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
 
             if (productosAgregados.contains(producto)) {
 
-                javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
                         this,
+                        "Atención",
                         "El producto ya fue agregado a la venta"
                 );
 
@@ -276,16 +314,18 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
 
         } catch (StockInsuficienteException e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Stock insuficiente",
                     e.getMessage()
             );
         } catch (ProductoVencidoException e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Producto vencido",
                     e.getMessage()
-            );        
+            );      
         } catch (Exception e) {
 
             javax.swing.JOptionPane.showMessageDialog(
@@ -301,25 +341,38 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         try {
 
             if (tblDetalle.getRowCount() == 0) {
-                javax.swing.JOptionPane.showMessageDialog(
+
+                Estilos.mostrarAdvertencia(
                         this,
+                        "Atención",
                         "Agregá al menos un producto"
                 );
+
                 return;
             }
 
             VentaController.guardarVenta(txtFecha.getText().trim(),cmbMedioPago.getSelectedItem().toString(),
                                                                       tblDetalle);
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Operación exitosa",
                     "Venta guardada correctamente"
             );
 
-            VentanaVentas vv = new VentanaVentas(rolUsuario);
-            vv.setVisible(true);
+            if (ventanaPrincipal != null) {
 
-            this.dispose();
+                ventanaPrincipal.mostrarVentas();
+
+            } else {
+
+                VentanaVentas vv =
+                        new VentanaVentas(rolUsuario);
+
+                vv.setVisible(true);
+
+                this.dispose();
+            }
 
         } catch (Exception e) {
 
@@ -331,12 +384,977 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        VentanaVentas vv = new VentanaVentas(rolUsuario);
-        vv.setVisible(true);
+         if (ventanaPrincipal != null) {
 
-        this.dispose();
+            ventanaPrincipal.mostrarVentas();
+
+        } else {
+
+            VentanaVentas vv =
+                    new VentanaVentas(rolUsuario);
+
+            vv.setVisible(true);
+
+            this.dispose();
+        }
     }//GEN-LAST:event_btnVolverActionPerformed
+    private void aplicarDiseñoCrearVenta() {
 
+        setTitle(
+                "Henry System Vet - Nueva venta"
+        );
+
+        setIconImage(
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/HenrySystemVet.png"
+                        )
+                ).getImage()
+        );
+
+        getContentPane().removeAll();
+
+        getContentPane().setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        getContentPane().setLayout(
+                new java.awt.BorderLayout()
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                30
+                        )
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "NUEVA VENTA"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        javax.swing.JPanel panelContenido =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        panelContenido.setOpaque(false);
+
+        java.awt.GridBagConstraints gbcPrincipal =
+                new java.awt.GridBagConstraints();
+
+        gbcPrincipal.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        0,
+                        10
+                );
+
+        gbcPrincipal.fill =
+                java.awt.GridBagConstraints.BOTH;
+
+        gbcPrincipal.weighty = 1;
+
+        javax.swing.JPanel tarjetaDatos =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        tarjetaDatos.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaDatos.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                35,
+                                40,
+                                35,
+                                40
+                        )
+                )
+        );
+
+        javax.swing.JLabel[] etiquetas = {
+            lblFecha,
+            lblProducto,
+            lblCantidad,
+            jLabel1
+        };
+
+        for (javax.swing.JLabel etiqueta : etiquetas) {
+
+            etiqueta.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            etiqueta.setForeground(
+                    Estilos.VERDE_OSCURO
+            );
+        }
+
+        txtFecha.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtCantidad.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbProducto.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbMedioPago.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        java.awt.Dimension tamañoCampo =
+                new java.awt.Dimension(
+                        260,
+                        38
+                );
+
+        txtFecha.setPreferredSize(
+                tamañoCampo
+        );
+
+        txtCantidad.setPreferredSize(
+                tamañoCampo
+        );
+
+        cmbProducto.setPreferredSize(
+                tamañoCampo
+        );
+
+        cmbMedioPago.setPreferredSize(
+                tamañoCampo
+        );
+
+        java.awt.GridBagConstraints gbc =
+                new java.awt.GridBagConstraints();
+
+        gbc.insets =
+                new java.awt.Insets(
+                        10,
+                        10,
+                        10,
+                        10
+                );
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        tarjetaDatos.add(
+                lblFecha,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        tarjetaDatos.add(
+                txtFecha,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+
+        tarjetaDatos.add(
+                lblProducto,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        tarjetaDatos.add(
+                cmbProducto,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+
+        tarjetaDatos.add(
+                lblCantidad,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        tarjetaDatos.add(
+                txtCantidad,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0;
+        gbc.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        tarjetaDatos.add(
+                jLabel1,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+
+        tarjetaDatos.add(
+                cmbMedioPago,
+                gbc
+        );
+
+        Estilos.estilizarBoton(
+                btnAgregar
+        );
+
+        btnAgregar.setPreferredSize(
+                new java.awt.Dimension(
+                        130,
+                        38
+                )
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.weightx = 0;
+        gbc.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.CENTER;
+
+        tarjetaDatos.add(
+                btnAgregar,
+                gbc
+        );
+
+        javax.swing.JPanel tarjetaDetalle =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                15
+                        )
+                );
+
+        tarjetaDetalle.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaDetalle.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblDetalle =
+                new javax.swing.JLabel(
+                        "DETALLE DE LA VENTA"
+                );
+
+        lblDetalle.setFont(
+                Estilos.fuente(18f)
+        );
+
+        lblDetalle.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblDetalle.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        Estilos.estilizarTabla(
+                tblDetalle
+        );
+
+        tblDetalle.setSelectionMode(
+                javax.swing.ListSelectionModel.SINGLE_SELECTION
+        );
+
+        scrollDetalle.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        scrollDetalle.setPreferredSize(
+                new java.awt.Dimension(
+                        650,
+                        320
+                )
+        );
+
+        lblTotal.setFont(
+                Estilos.fuente(20f)
+        );
+
+        lblTotal.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        javax.swing.JPanel panelTotal =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                10,
+                                5
+                        )
+                );
+
+        panelTotal.setOpaque(false);
+
+        panelTotal.add(
+                lblTotal
+        );
+
+        tarjetaDetalle.add(
+                lblDetalle,
+                java.awt.BorderLayout.NORTH
+        );
+
+        tarjetaDetalle.add(
+                scrollDetalle,
+                java.awt.BorderLayout.CENTER
+        );
+
+        tarjetaDetalle.add(
+                panelTotal,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        gbcPrincipal.gridx = 0;
+        gbcPrincipal.gridy = 0;
+        gbcPrincipal.weightx = 0.35;
+
+        panelContenido.add(
+                tarjetaDatos,
+                gbcPrincipal
+        );
+
+        gbcPrincipal.gridx = 1;
+        gbcPrincipal.weightx = 0.65;
+
+        panelContenido.add(
+                tarjetaDetalle,
+                gbcPrincipal
+        );
+
+        Estilos.estilizarBoton(
+                btnGuardar
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+        btnGuardar.setPreferredSize(
+                new java.awt.Dimension(
+                        140,
+                        38
+                )
+        );
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(
+                btnGuardar
+        );
+
+        panelBotones.add(
+                btnVolver
+        );
+
+        panelPrincipal.add(
+                contenedorTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                panelContenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        getContentPane().add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        revalidate();
+        repaint();
+    }
+    public javax.swing.JPanel obtenerPanelCrearVenta() {
+
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panel.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                30
+                        )
+                );
+
+        panelPrincipal.setOpaque(false);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        45,
+                        60,
+                        40,
+                        60
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "NUEVA VENTA"
+                );
+
+        lblTitulo.setFont(
+                Estilos.fuente(26f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                25,
+                                12
+                        )
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                lblTitulo
+        );
+
+        javax.swing.JPanel contenedorTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorTitulo.setOpaque(false);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
+
+        javax.swing.JPanel panelContenido =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        panelContenido.setOpaque(false);
+
+        java.awt.GridBagConstraints gbcPrincipal =
+                new java.awt.GridBagConstraints();
+
+        gbcPrincipal.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        0,
+                        10
+                );
+
+        gbcPrincipal.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        gbcPrincipal.weighty = 0;
+
+        javax.swing.JPanel tarjetaDatos =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        tarjetaDatos.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaDatos.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                35,
+                                40,
+                                35,
+                                40
+                        )
+                )
+        );
+
+        javax.swing.JLabel[] etiquetas = {
+            lblFecha,
+            lblProducto,
+            lblCantidad,
+            jLabel1
+        };
+
+        for (javax.swing.JLabel etiqueta : etiquetas) {
+
+            etiqueta.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            etiqueta.setForeground(
+                    Estilos.VERDE_OSCURO
+            );
+        }
+
+        txtFecha.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtCantidad.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbProducto.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbMedioPago.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        java.awt.Dimension tamañoCampo =
+                new java.awt.Dimension(
+                        240,
+                        38
+                );
+
+        txtFecha.setPreferredSize(tamañoCampo);
+        txtFecha.setMinimumSize(tamañoCampo);
+
+        txtCantidad.setPreferredSize(tamañoCampo);
+        txtCantidad.setMinimumSize(tamañoCampo);
+
+        cmbProducto.setPreferredSize(tamañoCampo);
+        cmbProducto.setMinimumSize(tamañoCampo);
+
+        cmbMedioPago.setPreferredSize(tamañoCampo);
+        cmbMedioPago.setMinimumSize(tamañoCampo);
+
+        java.awt.GridBagConstraints gbc =
+                new java.awt.GridBagConstraints();
+
+        gbc.insets =
+                new java.awt.Insets(
+                        10,
+                        10,
+                        10,
+                        10
+                );
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbc.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        tarjetaDatos.add(
+                lblFecha,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+
+        tarjetaDatos.add(
+                txtFecha,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+
+        tarjetaDatos.add(
+                lblProducto,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+
+        tarjetaDatos.add(
+                cmbProducto,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+
+        tarjetaDatos.add(
+                lblCantidad,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        tarjetaDatos.add(
+                txtCantidad,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0;
+        gbc.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        tarjetaDatos.add(
+                jLabel1,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+
+        tarjetaDatos.add(
+                cmbMedioPago,
+                gbc
+        );
+
+        Estilos.estilizarBoton(
+                btnAgregar
+        );
+
+        btnAgregar.setPreferredSize(
+                new java.awt.Dimension(
+                        130,
+                        38
+                )
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.weightx = 0;
+        gbc.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.CENTER;
+
+        tarjetaDatos.add(
+                btnAgregar,
+                gbc
+        );
+
+        javax.swing.JPanel tarjetaDetalle =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                15
+                        )
+                );
+
+        tarjetaDetalle.setBackground(
+                Estilos.BLANCO
+        );
+
+        tarjetaDetalle.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblDetalle =
+                new javax.swing.JLabel(
+                        "DETALLE DE LA VENTA"
+                );
+
+        lblDetalle.setFont(
+                Estilos.fuente(18f)
+        );
+
+        lblDetalle.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblDetalle.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        Estilos.estilizarTabla(
+                tblDetalle
+        );
+
+        tblDetalle.setSelectionMode(
+                javax.swing.ListSelectionModel.SINGLE_SELECTION
+        );
+
+        scrollDetalle.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder()
+        );
+
+        scrollDetalle.setPreferredSize(
+                new java.awt.Dimension(
+                        650,
+                        320
+                )
+        );
+
+        lblTotal.setFont(
+                Estilos.fuente(20f)
+        );
+
+        lblTotal.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        javax.swing.JPanel panelTotal =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                10,
+                                5
+                        )
+                );
+
+        panelTotal.setOpaque(false);
+
+        panelTotal.add(
+                lblTotal
+        );
+
+        tarjetaDetalle.add(
+                lblDetalle,
+                java.awt.BorderLayout.NORTH
+        );
+
+        tarjetaDetalle.add(
+                scrollDetalle,
+                java.awt.BorderLayout.CENTER
+        );
+
+        tarjetaDetalle.add(
+                panelTotal,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        gbcPrincipal.gridx = 0;
+        gbcPrincipal.gridy = 0;
+        gbcPrincipal.weightx = 0.35;
+
+        panelContenido.add(
+                tarjetaDatos,
+                gbcPrincipal
+        );
+
+        gbcPrincipal.gridx = 1;
+        gbcPrincipal.weightx = 0.65;
+        gbcPrincipal.fill =
+                java.awt.GridBagConstraints.BOTH;
+        gbcPrincipal.weighty = 1;
+
+        panelContenido.add(
+                tarjetaDetalle,
+                gbcPrincipal
+        );
+
+        Estilos.estilizarBoton(
+                btnGuardar
+        );
+
+        Estilos.estilizarBoton(
+                btnVolver
+        );
+
+        btnGuardar.setPreferredSize(
+                new java.awt.Dimension(
+                        140,
+                        38
+                )
+        );
+
+        btnVolver.setPreferredSize(
+                new java.awt.Dimension(
+                        120,
+                        38
+                )
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(
+                btnGuardar
+        );
+
+        panelBotones.add(
+                btnVolver
+        );
+
+        panelPrincipal.add(
+                contenedorTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                panelContenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panel.add(
+                panelPrincipal,
+                java.awt.BorderLayout.CENTER
+        );
+
+        return panel;
+    }
     public static void main(String args[]) {
     
         java.awt.EventQueue.invokeLater(() -> new VentanaCrearVenta().setVisible(true));

@@ -127,6 +127,98 @@ public class ProductoDAO implements CrudDAO<Producto> {
 
         return lista;
     }
+    
+    public ArrayList<Producto> buscarProductos(
+            String filtro
+    ) {
+        ArrayList<Producto> lista =
+                new ArrayList<>();
+
+        Connection conn = null;
+
+        try {
+
+            conn =
+                    Conexion.getInstancia().conectar();
+
+            String sql =
+                    "SELECT * FROM productos "
+                    + "WHERE CAST(id_producto AS TEXT) LIKE ? "
+                    + "OR LOWER(nombre) LIKE LOWER(?) "
+                    + "ORDER BY nombre";
+
+            PreparedStatement pst =
+                    conn.prepareStatement(sql);
+
+            String busqueda =
+                    "%" + filtro.trim() + "%";
+
+            pst.setString(
+                    1,
+                    busqueda
+            );
+
+            pst.setString(
+                    2,
+                    busqueda
+            );
+
+            ResultSet rs =
+                    pst.executeQuery();
+
+            while (rs.next()) {
+
+                Producto producto =
+                        new Producto(
+                                rs.getInt(
+                                        "id_producto"
+                                ),
+                                rs.getString(
+                                        "nombre"
+                                ),
+                                rs.getDouble(
+                                        "precio"
+                                ),
+                                rs.getInt(
+                                        "stock"
+                                )
+                        );
+
+                producto.setFechaVencimiento(
+                        rs.getString(
+                                "fecha_vencimiento"
+                        )
+                );
+
+                lista.add(
+                        producto
+                );
+            }
+
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al buscar productos: " + e
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return lista;
+    }
 
     @Override
     public void eliminar(int idProducto) {
