@@ -1,4 +1,3 @@
-
 package sistemaveterinaria;
 
 import controller.UsuarioController;
@@ -10,91 +9,26 @@ public class VentanaLogin extends javax.swing.JFrame {
     public VentanaLogin() {
 
         initComponents();
+
         setTitle("Henry System Vet - Iniciar sesión");
+
         setIconImage(
                 new javax.swing.ImageIcon(
-                        getClass().getResource("/imagenes/HenrySystemVet.png")
+                        getClass().getResource(
+                                "/imagenes/HenrySystemVet.png"
+                        )
                 ).getImage()
         );
-        getRootPane().setDefaultButton(btnIngresar);
-        btnIngresar.setCursor(
-                new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR)
-        );
+
         setExtendedState(
                 javax.swing.JFrame.MAXIMIZED_BOTH
         );
 
-        java.awt.Color verdePrincipal =
-                new java.awt.Color(58, 222, 158);
-        
-        java.awt.Color verdeHover =
-            new java.awt.Color(42, 190, 134);
-        
-        java.awt.Color textoOscuro =
-                new java.awt.Color(51, 51, 51);
-
-    
-        getContentPane().setBackground(
-                java.awt.Color.WHITE
+        getRootPane().setDefaultButton(
+                btnIngresar
         );
 
-        panelLogin.setBackground(
-                java.awt.Color.WHITE
-        );
-
-    
         configurarDiseñoLogin();
-
-        
-        lblUsuario.setForeground(textoOscuro);
-        lblPassword.setForeground(textoOscuro);
-
-       
-        javax.swing.border.Border bordeVerde =
-                javax.swing.BorderFactory.createLineBorder(
-                        verdePrincipal,
-                        1
-                );
-
-        txtUsuario.setBorder(bordeVerde);
-        txtPassword.setBorder(bordeVerde);
-
-        
-        btnIngresar.setBackground(
-                verdePrincipal
-        );
-
-        btnIngresar.setForeground(
-                java.awt.Color.WHITE
-        );
-
-        btnIngresar.setFocusPainted(false);
-        btnIngresar.setBorderPainted(false);
-        btnIngresar.addMouseListener(
-                new java.awt.event.MouseAdapter() {
-
-                    @Override
-                    public void mouseEntered(
-                            java.awt.event.MouseEvent evt) {
-
-                        btnIngresar.setBackground(
-                                verdeHover
-                        );
-                    }
-
-                    @Override
-                    public void mouseExited(
-                            java.awt.event.MouseEvent evt) {
-
-                        btnIngresar.setBackground(
-                                verdePrincipal
-                        );
-                    }
-                }
-        );
-      
-        lblLogo.setOpaque(false);
-
         cargarLogo();
     }
     
@@ -247,7 +181,50 @@ public class VentanaLogin extends javax.swing.JFrame {
     
    private void configurarDiseñoLogin() {
 
+        getContentPane().removeAll();
+
+        getContentPane().setLayout(
+                new java.awt.BorderLayout()
+        );
+
+        getContentPane().setBackground(
+                Estilos.BLANCO
+        );
+
+        javax.swing.JPanel franjaSuperior =
+                new javax.swing.JPanel();
+
+        franjaSuperior.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        franjaSuperior.setPreferredSize(
+                new java.awt.Dimension(0, 45)
+        );
+
+        javax.swing.JPanel franjaInferior =
+                new javax.swing.JPanel();
+
+        franjaInferior.setBackground(
+                Estilos.VERDE_PRINCIPAL
+        );
+
+        franjaInferior.setPreferredSize(
+                new java.awt.Dimension(0, 45)
+        );
+
+        javax.swing.JPanel panelCentro =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        panelCentro.setBackground(
+                Estilos.BLANCO
+        );
+
         panelLogin.setLayout(null);
+        panelLogin.setBackground(Estilos.BLANCO);
+        panelLogin.setOpaque(true);
 
         panelLogin.setPreferredSize(
                 new java.awt.Dimension(400, 580)
@@ -258,33 +235,27 @@ public class VentanaLogin extends javax.swing.JFrame {
                 300, 300
         );
 
-        panelFormulario = new javax.swing.JPanel();
+        lblLogo.setOpaque(false);
+
+        panelFormulario =
+                new javax.swing.JPanel();
+
         panelFormulario.setLayout(null);
-        panelFormulario.setOpaque(false);
+        panelFormulario.setBackground(Estilos.BLANCO);
+        panelFormulario.setOpaque(true);
 
         panelFormulario.setBounds(
                 75, 335,
                 250, 195
         );
 
-        java.awt.Color verdePrincipal =
-                new java.awt.Color(58, 222, 158);
-
         panelFormulario.setBorder(
                 javax.swing.BorderFactory.createLineBorder(
-                        verdePrincipal,
+                        Estilos.VERDE_OSCURO,
                         2,
                         true
                 )
         );
-
-        panelLogin.add(panelFormulario);
-
-        panelFormulario.add(lblUsuario);
-        panelFormulario.add(txtUsuario);
-        panelFormulario.add(lblPassword);
-        panelFormulario.add(txtPassword);
-        panelFormulario.add(btnIngresar);
 
         lblUsuario.setBounds(
                 30, 10,
@@ -305,59 +276,102 @@ public class VentanaLogin extends javax.swing.JFrame {
                 30, 95,
                 190, 27
         );
-     
-        btnIngresar.setBounds(
-                30, 158,
-                190, 30
-        );
-
-        java.awt.Font fuenteCampos =
-                new java.awt.Font(
-                        "Segoe UI",
-                        java.awt.Font.PLAIN,
-                        13
-                );
-
-        java.awt.Font fuenteLabels =
-                new java.awt.Font(
-                        "Segoe UI",
-                        java.awt.Font.BOLD,
-                        13
-                );
-
-        java.awt.Font fuenteBoton =
-                new java.awt.Font(
-                        "Segoe UI",
-                        java.awt.Font.BOLD,
-                        13
-                );
-
-        lblUsuario.setFont(fuenteLabels);
-        lblPassword.setFont(fuenteLabels);
-
-        txtUsuario.setFont(fuenteCampos);
-        txtPassword.setFont(fuenteCampos);
-
-        btnIngresar.setFont(fuenteBoton);
-        
-        panelFormulario.add(chkMostrarPassword);
 
         chkMostrarPassword.setBounds(
                 30, 124,
                 190, 20
         );
 
-        chkMostrarPassword.setOpaque(false);
+        btnIngresar.setBounds(
+                30, 158,
+                190, 30
+        );
+
+        lblUsuario.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblPassword.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtUsuario.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtPassword.setFont(
+                Estilos.fuenteNormal()
+        );
 
         chkMostrarPassword.setFont(
-                new java.awt.Font(
-                        "Segoe UI",
-                        java.awt.Font.PLAIN,
-                        12
-                )
+                Estilos.fuente(12f)
         );
+
+        lblUsuario.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblPassword.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        chkMostrarPassword.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        chkMostrarPassword.setOpaque(false);
+
+        javax.swing.border.Border bordeCampos =
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                2, 5, 2, 5
+                        )
+                );
+
+        txtUsuario.setBorder(bordeCampos);
+        txtPassword.setBorder(bordeCampos);
+
+        Estilos.estilizarBoton(
+                btnIngresar
+        );
+
+        panelFormulario.add(lblUsuario);
+        panelFormulario.add(txtUsuario);
+        panelFormulario.add(lblPassword);
+        panelFormulario.add(txtPassword);
+        panelFormulario.add(chkMostrarPassword);
+        panelFormulario.add(btnIngresar);
+
+        panelLogin.add(lblLogo);
+        panelLogin.add(panelFormulario);
+
+        panelCentro.add(
+                panelLogin,
+                new java.awt.GridBagConstraints()
+        );
+
+        getContentPane().add(
+                franjaSuperior,
+                java.awt.BorderLayout.NORTH
+        );
+
+        getContentPane().add(
+                panelCentro,
+                java.awt.BorderLayout.CENTER
+        );
+
+        getContentPane().add(
+                franjaInferior,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        getContentPane().revalidate();
+        getContentPane().repaint();
     }
-    
+
     
     
     

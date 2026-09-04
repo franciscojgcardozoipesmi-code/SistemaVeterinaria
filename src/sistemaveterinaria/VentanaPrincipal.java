@@ -1077,7 +1077,35 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelContenido.revalidate();
         panelContenido.repaint();
     }
-    
+    public void mostrarAnimalSeleccionado(
+            int idAnimal
+    ) {
+
+        VentanaAnimales ventanaAnimales =
+                new VentanaAnimales(
+                        rolUsuario,
+                        this
+                );
+
+        javax.swing.JPanel animales =
+                ventanaAnimales.obtenerPanelAnimales();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                animales,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+
+        javax.swing.SwingUtilities.invokeLater(
+                () -> ventanaAnimales.seleccionarAnimal(
+                        idAnimal
+                )
+        );
+    }
     public void mostrarHistorialMedico(
             int idAnimal,
             String nombreAnimal

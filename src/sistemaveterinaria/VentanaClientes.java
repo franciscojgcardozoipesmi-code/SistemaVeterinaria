@@ -1,10 +1,11 @@
 package sistemaveterinaria;
 
 import controller.ClienteController;
-
+import controller.AnimalController;
 public class VentanaClientes extends javax.swing.JFrame {
     private String rolUsuario;
     private VentanaPrincipal ventanaPrincipal;
+    private javax.swing.JPanel panelAnimalesCliente;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaClientes.class.getName());
 
     public VentanaClientes() {
@@ -553,7 +554,135 @@ public class VentanaClientes extends javax.swing.JFrame {
 
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
+    private void mostrarAnimalesDelCliente() {
 
+        int filaVista =
+                tblClientes.getSelectedRow();
+
+        if (filaVista == -1
+                || panelAnimalesCliente == null) {
+            return;
+        }
+
+        int filaModelo =
+                tblClientes.convertRowIndexToModel(
+                        filaVista
+                );
+
+        int idCliente =
+                Integer.parseInt(
+                        tblClientes.getModel()
+                                .getValueAt(
+                                        filaModelo,
+                                        0
+                                ).toString()
+                );
+
+        String nombreCliente =
+                tblClientes.getModel()
+                        .getValueAt(
+                                filaModelo,
+                                1
+                        ).toString();
+
+        panelAnimalesCliente.removeAll();
+
+        javax.swing.JLabel lblAnimales =
+                new javax.swing.JLabel(
+                        "Animales de "
+                        + nombreCliente
+                        + ":"
+                );
+
+        lblAnimales.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblAnimales.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelAnimalesCliente.add(
+                lblAnimales
+        );
+
+        java.util.ArrayList<Object[]> animales =
+                AnimalController.listarAnimalesPorCliente(
+                        idCliente
+                );
+
+        if (animales.isEmpty()) {
+
+            javax.swing.JLabel lblSinAnimales =
+                    new javax.swing.JLabel(
+                            "No tiene animales registrados"
+                    );
+
+            lblSinAnimales.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            lblSinAnimales.setForeground(
+                    new java.awt.Color(
+                            100,
+                            100,
+                            100
+                    )
+            );
+
+            panelAnimalesCliente.add(
+                    lblSinAnimales
+            );
+
+        } else {
+
+            for (Object[] animal : animales) {
+
+                int idAnimal =
+                        Integer.parseInt(
+                                animal[0].toString()
+                        );
+
+                String nombreAnimal =
+                        animal[1].toString();
+
+                javax.swing.JButton btnAnimal =
+                        new javax.swing.JButton(
+                                nombreAnimal
+                        );
+
+                Estilos.estilizarBoton(
+                        btnAnimal
+                );
+
+                btnAnimal.setPreferredSize(
+                        new java.awt.Dimension(
+                                135,
+                                34
+                        )
+                );
+
+                btnAnimal.addActionListener(e -> {
+
+                    if (ventanaPrincipal != null) {
+
+                        ventanaPrincipal
+                                .mostrarAnimalSeleccionado(
+                                        idAnimal
+                                );
+                    }
+                });
+
+                panelAnimalesCliente.add(
+                        btnAnimal
+                );
+            }
+        }
+
+        panelAnimalesCliente.setVisible(true);
+        panelAnimalesCliente.revalidate();
+        panelAnimalesCliente.repaint();
+    }
     private void configurarDiseñoClientes() {
 
         setTitle(
@@ -1009,7 +1138,54 @@ public class VentanaClientes extends javax.swing.JFrame {
                 scrollClientes,
                 java.awt.BorderLayout.CENTER
         );
+        panelAnimalesCliente =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                8
+                        )
+                );
 
+        panelAnimalesCliente.setBackground(
+                new java.awt.Color(
+                        245,
+                        245,
+                        245
+                )
+        );
+
+        panelAnimalesCliente.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createMatteBorder(
+                                1,
+                                0,
+                                0,
+                                0,
+                                Estilos.VERDE_OSCURO
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                5,
+                                5,
+                                5,
+                                5
+                        )
+                )
+        );
+
+        panelAnimalesCliente.setVisible(false);
+
+        tblClientes.setSelectionMode(
+                javax.swing.ListSelectionModel.SINGLE_SELECTION
+        );
+
+        tblClientes.getSelectionModel()
+                .addListSelectionListener(e -> {
+
+                    if (!e.getValueIsAdjusting()) {
+                        mostrarAnimalesDelCliente();
+                    }
+                });
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
@@ -1087,8 +1263,28 @@ public class VentanaClientes extends javax.swing.JFrame {
                 btnMostrarTodos
         );
 
-        tarjetaClientes.add(
+        javax.swing.JPanel zonaInferior =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                12
+                        )
+                );
+
+        zonaInferior.setOpaque(false);
+
+        zonaInferior.add(
+                panelAnimalesCliente,
+                java.awt.BorderLayout.CENTER
+        );
+
+        zonaInferior.add(
                 panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        tarjetaClientes.add(
+                zonaInferior,
                 java.awt.BorderLayout.SOUTH
         );
 

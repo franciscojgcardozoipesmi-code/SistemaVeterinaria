@@ -10,9 +10,15 @@ public class AnimalController {
 
     public static ArrayList<Object[]> listarAnimales() {
 
-        ArrayList<Object[]> lista = new ArrayList<>();
+        ArrayList<Object[]> lista =
+                new ArrayList<>();
 
         for (Animal animal : animalDAO.listar()) {
+
+            String nombreCliente =
+                    obtenerNombreCliente(
+                            animal.getIdCliente()
+                    );
 
             lista.add(new Object[]{
                 animal.getIdAnimal(),
@@ -20,18 +26,27 @@ public class AnimalController {
                 animal.getEspecie(),
                 animal.getRaza(),
                 animal.getEdad(),
-                animal.getIdCliente()
+                nombreCliente
             });
         }
 
         return lista;
     }
 
-    public static ArrayList<Object[]> buscarAnimales(String filtro) {
+    public static ArrayList<Object[]> buscarAnimales(
+            String filtro
+    ) {
 
-        ArrayList<Object[]> lista = new ArrayList<>();
+        ArrayList<Object[]> lista =
+                new ArrayList<>();
 
-        for (Animal animal : animalDAO.buscarAnimales(filtro)) {
+        for (Animal animal
+                : animalDAO.buscarAnimales(filtro)) {
+
+            String nombreCliente =
+                    obtenerNombreCliente(
+                            animal.getIdCliente()
+                    );
 
             lista.add(new Object[]{
                 animal.getIdAnimal(),
@@ -39,7 +54,7 @@ public class AnimalController {
                 animal.getEspecie(),
                 animal.getRaza(),
                 animal.getEdad(),
-                animal.getIdCliente()
+                nombreCliente
             });
         }
 
@@ -96,4 +111,45 @@ public class AnimalController {
 
         return -1;
     }
+        public static ArrayList<Object[]> listarAnimalesPorCliente(
+                int idCliente
+        ) {
+
+            ArrayList<Object[]> lista =
+                    new ArrayList<>();
+
+            for (Animal animal : animalDAO.listar()) {
+
+                if (animal.getIdCliente() == idCliente) {
+
+                    lista.add(new Object[]{
+                        animal.getIdAnimal(),
+                        animal.getNombre(),
+                        animal.getEspecie(),
+                        animal.getRaza(),
+                        animal.getEdad(),
+                        obtenerNombreCliente(
+                                animal.getIdCliente()
+                        )
+                    });
+                }
+            }
+
+            return lista;
+        }
+        private static String obtenerNombreCliente(
+                int idCliente
+        ) {
+
+            Object[] cliente =
+                    ClienteController.obtenerClientePorId(
+                            idCliente
+                    );
+
+            if (cliente != null) {
+                return cliente[1].toString();
+            }
+
+            return "Sin cliente";
+        }
 }

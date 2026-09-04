@@ -66,7 +66,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
         modelo.addColumn("Especie");
         modelo.addColumn("Raza");
         modelo.addColumn("Edad");
-        modelo.addColumn("ID Cliente");
+        modelo.addColumn("Cliente");
 
         for (Object[] fila : AnimalController.listarAnimales()) {
             modelo.addRow(fila);
@@ -518,9 +518,10 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 tblAnimales.getValueAt(fila, 4).toString()
         );
 
-        int idCliente = Integer.parseInt(
-                tblAnimales.getValueAt(fila, 5).toString()
-        );
+        int idCliente =
+                AnimalController.obtenerIdClientePorAnimal(
+                        idAnimal
+                );
 
         ventanaPrincipal.mostrarEditarAnimal(
                 idAnimal,
@@ -852,7 +853,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
         modelo.addColumn("Especie");
         modelo.addColumn("Raza");
         modelo.addColumn("Edad");
-        modelo.addColumn("ID Cliente");
+        modelo.addColumn("Cliente");
 
         for (Object[] fila : AnimalController.buscarAnimales(filtro)) {
             modelo.addRow(fila);
@@ -1763,6 +1764,49 @@ public class VentanaAnimales extends javax.swing.JFrame {
         );
 
         dialogo.setVisible(true);
+    }
+    
+    public void seleccionarAnimal(int idAnimal) {
+
+        for (int filaModelo = 0;
+                filaModelo < tblAnimales.getRowCount();
+                filaModelo++) {
+
+            int idFila = Integer.parseInt(
+                    tblAnimales.getValueAt(
+                            filaModelo,
+                            0
+                    ).toString()
+            );
+
+            if (idFila == idAnimal) {
+
+                int filaVista =
+                        tblAnimales.convertRowIndexToView(
+                                filaModelo
+                        );
+
+                tblAnimales.setRowSelectionInterval(
+                        filaVista,
+                        filaVista
+                );
+
+                java.awt.Rectangle rectangulo =
+                        tblAnimales.getCellRect(
+                                filaVista,
+                                0,
+                                true
+                        );
+
+                tblAnimales.scrollRectToVisible(
+                        rectangulo
+                );
+
+                tblAnimales.requestFocusInWindow();
+
+                return;
+            }
+        }
     }
     public static void main(String args[]) {
       
