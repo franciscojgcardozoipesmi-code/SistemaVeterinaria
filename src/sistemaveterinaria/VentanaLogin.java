@@ -3,6 +3,8 @@ package sistemaveterinaria;
 import controller.UsuarioController;
 public class VentanaLogin extends javax.swing.JFrame {
     private javax.swing.JPanel panelFormulario;
+    private final javax.swing.JButton btnSalir =
+        new javax.swing.JButton("⏻");
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaLogin.class.getName());
 
    
@@ -178,39 +180,99 @@ public class VentanaLogin extends javax.swing.JFrame {
                 new javax.swing.ImageIcon(imagen)
         );
     }
-    
-   private void configurarDiseñoLogin() {
+    private class PanelFranjas extends javax.swing.JPanel {
 
+        @Override
+        protected void paintComponent(java.awt.Graphics g) {
+            super.paintComponent(g);
+
+            java.awt.Graphics2D g2 =
+                    (java.awt.Graphics2D) g.create();
+
+            int ancho = getWidth();
+            int alto = getHeight();
+
+            int grosorPrincipal = 45;
+            int grosorClaro = 18;
+            int longitud = (int) (ancho * 0.75);
+            int corte = 40;
+
+            g2.setColor(Estilos.VERDE_PRINCIPAL);
+
+            g2.fillRect(
+                    0,
+                    0,
+                    ancho,
+                    grosorPrincipal
+            );
+
+            g2.fillRect(
+                    0,
+                    alto - grosorPrincipal,
+                    ancho,
+                    grosorPrincipal
+            );
+
+            g2.setColor(
+                    new java.awt.Color(112, 224, 180)
+            );
+
+            java.awt.Polygon franjaClaraSuperior =
+                    new java.awt.Polygon(
+                            new int[]{
+                                0,
+                                longitud,
+                                longitud - corte,
+                                0
+                            },
+                            new int[]{
+                                grosorPrincipal,
+                                grosorPrincipal,
+                                grosorPrincipal + grosorClaro,
+                                grosorPrincipal + grosorClaro
+                            },
+                            4
+                    );
+
+            java.awt.Polygon franjaClaraInferior =
+                    new java.awt.Polygon(
+                            new int[]{
+                                ancho - longitud + corte,
+                                ancho,
+                                ancho,
+                                ancho - longitud
+                            },
+                            new int[]{
+                                alto - grosorPrincipal - grosorClaro,
+                                alto - grosorPrincipal - grosorClaro,
+                                alto - grosorPrincipal,
+                                alto - grosorPrincipal
+                            },
+                            4
+                    );
+
+            g2.fillPolygon(franjaClaraSuperior);
+            g2.fillPolygon(franjaClaraInferior);
+
+            g2.dispose();
+        }
+    } 
+    private void configurarDiseñoLogin() {
         getContentPane().removeAll();
 
         getContentPane().setLayout(
                 new java.awt.BorderLayout()
         );
 
-        getContentPane().setBackground(
+        PanelFranjas panelFondo =
+                new PanelFranjas();
+
+        panelFondo.setBackground(
                 Estilos.BLANCO
         );
 
-        javax.swing.JPanel franjaSuperior =
-                new javax.swing.JPanel();
-
-        franjaSuperior.setBackground(
-                Estilos.VERDE_PRINCIPAL
-        );
-
-        franjaSuperior.setPreferredSize(
-                new java.awt.Dimension(0, 45)
-        );
-
-        javax.swing.JPanel franjaInferior =
-                new javax.swing.JPanel();
-
-        franjaInferior.setBackground(
-                Estilos.VERDE_PRINCIPAL
-        );
-
-        franjaInferior.setPreferredSize(
-                new java.awt.Dimension(0, 45)
+        panelFondo.setLayout(
+                new java.awt.BorderLayout()
         );
 
         javax.swing.JPanel panelCentro =
@@ -218,21 +280,24 @@ public class VentanaLogin extends javax.swing.JFrame {
                         new java.awt.GridBagLayout()
                 );
 
-        panelCentro.setBackground(
-                Estilos.BLANCO
-        );
+        panelCentro.setOpaque(false);
 
         panelLogin.setLayout(null);
-        panelLogin.setBackground(Estilos.BLANCO);
-        panelLogin.setOpaque(true);
+        panelLogin.setOpaque(false);
 
         panelLogin.setPreferredSize(
                 new java.awt.Dimension(400, 580)
         );
+        
+        panelLogin.setMinimumSize(
+                new java.awt.Dimension(400, 550)
+        );
 
         lblLogo.setBounds(
-                50, 10,
-                300, 300
+                50,
+                55,
+                300,
+                300
         );
 
         lblLogo.setOpaque(false);
@@ -245,8 +310,10 @@ public class VentanaLogin extends javax.swing.JFrame {
         panelFormulario.setOpaque(true);
 
         panelFormulario.setBounds(
-                75, 335,
-                250, 195
+                75,
+                355,
+                250,
+                195
         );
 
         panelFormulario.setBorder(
@@ -258,33 +325,45 @@ public class VentanaLogin extends javax.swing.JFrame {
         );
 
         lblUsuario.setBounds(
-                30, 10,
-                190, 20
+                30,
+                10,
+                190,
+                20
         );
 
         txtUsuario.setBounds(
-                30, 33,
-                190, 27
+                30,
+                33,
+                190,
+                27
         );
 
         lblPassword.setBounds(
-                30, 72,
-                190, 20
+                30,
+                72,
+                190,
+                20
         );
 
         txtPassword.setBounds(
-                30, 95,
-                190, 27
+                30,
+                95,
+                190,
+                27
         );
 
         chkMostrarPassword.setBounds(
-                30, 124,
-                190, 20
+                30,
+                124,
+                190,
+                20
         );
 
         btnIngresar.setBounds(
-                30, 158,
-                190, 30
+                30,
+                158,
+                190,
+                30
         );
 
         lblUsuario.setFont(
@@ -327,7 +406,10 @@ public class VentanaLogin extends javax.swing.JFrame {
                                 Estilos.VERDE_OSCURO
                         ),
                         javax.swing.BorderFactory.createEmptyBorder(
-                                2, 5, 2, 5
+                                2,
+                                5,
+                                2,
+                                5
                         )
                 );
 
@@ -353,19 +435,65 @@ public class VentanaLogin extends javax.swing.JFrame {
                 new java.awt.GridBagConstraints()
         );
 
-        getContentPane().add(
-                franjaSuperior,
-                java.awt.BorderLayout.NORTH
+        Estilos.estilizarBotonEliminar(
+                btnSalir
         );
 
-        getContentPane().add(
+        btnSalir.setText("");
+
+        btnSalir.setToolTipText(
+                "Salir del sistema"
+        );
+
+        Estilos.aplicarIcono(
+                btnSalir,
+                "/imagenes/iconos/apagado.png",
+                20,
+                20
+        );
+
+        java.awt.Dimension tamañoSalir =
+                new java.awt.Dimension(38, 38);
+
+        btnSalir.setPreferredSize(tamañoSalir);
+        btnSalir.setMinimumSize(tamañoSalir);
+        btnSalir.setMaximumSize(tamañoSalir);
+
+        btnSalir.addActionListener(e ->
+                System.exit(0)
+        );
+
+        javax.swing.JPanel panelSalida =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                8,
+                                5
+                        )
+                );
+
+        panelSalida.setOpaque(false);
+
+        panelSalida.setPreferredSize(
+                new java.awt.Dimension(0, 95)
+        );
+        panelSalida.add(
+                btnSalir
+        );
+
+        panelFondo.add(
                 panelCentro,
                 java.awt.BorderLayout.CENTER
         );
 
-        getContentPane().add(
-                franjaInferior,
+        panelFondo.add(
+                panelSalida,
                 java.awt.BorderLayout.SOUTH
+        );
+
+        getContentPane().add(
+                panelFondo,
+                java.awt.BorderLayout.CENTER
         );
 
         getContentPane().revalidate();

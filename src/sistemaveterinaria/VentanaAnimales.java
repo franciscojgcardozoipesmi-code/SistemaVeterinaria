@@ -1251,7 +1251,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
 
         javax.swing.JLabel lblTitulo =
                 new javax.swing.JLabel(
-                        "GESTIÓN DE ANIMALES"
+                        "Gestión de animales"
                 );
 
         lblTitulo.setFont(
@@ -1366,19 +1366,16 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 btnAgregarAnimal
         );
 
-        Estilos.estilizarBoton(
+        Estilos.estilizarBotonEditar(
                 btnEditarAnimal
+        );
+
+        Estilos.estilizarBotonHistorial(
+                btnHistorialMedico
         );
 
         Estilos.estilizarBotonEliminar(
                 btnDarDeBajaRegistro
-        );
-        btnDarDeBajaRegistro.setText(
-                "Dar de baja el registro"
-        );
-
-        Estilos.estilizarBoton(
-                btnHistorialMedico
         );
 
         Estilos.estilizarBoton(
@@ -1389,50 +1386,144 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 btnMostrarTodos
         );
 
+        Estilos.aplicarIcono(
+                btnAgregarAnimal,
+                "/imagenes/iconos/agregar.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnEditarAnimal,
+                "/imagenes/iconos/editar.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnHistorialMedico,
+                "/imagenes/iconos/historial.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnMostrarTodos,
+                "/imagenes/iconos/mostrar_todos.png",
+                18,
+                18
+        );
+
+        txtBuscar.setText("");
+
+        txtBuscar.setToolTipText(
+                "Buscar animal"
+        );
+
+        Estilos.aplicarIcono(
+                txtBuscar,
+                "/imagenes/iconos/buscar.png",
+                20,
+                20
+        );
+
+        txtBuscar.setPreferredSize(
+                new java.awt.Dimension(
+                        42,
+                        38
+                )
+        );
+
+        txtBuscar.setMinimumSize(
+                new java.awt.Dimension(
+                        42,
+                        38
+                )
+        );
+
+        txtBuscar.setMaximumSize(
+                new java.awt.Dimension(
+                        42,
+                        38
+                )
+        );
+
+        btnDarDeBajaRegistro.setText(
+                "Dar de baja el registro"
+        );
+
+        btnDarDeBajaRegistro.setIcon(
+                null
+        );
+
         btnAgregarAnimal.setPreferredSize(
-                new java.awt.Dimension(
-                        165,
-                        38
-                )
-        );
-
-        btnEditarAnimal.setPreferredSize(
-                new java.awt.Dimension(
-                        165,
-                        38
-                )
-        );
-
-        btnDarDeBajaRegistro.setPreferredSize(
-                new java.awt.Dimension(
-                        260,
-                        38
-                )
-        );
-
-        btnHistorialMedico.setPreferredSize(
                 new java.awt.Dimension(
                         175,
                         38
                 )
         );
 
-        txtBuscar.setPreferredSize(
+        btnEditarAnimal.setPreferredSize(
                 new java.awt.Dimension(
-                        130,
+                        175,
+                        38
+                )
+        );
+
+        btnHistorialMedico.setPreferredSize(
+                new java.awt.Dimension(
+                        205,
                         38
                 )
         );
 
         btnMostrarTodos.setPreferredSize(
                 new java.awt.Dimension(
-                        165,
+                        180,
                         38
                 )
         );
 
+        java.awt.Dimension tamañoBotonBaja =
+                new java.awt.Dimension(
+                        300,
+                        38
+                );
+
+        btnDarDeBajaRegistro.setPreferredSize(
+                tamañoBotonBaja
+        );
+
+        btnDarDeBajaRegistro.setMinimumSize(
+                tamañoBotonBaja
+        );
+
+        btnDarDeBajaRegistro.setMaximumSize(
+                tamañoBotonBaja
+        );
+
+        javax.swing.JPanel panelBusqueda =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelBusqueda.setOpaque(false);
+
+        panelBusqueda.add(
+                txtBuscar
+        );
+
+        tarjetaAnimales.add(
+                panelBusqueda,
+                java.awt.BorderLayout.NORTH
+        );
+
         javax.swing.JPanel panelBotones =
-        new javax.swing.JPanel();
+                new javax.swing.JPanel();
 
         panelBotones.setOpaque(false);
 
@@ -1454,59 +1545,6 @@ public class VentanaAnimales extends javax.swing.JFrame {
 
         filaPrincipal.setOpaque(false);
 
-        javax.swing.JPanel filaBaja =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.LEFT,
-                                10,
-                                0
-                        )
-                );
-
-        filaBaja.setOpaque(false);
-
-        btnAgregarAnimal.setPreferredSize(
-                new java.awt.Dimension(
-                        165,
-                        38
-                )
-        );
-
-        btnEditarAnimal.setPreferredSize(
-                new java.awt.Dimension(
-                        165,
-                        38
-                )
-        );
-
-        btnHistorialMedico.setPreferredSize(
-                new java.awt.Dimension(
-                        175,
-                        38
-                )
-        );
-
-        txtBuscar.setPreferredSize(
-                new java.awt.Dimension(
-                        130,
-                        38
-                )
-        );
-
-        btnMostrarTodos.setPreferredSize(
-                new java.awt.Dimension(
-                        165,
-                        38
-                )
-        );
-
-        btnDarDeBajaRegistro.setPreferredSize(
-                new java.awt.Dimension(
-                        210,
-                        38
-                )
-        );
-
         filaPrincipal.add(
                 btnAgregarAnimal
         );
@@ -1520,34 +1558,19 @@ public class VentanaAnimales extends javax.swing.JFrame {
         );
 
         filaPrincipal.add(
-                txtBuscar
-        );
-
-        filaPrincipal.add(
                 btnMostrarTodos
         );
 
-        btnDarDeBajaRegistro.setText(
-            "Dar de baja el registro"
-        );
-
-        java.awt.Dimension tamañoBotonBaja =
-                new java.awt.Dimension(
-                        300,
-                        38
+        javax.swing.JPanel filaBaja =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
                 );
 
-        btnDarDeBajaRegistro.setPreferredSize(
-                tamañoBotonBaja
-        );
-
-        btnDarDeBajaRegistro.setMinimumSize(
-                tamañoBotonBaja
-        );
-
-        btnDarDeBajaRegistro.setMaximumSize(
-                tamañoBotonBaja
-        );
+        filaBaja.setOpaque(false);
 
         filaBaja.add(
                 btnDarDeBajaRegistro
@@ -1558,7 +1581,9 @@ public class VentanaAnimales extends javax.swing.JFrame {
         );
 
         panelBotones.add(
-                javax.swing.Box.createVerticalStrut(10)
+                javax.swing.Box.createVerticalStrut(
+                        10
+                )
         );
 
         panelBotones.add(

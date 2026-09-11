@@ -254,24 +254,11 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         int fila = tblUsuarios.getSelectedRow();
 
         if (fila == -1) {
-
             Estilos.mostrarAdvertencia(
                     this,
                     "Atención",
                     "Seleccioná un usuario"
             );
-
-            return;
-        }
-
-        int opcion = javax.swing.JOptionPane.showConfirmDialog(
-                this,
-                "¿Seguro que querés eliminar este usuario?",
-                "Confirmar eliminación",
-                javax.swing.JOptionPane.YES_NO_OPTION
-        );
-
-        if (opcion != javax.swing.JOptionPane.YES_OPTION) {
             return;
         }
 
@@ -279,15 +266,176 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                 tblUsuarios.getValueAt(fila, 0).toString()
         );
 
-        UsuarioController.eliminarUsuario(idUsuario);
+        String nombreUsuario =
+                tblUsuarios.getValueAt(fila, 1).toString();
 
-        javax.swing.JOptionPane.showMessageDialog(
-                this,
-                "Usuario eliminado correctamente"
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        "Confirmar eliminación",
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(true);
+
+        java.awt.Color rojo =
+                new java.awt.Color(210, 70, 70);
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(0, 15)
+                );
+
+        panelPrincipal.setBackground(Estilos.BLANCO);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                rojo,
+                                2
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                20,
+                                18,
+                                20
+                        )
+                )
         );
 
-        cargarTabla();
-    
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "CONFIRMAR ELIMINACIÓN",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblTitulo.setFont(Estilos.fuente(20f));
+        lblTitulo.setForeground(Estilos.BLANCO);
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(rojo);
+
+        panelTitulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        10,
+                        15,
+                        10,
+                        15
+                )
+        );
+
+        panelTitulo.add(
+                lblTitulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JLabel lblMensaje =
+                new javax.swing.JLabel(
+                        "¿Seguro que querés eliminar al usuario "
+                        + nombreUsuario + "?",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblMensaje.setFont(Estilos.fuente(13f));
+        lblMensaje.setForeground(Estilos.VERDE_OSCURO);
+
+        javax.swing.JButton btnCancelarDialogo =
+                new javax.swing.JButton("Cancelar");
+
+        javax.swing.JButton btnConfirmarDialogo =
+                new javax.swing.JButton("Confirmar");
+
+        Estilos.estilizarBoton(btnCancelarDialogo);
+        Estilos.estilizarBotonEliminar(btnConfirmarDialogo);
+
+        btnCancelarDialogo.setPreferredSize(
+                new java.awt.Dimension(115, 34)
+        );
+
+        btnConfirmarDialogo.setPreferredSize(
+                new java.awt.Dimension(125, 34)
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+        panelBotones.add(btnCancelarDialogo);
+        panelBotones.add(btnConfirmarDialogo);
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(0, 15)
+                );
+
+        contenido.setOpaque(false);
+
+        contenido.add(
+                lblMensaje,
+                java.awt.BorderLayout.CENTER
+        );
+
+        contenido.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        btnCancelarDialogo.addActionListener(e ->
+                dialogo.dispose()
+        );
+
+        btnConfirmarDialogo.addActionListener(e -> {
+            try {
+                UsuarioController.eliminarUsuario(idUsuario);
+
+                dialogo.dispose();
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Operación exitosa",
+                        "Usuario eliminado correctamente"
+                );
+
+                cargarTabla();
+
+            } catch (Exception ex) {
+                dialogo.dispose();
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Error",
+                        "No se pudo eliminar el usuario"
+                );
+            }
+        });
+
+        dialogo.setContentPane(panelPrincipal);
+        dialogo.setSize(440, 180);
+        dialogo.setLocationRelativeTo(ventanaPadre);
+        dialogo.setVisible(true);
     }//GEN-LAST:event_btnEliminarUsuarioActionPerformed
     private void configurarDiseñoUsuarios() {
 
@@ -715,59 +863,83 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                 java.awt.BorderLayout.CENTER
         );
 
-        Estilos.estilizarBoton(
-                btnCrearUsuario
+        Estilos.estilizarBoton(btnCrearUsuario);
+        Estilos.estilizarBotonEditar(btnEditarUsuario);
+        Estilos.estilizarBotonEliminar(btnEliminarUsuario);
+        Estilos.estilizarBoton(btnBuscarUsuario);
+        Estilos.estilizarBoton(btnMostrarTodos);
+
+        Estilos.aplicarIcono(
+                btnCrearUsuario,
+                "/imagenes/iconos/agregar.png",
+                18,
+                18
         );
 
-        Estilos.estilizarBoton(
-                btnEditarUsuario
+        Estilos.aplicarIcono(
+                btnEditarUsuario,
+                "/imagenes/iconos/editar.png",
+                18,
+                18
         );
 
-        Estilos.estilizarBotonEliminar(
-                btnEliminarUsuario
+        Estilos.aplicarIcono(
+                btnMostrarTodos,
+                "/imagenes/iconos/mostrar_todos.png",
+                18,
+                18
         );
 
-        Estilos.estilizarBoton(
-                btnBuscarUsuario
+        btnEliminarUsuario.setIcon(null);
+
+        btnBuscarUsuario.setText("");
+        btnBuscarUsuario.setToolTipText("Buscar usuario");
+
+        Estilos.aplicarIcono(
+                btnBuscarUsuario,
+                "/imagenes/iconos/buscar.png",
+                20,
+                20
         );
 
-        Estilos.estilizarBoton(
-                btnMostrarTodos
+        java.awt.Dimension tamañoBuscar =
+                new java.awt.Dimension(42, 38);
+
+        btnBuscarUsuario.setPreferredSize(tamañoBuscar);
+        btnBuscarUsuario.setMinimumSize(tamañoBuscar);
+        btnBuscarUsuario.setMaximumSize(tamañoBuscar);
+
+        javax.swing.JPanel panelBusqueda =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelBusqueda.setOpaque(false);
+        panelBusqueda.add(btnBuscarUsuario);
+
+        tarjetaUsuarios.add(
+                panelBusqueda,
+                java.awt.BorderLayout.NORTH
         );
 
         btnCrearUsuario.setPreferredSize(
-                new java.awt.Dimension(
-                        170,
-                        38
-                )
+                new java.awt.Dimension(175, 38)
         );
 
         btnEditarUsuario.setPreferredSize(
-                new java.awt.Dimension(
-                        170,
-                        38
-                )
+                new java.awt.Dimension(175, 38)
         );
 
         btnEliminarUsuario.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
-        );
-
-        btnBuscarUsuario.setPreferredSize(
-                new java.awt.Dimension(
-                        160,
-                        38
-                )
+                new java.awt.Dimension(180, 38)
         );
 
         btnMostrarTodos.setPreferredSize(
-                new java.awt.Dimension(
-                        160,
-                        38
-                )
+                new java.awt.Dimension(180, 38)
         );
 
         javax.swing.JPanel panelBotones =
@@ -779,29 +951,12 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                         )
                 );
 
-        panelBotones.setOpaque(
-                false
-        );
+        panelBotones.setOpaque(false);
 
-        panelBotones.add(
-                btnCrearUsuario
-        );
-
-        panelBotones.add(
-                btnEditarUsuario
-        );
-
-        panelBotones.add(
-                btnEliminarUsuario
-        );
-
-        panelBotones.add(
-                btnBuscarUsuario
-        );
-
-        panelBotones.add(
-                btnMostrarTodos
-        );
+        panelBotones.add(btnCrearUsuario);
+        panelBotones.add(btnEditarUsuario);
+        panelBotones.add(btnEliminarUsuario);
+        panelBotones.add(btnMostrarTodos);
 
         tarjetaUsuarios.add(
                 panelBotones,

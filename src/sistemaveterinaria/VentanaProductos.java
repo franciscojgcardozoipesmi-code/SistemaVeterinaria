@@ -211,42 +211,191 @@ public class VentanaProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCrearProductoActionPerformed
 
     private void btnEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProductoActionPerformed
-            int fila = tblProductos.getSelectedRow();
+        int fila = tblProductos.getSelectedRow();
 
-            if (fila == -1) {
+        if (fila == -1) {
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "Seleccioná un producto"
+            );
+            return;
+        }
+
+        int idProducto = Integer.parseInt(
+                tblProductos.getValueAt(fila, 0).toString()
+        );
+
+        String nombreProducto =
+                tblProductos.getValueAt(fila, 1).toString();
+
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        "Confirmar eliminación",
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(true);
+
+        java.awt.Color rojo =
+                new java.awt.Color(210, 70, 70);
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(0, 15)
+                );
+
+        panelPrincipal.setBackground(Estilos.BLANCO);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                rojo,
+                                2
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                20,
+                                18,
+                                20
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "CONFIRMAR ELIMINACIÓN",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblTitulo.setFont(Estilos.fuente(20f));
+        lblTitulo.setForeground(Estilos.BLANCO);
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(rojo);
+
+        panelTitulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        10,
+                        15,
+                        10,
+                        15
+                )
+        );
+
+        panelTitulo.add(
+                lblTitulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JLabel lblMensaje =
+                new javax.swing.JLabel(
+                        "¿Seguro que querés eliminar el producto "
+                        + nombreProducto + "?",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblMensaje.setFont(Estilos.fuente(13f));
+        lblMensaje.setForeground(Estilos.VERDE_OSCURO);
+
+        javax.swing.JButton btnCancelarDialogo =
+                new javax.swing.JButton("Cancelar");
+
+        javax.swing.JButton btnConfirmarDialogo =
+                new javax.swing.JButton("Confirmar");
+
+        Estilos.estilizarBoton(btnCancelarDialogo);
+        Estilos.estilizarBotonEliminar(btnConfirmarDialogo);
+
+        btnCancelarDialogo.setPreferredSize(
+                new java.awt.Dimension(115, 34)
+        );
+
+        btnConfirmarDialogo.setPreferredSize(
+                new java.awt.Dimension(125, 34)
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+        panelBotones.add(btnCancelarDialogo);
+        panelBotones.add(btnConfirmarDialogo);
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(0, 15)
+                );
+
+        contenido.setOpaque(false);
+
+        contenido.add(
+                lblMensaje,
+                java.awt.BorderLayout.CENTER
+        );
+
+        contenido.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        btnCancelarDialogo.addActionListener(e ->
+                dialogo.dispose()
+        );
+
+        btnConfirmarDialogo.addActionListener(e -> {
+            try {
+                ProductoController.eliminarProducto(idProducto);
+
+                dialogo.dispose();
 
                 Estilos.mostrarAdvertencia(
                         this,
-                        "Atención",
-                        "Seleccioná un producto"
+                        "Operación exitosa",
+                        "Producto eliminado correctamente"
                 );
 
-                return;
+                cargarTabla();
+
+            } catch (Exception ex) {
+                dialogo.dispose();
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Error",
+                        "No se pudo eliminar el producto"
+                );
             }
+        });
 
-            int opcion = javax.swing.JOptionPane.showConfirmDialog(
-                    this,
-                    "¿Seguro que querés eliminar este producto?",
-                    "Confirmar eliminación",
-                    javax.swing.JOptionPane.YES_NO_OPTION
-            );
-
-            if (opcion != javax.swing.JOptionPane.YES_OPTION) {
-                return;
-            }
-
-            int idProducto = Integer.parseInt(
-                    tblProductos.getValueAt(fila, 0).toString()
-            );
-
-            ProductoController.eliminarProducto(idProducto);
-
-            javax.swing.JOptionPane.showMessageDialog(
-                    this,
-                    "Producto eliminado"
-            );
-
-            cargarTabla();    
+        dialogo.setContentPane(panelPrincipal);
+        dialogo.setSize(440, 180);
+        dialogo.setLocationRelativeTo(ventanaPadre);
+        dialogo.setVisible(true);
     }//GEN-LAST:event_btnEliminarProductoActionPerformed
 
     private void btnEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarProductoActionPerformed
@@ -639,7 +788,12 @@ public class VentanaProductos extends javax.swing.JFrame {
                         javax.swing.SwingConstants.CENTER
                 );
 
+                componente.setFont(
+                        Estilos.fuenteNormal()
+                );
+
                 if (seleccionado) {
+
                     componente.setBackground(
                             Estilos.VERDE_OSCURO
                     );
@@ -685,19 +839,51 @@ public class VentanaProductos extends javax.swing.JFrame {
                             componente.setBackground(
                                     new java.awt.Color(
                                             255,
-                                            153,
-                                            153
+                                            218,
+                                            218
                                     )
                             );
 
-                        } else if (!fechaVencimiento.isAfter(limite)) {
+                            componente.setForeground(
+                                    new java.awt.Color(
+                                            145,
+                                            25,
+                                            25
+                                    )
+                            );
+
+                            componente.setFont(
+                                    Estilos.fuenteNormal()
+                                            .deriveFont(
+                                                    java.awt.Font.BOLD
+                                            )
+                            );
+
+                        } else if (!fechaVencimiento.isAfter(
+                                limite
+                        )) {
 
                             componente.setBackground(
                                     new java.awt.Color(
                                             255,
-                                            140,
+                                            235,
+                                            190
+                                    )
+                            );
+
+                            componente.setForeground(
+                                    new java.awt.Color(
+                                            135,
+                                            80,
                                             0
                                     )
+                            );
+
+                            componente.setFont(
+                                    Estilos.fuenteNormal()
+                                            .deriveFont(
+                                                    java.awt.Font.BOLD
+                                            )
                             );
                         }
 
@@ -705,6 +891,10 @@ public class VentanaProductos extends javax.swing.JFrame {
 
                         componente.setBackground(
                                 Estilos.BLANCO
+                        );
+
+                        componente.setForeground(
+                                Estilos.VERDE_OSCURO
                         );
                     }
                 }
@@ -755,7 +945,7 @@ public class VentanaProductos extends javax.swing.JFrame {
 
         javax.swing.JLabel lblTitulo =
                 new javax.swing.JLabel(
-                        "GESTIÓN DE PRODUCTOS"
+                        "Gestión de productos"
                 );
 
         lblTitulo.setFont(
@@ -871,10 +1061,10 @@ public class VentanaProductos extends javax.swing.JFrame {
         );
 
         Estilos.estilizarBoton(
-            btnCrearProducto
+                btnCrearProducto
         );
 
-        Estilos.estilizarBoton(
+        Estilos.estilizarBotonEditar(
                 btnEditarProducto
         );
 
@@ -890,30 +1080,108 @@ public class VentanaProductos extends javax.swing.JFrame {
                 btnMostrarTodos
         );
 
-        java.awt.Dimension tamañoBoton =
+        Estilos.aplicarIcono(
+                btnCrearProducto,
+                "/imagenes/iconos/agregar.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnEditarProducto,
+                "/imagenes/iconos/editar.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnMostrarTodos,
+                "/imagenes/iconos/mostrar_todos.png",
+                18,
+                18
+        );
+
+        btnEliminarProducto.setIcon(
+                null
+        );
+
+        btnBuscarProducto.setText("");
+
+        btnBuscarProducto.setToolTipText(
+                "Buscar producto"
+        );
+
+        Estilos.aplicarIcono(
+                btnBuscarProducto,
+                "/imagenes/iconos/buscar.png",
+                20,
+                20
+        );
+
+        java.awt.Dimension tamañoBuscar =
                 new java.awt.Dimension(
-                        175,
+                        42,
                         38
                 );
 
+        btnBuscarProducto.setPreferredSize(
+                tamañoBuscar
+        );
+
+        btnBuscarProducto.setMinimumSize(
+                tamañoBuscar
+        );
+
+        btnBuscarProducto.setMaximumSize(
+                tamañoBuscar
+        );
+
+        javax.swing.JPanel panelBusqueda =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelBusqueda.setOpaque(false);
+
+        panelBusqueda.add(
+                btnBuscarProducto
+        );
+
+        tarjetaProductos.add(
+                panelBusqueda,
+                java.awt.BorderLayout.NORTH
+        );
+
         btnCrearProducto.setPreferredSize(
-                tamañoBoton
+                new java.awt.Dimension(
+                        185,
+                        38
+                )
         );
 
         btnEditarProducto.setPreferredSize(
-                tamañoBoton
+                new java.awt.Dimension(
+                        185,
+                        38
+                )
         );
 
         btnEliminarProducto.setPreferredSize(
-                tamañoBoton
-        );
-
-        btnBuscarProducto.setPreferredSize(
-                tamañoBoton
+                new java.awt.Dimension(
+                        185,
+                        38
+                )
         );
 
         btnMostrarTodos.setPreferredSize(
-                tamañoBoton
+                new java.awt.Dimension(
+                        180,
+                        38
+                )
         );
 
         javax.swing.JPanel panelBotones =
@@ -925,9 +1193,7 @@ public class VentanaProductos extends javax.swing.JFrame {
                         )
                 );
 
-        panelBotones.setOpaque(
-                false
-        );
+        panelBotones.setOpaque(false);
 
         panelBotones.add(
                 btnCrearProducto
@@ -939,10 +1205,6 @@ public class VentanaProductos extends javax.swing.JFrame {
 
         panelBotones.add(
                 btnEliminarProducto
-        );
-
-        panelBotones.add(
-                btnBuscarProducto
         );
 
         panelBotones.add(

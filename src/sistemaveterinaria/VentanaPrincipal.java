@@ -411,6 +411,69 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Estilos.estilizarBotonMenu(btnAlertas);
         Estilos.estilizarBotonMenu(btnUsuarios);
         
+        Estilos.aplicarIcono(
+                btnAnimales,
+                "/imagenes/iconos/animales.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnClientes,
+                "/imagenes/iconos/clientes.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnTurnos,
+                "/imagenes/iconos/turnos.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnProcedimientos,
+                "/imagenes/iconos/procedimientos.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnProductos,
+                "/imagenes/iconos/productos.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnVentas,
+                "/imagenes/iconos/ventas.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnReportesVentas,
+                "/imagenes/iconos/reportes.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnAlertas,
+                "/imagenes/iconos/alertas.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnUsuarios,
+                "/imagenes/iconos/usuarios.png",
+                18,
+                18
+        );
+        
         panelMenu.add(btnAnimales);
 
         panelMenu.add(
@@ -473,6 +536,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         Estilos.estilizarBotonEliminar(
                 btnCerrarSesion
+        );
+        
+        Estilos.aplicarIcono(
+        btnCerrarSesion,
+                "/imagenes/iconos/cerrar_sesion.png",
+                18,
+                18
         );
 
         java.awt.Dimension tamañoCerrarSesion =
@@ -981,6 +1051,45 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 id,
                 nombre,
                 dni
+        );
+
+        javax.swing.JPanel formulario =
+                ventanaCrearCliente.obtenerPanelCrearEditarCliente();
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                formulario,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
+    public void mostrarEditarCliente(
+            int id,
+            String nombre,
+            String dni,
+            String telefono,
+            String direccion,
+            String correo,
+            String observaciones
+    ) {
+        VentanaCrearCliente ventanaCrearCliente =
+                new VentanaCrearCliente(
+                        rolUsuario,
+                        this
+                );
+
+        ventanaCrearCliente.cargarDatos(
+                id,
+                nombre,
+                dni,
+                telefono,
+                direccion,
+                correo,
+                observaciones
         );
 
         javax.swing.JPanel formulario =

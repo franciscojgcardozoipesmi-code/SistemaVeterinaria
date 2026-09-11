@@ -3,6 +3,11 @@ import controller.ProductoController;
 import controller.TurnoController;
 public class VentanaAlertas extends javax.swing.JFrame {
     private String rolUsuario;
+    private final javax.swing.JLabel lblTipoAlerta =
+        new javax.swing.JLabel(
+                "Productos por vencer",
+                javax.swing.SwingConstants.CENTER
+        );
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaAlertas.class.getName());
 
  
@@ -14,7 +19,7 @@ public class VentanaAlertas extends javax.swing.JFrame {
         );
 
         configurarDiseñoAlertas();
-        prepararTablaVacia();
+        cargarProductosProximosAVencer();
     }
     
     public VentanaAlertas(String rolUsuario) {
@@ -27,11 +32,13 @@ public class VentanaAlertas extends javax.swing.JFrame {
         );
 
         configurarDiseñoAlertas();
-        prepararTablaVacia();
+        cargarProductosProximosAVencer();
     }
 
     private void cargarTurnosProximos() {
-
+        lblTipoAlerta.setText(
+                "Turnos próximos"
+        );
         javax.swing.table.DefaultTableModel modelo =
                 new javax.swing.table.DefaultTableModel() {
 
@@ -86,7 +93,9 @@ public class VentanaAlertas extends javax.swing.JFrame {
                 .setCellRenderer(centrado);
     }
     private void cargarProductosProximosAVencer() {
-
+        lblTipoAlerta.setText(
+                "Productos por vencer"
+        );
         javax.swing.table.DefaultTableModel modelo =
                 new javax.swing.table.DefaultTableModel() {
 
@@ -353,6 +362,28 @@ public class VentanaAlertas extends javax.swing.JFrame {
                         )
                 )
         );
+        
+        lblTipoAlerta.setFont(
+                Estilos.fuenteSubtitulo()
+        );
+
+        lblTipoAlerta.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblTipoAlerta.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        0,
+                        0,
+                        5,
+                        0
+                )
+        );
+
+        tarjetaAlertas.add(
+                lblTipoAlerta,
+                java.awt.BorderLayout.NORTH
+        );
 
         Estilos.estilizarTabla(
                 tblAlertas
@@ -374,11 +405,10 @@ public class VentanaAlertas extends javax.swing.JFrame {
                 java.awt.BorderLayout.CENTER
         );
 
-        Estilos.estilizarBoton(
+        Estilos.estilizarBotonVencidos(
                 btnProductosVencer
         );
-
-        Estilos.estilizarBoton(
+        Estilos.estilizarBotonEditar(
                 btnTurnosProximos
         );
 
@@ -613,6 +643,28 @@ public class VentanaAlertas extends javax.swing.JFrame {
                         )
                 )
         );
+        
+        lblTipoAlerta.setFont(
+                Estilos.fuenteSubtitulo()
+        );
+
+        lblTipoAlerta.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblTipoAlerta.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        0,
+                        0,
+                        5,
+                        0
+                )
+        );
+
+        tarjetaAlertas.add(
+                lblTipoAlerta,
+                java.awt.BorderLayout.NORTH
+        );
 
         Estilos.estilizarTabla(
                 tblAlertas
@@ -627,11 +679,11 @@ public class VentanaAlertas extends javax.swing.JFrame {
                 java.awt.BorderLayout.CENTER
         );
 
-        Estilos.estilizarBoton(
+        Estilos.estilizarBotonVencidos(
                 btnProductosVencer
         );
 
-        Estilos.estilizarBoton(
+        Estilos.estilizarBotonEditar(
                 btnTurnosProximos
         );
 

@@ -253,49 +253,189 @@ public class VentanaTurnos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCrearTurnoActionPerformed
 
     private void btnEliminarTurnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarTurnoActionPerformed
-
         int fila = tblTurnos.getSelectedRow();
 
         if (fila == -1) {
-
-            if (fila == -1) {
-
-                Estilos.mostrarAdvertencia(
-                        this,
-                        "Atención",
-                        "Seleccioná un turno"
-                );
-
-                return;
-            }
-
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "Seleccioná un turno"
+            );
             return;
         }
 
-        int opcion = javax.swing.JOptionPane.showConfirmDialog(
-                this,
-                "¿Seguro que querés eliminar este turno?",
-                "Confirmar eliminación",
-                javax.swing.JOptionPane.YES_NO_OPTION
-        );
-
-        if (opcion != javax.swing.JOptionPane.YES_OPTION) {
-            return;
-        }
-
-        int id = Integer.parseInt(
+        int idTurno = Integer.parseInt(
                 tblTurnos.getValueAt(fila, 0).toString()
         );
 
-        TurnoController.eliminarTurno(id);
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(this);
 
-        javax.swing.JOptionPane.showMessageDialog(
-                this,
-                "Turno eliminado"
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        "Confirmar eliminación",
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(true);
+
+        java.awt.Color rojo =
+                new java.awt.Color(210, 70, 70);
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(0, 15)
+                );
+
+        panelPrincipal.setBackground(Estilos.BLANCO);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                rojo,
+                                2
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                20,
+                                18,
+                                20
+                        )
+                )
         );
 
-        cargarTabla();
-    
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "CONFIRMAR ELIMINACIÓN",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblTitulo.setFont(Estilos.fuente(20f));
+        lblTitulo.setForeground(Estilos.BLANCO);
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(rojo);
+
+        panelTitulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        10,
+                        15,
+                        10,
+                        15
+                )
+        );
+
+        panelTitulo.add(
+                lblTitulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JLabel lblMensaje =
+                new javax.swing.JLabel(
+                        "¿Seguro que querés eliminar el turno seleccionado?",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblMensaje.setFont(Estilos.fuente(13f));
+        lblMensaje.setForeground(Estilos.VERDE_OSCURO);
+
+        javax.swing.JButton btnCancelarDialogo =
+                new javax.swing.JButton("Cancelar");
+
+        javax.swing.JButton btnConfirmarDialogo =
+                new javax.swing.JButton("Confirmar");
+
+        Estilos.estilizarBoton(btnCancelarDialogo);
+        Estilos.estilizarBotonEliminar(btnConfirmarDialogo);
+
+        btnCancelarDialogo.setPreferredSize(
+                new java.awt.Dimension(115, 34)
+        );
+
+        btnConfirmarDialogo.setPreferredSize(
+                new java.awt.Dimension(125, 34)
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+        panelBotones.add(btnCancelarDialogo);
+        panelBotones.add(btnConfirmarDialogo);
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(0, 15)
+                );
+
+        contenido.setOpaque(false);
+
+        contenido.add(
+                lblMensaje,
+                java.awt.BorderLayout.CENTER
+        );
+
+        contenido.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        btnCancelarDialogo.addActionListener(e ->
+                dialogo.dispose()
+        );
+
+        btnConfirmarDialogo.addActionListener(e -> {
+            try {
+                TurnoController.eliminarTurno(idTurno);
+
+                dialogo.dispose();
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Operación exitosa",
+                        "Turno eliminado correctamente"
+                );
+
+                cargarTabla();
+
+            } catch (Exception ex) {
+                dialogo.dispose();
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Error",
+                        "No se pudo eliminar el turno"
+                );
+            }
+        });
+
+        dialogo.setContentPane(panelPrincipal);
+        dialogo.setSize(450, 180);
+        dialogo.setLocationRelativeTo(ventanaPadre);
+        dialogo.setVisible(true);
+
+        
     }//GEN-LAST:event_btnEliminarTurnoActionPerformed
 
     private void btnEditarTurnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarTurnoActionPerformed
@@ -1301,31 +1441,165 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 java.awt.BorderLayout.CENTER
         );
 
-        Estilos.estilizarBoton(btnCrearTurno);
-        Estilos.estilizarBoton(btnEditarTurno);
-        Estilos.estilizarBotonEliminar(btnEliminarTurno);
-        Estilos.estilizarBoton(btnBuscarTurno);
-        Estilos.estilizarBoton(btnMostrarTodos);
-        Estilos.estilizarBoton(btnCambiarEstado);
-        Estilos.estilizarBoton(btnVencidos);
+        Estilos.estilizarBoton(
+                btnCrearTurno
+        );
 
-        java.awt.Dimension tamañoBoton =
+        Estilos.estilizarBotonEditar(
+                btnEditarTurno
+        );
+
+        Estilos.estilizarBotonEliminar(
+                btnEliminarTurno
+        );
+
+        Estilos.estilizarBoton(
+                btnBuscarTurno
+        );
+
+        Estilos.estilizarBoton(
+                btnMostrarTodos
+        );
+
+        Estilos.estilizarBotonHistorial(
+                btnCambiarEstado
+        );
+
+        Estilos.estilizarBotonVencidos(
+                btnVencidos
+        );
+
+        Estilos.aplicarIcono(
+                btnCrearTurno,
+                "/imagenes/iconos/agregar.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnEditarTurno,
+                "/imagenes/iconos/editar.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnMostrarTodos,
+                "/imagenes/iconos/mostrar_todos.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnCambiarEstado,
+                "/imagenes/iconos/cambiar_estado.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnVencidos,
+                "/imagenes/iconos/vencidos.png",
+                18,
+                18
+        );
+
+        btnEliminarTurno.setIcon(
+                null
+        );
+
+        btnBuscarTurno.setText("");
+
+        btnBuscarTurno.setToolTipText(
+                "Buscar turno"
+        );
+
+        Estilos.aplicarIcono(
+                btnBuscarTurno,
+                "/imagenes/iconos/buscar.png",
+                20,
+                20
+        );
+
+        java.awt.Dimension tamañoBuscar =
                 new java.awt.Dimension(
-                        140,
+                        42,
                         38
                 );
 
-        btnCrearTurno.setPreferredSize(tamañoBoton);
-        btnEditarTurno.setPreferredSize(tamañoBoton);
+        btnBuscarTurno.setPreferredSize(
+                tamañoBuscar
+        );
+
+        btnBuscarTurno.setMinimumSize(
+                tamañoBuscar
+        );
+
+        btnBuscarTurno.setMaximumSize(
+                tamañoBuscar
+        );
+
+        javax.swing.JPanel panelBusqueda =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelBusqueda.setOpaque(false);
+
+        panelBusqueda.add(
+                btnBuscarTurno
+        );
+
+        tarjetaTurnos.add(
+                panelBusqueda,
+                java.awt.BorderLayout.NORTH
+        );
+
+        btnCrearTurno.setPreferredSize(
+                new java.awt.Dimension(
+                        165,
+                        38
+                )
+        );
+
+        btnEditarTurno.setPreferredSize(
+                new java.awt.Dimension(
+                        165,
+                        38
+                )
+        );
+
         btnEliminarTurno.setPreferredSize(
                 new java.awt.Dimension(
                         180,
                         38
                 )
         );
-        btnBuscarTurno.setPreferredSize(tamañoBoton);
-        btnMostrarTodos.setPreferredSize(tamañoBoton);
-        btnVencidos.setPreferredSize(tamañoBoton);
+
+        btnMostrarTodos.setPreferredSize(
+                new java.awt.Dimension(
+                        180,
+                        38
+                )
+        );
+
+        btnCambiarEstado.setPreferredSize(
+                new java.awt.Dimension(
+                        200,
+                        38
+                )
+        );
+
+        btnVencidos.setPreferredSize(
+                new java.awt.Dimension(
+                        150,
+                        38
+                )
+        );
 
         javax.swing.JPanel panelAcciones =
                 new javax.swing.JPanel();
@@ -1350,11 +1624,21 @@ public class VentanaTurnos extends javax.swing.JFrame {
 
         filaPrincipal.setOpaque(false);
 
-        filaPrincipal.add(btnCrearTurno);
-        filaPrincipal.add(btnEditarTurno);
-        filaPrincipal.add(btnEliminarTurno);
-        filaPrincipal.add(btnBuscarTurno);
-        filaPrincipal.add(btnMostrarTodos);
+        filaPrincipal.add(
+                btnCrearTurno
+        );
+
+        filaPrincipal.add(
+                btnEditarTurno
+        );
+
+        filaPrincipal.add(
+                btnEliminarTurno
+        );
+
+        filaPrincipal.add(
+                btnMostrarTodos
+        );
 
         javax.swing.JPanel filaEstado =
                 new javax.swing.JPanel(
@@ -1391,23 +1675,30 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 )
         );
 
-        btnCambiarEstado.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
+        filaEstado.add(
+                lblEstado
         );
 
-        filaEstado.add(lblEstado);
-        filaEstado.add(cmbEstado);
-        filaEstado.add(btnCambiarEstado);
-        filaEstado.add(btnVencidos);
+        filaEstado.add(
+                cmbEstado
+        );
+
+        filaEstado.add(
+                btnCambiarEstado
+        );
+
+        filaEstado.add(
+                btnVencidos
+        );
+
         panelAcciones.add(
                 filaPrincipal
         );
 
         panelAcciones.add(
-                javax.swing.Box.createVerticalStrut(12)
+                javax.swing.Box.createVerticalStrut(
+                        12
+                )
         );
 
         panelAcciones.add(

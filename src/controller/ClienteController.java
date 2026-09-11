@@ -18,7 +18,11 @@ public class ClienteController {
             lista.add(new Object[]{
                 cliente.getIdCliente(),
                 cliente.getNombre(),
-                cliente.getDni()
+                cliente.getDni(),
+                cliente.getTelefono(),
+                cliente.getDireccion(),
+                cliente.getCorreo(),
+                cliente.getObservaciones()
             });
         }
 
@@ -34,7 +38,11 @@ public class ClienteController {
             lista.add(new Object[]{
                 cliente.getIdCliente(),
                 cliente.getNombre(),
-                cliente.getDni()
+                cliente.getDni(),
+                cliente.getTelefono(),
+                cliente.getDireccion(),
+                cliente.getCorreo(),
+                cliente.getObservaciones()
             });
         }
 
@@ -89,5 +97,26 @@ public class ClienteController {
         }
 
         return null;
+    }
+    public static void guardarCliente(
+            String nombre,
+            String dni,
+            String telefono,
+            String direccion,
+            String correo,
+            String observaciones,
+            int idCliente
+    ) {
+        Cliente cliente = ModeloFactory.crearCliente(
+                idCliente,
+                nombre,
+                dni,
+                telefono,
+                direccion,
+                correo,
+                observaciones
+        );
+
+        clienteDAO.guardar(cliente);
     }
 }

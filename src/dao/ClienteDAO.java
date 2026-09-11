@@ -12,59 +12,71 @@ public class ClienteDAO implements CrudDAO<Cliente> {
 
     @Override
     public void guardar(Cliente cliente) {
-
         Connection conn = null;
 
         try {
-
             conn = Conexion.getInstancia().conectar();
 
-            boolean editando = (cliente.getIdCliente() != -1);
+            boolean editando =
+                    cliente.getIdCliente() != -1;
 
             if (editando) {
-
                 String sql =
-                        "UPDATE clientes SET nombre = ?, dni = ? WHERE id_cliente = ?";
+                        "UPDATE clientes SET "
+                        + "nombre = ?, "
+                        + "dni = ?, "
+                        + "telefono = ?, "
+                        + "direccion = ?, "
+                        + "correo = ?, "
+                        + "observaciones = ? "
+                        + "WHERE id_cliente = ?";
 
-                PreparedStatement pst = conn.prepareStatement(sql);
+                PreparedStatement pst =
+                        conn.prepareStatement(sql);
 
                 pst.setString(1, cliente.getNombre());
                 pst.setString(2, cliente.getDni());
-                pst.setInt(3, cliente.getIdCliente());
+                pst.setString(3, cliente.getTelefono());
+                pst.setString(4, cliente.getDireccion());
+                pst.setString(5, cliente.getCorreo());
+                pst.setString(6, cliente.getObservaciones());
+                pst.setInt(7, cliente.getIdCliente());
 
                 pst.executeUpdate();
                 pst.close();
 
             } else {
-
                 String sql =
-                        "INSERT INTO clientes (nombre, dni) VALUES (?, ?)";
+                        "INSERT INTO clientes "
+                        + "(nombre, dni, telefono, direccion, correo, observaciones) "
+                        + "VALUES (?, ?, ?, ?, ?, ?)";
 
-                PreparedStatement pst = conn.prepareStatement(sql);
+                PreparedStatement pst =
+                        conn.prepareStatement(sql);
 
                 pst.setString(1, cliente.getNombre());
                 pst.setString(2, cliente.getDni());
+                pst.setString(3, cliente.getTelefono());
+                pst.setString(4, cliente.getDireccion());
+                pst.setString(5, cliente.getCorreo());
+                pst.setString(6, cliente.getObservaciones());
 
                 pst.executeUpdate();
                 pst.close();
             }
 
         } catch (Exception e) {
-
             System.out.println("Error: " + e);
 
         } finally {
-
             try {
-
                 if (conn != null) {
                     conn.close();
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+        }       
     }
 
     @Override
@@ -87,8 +99,12 @@ public class ClienteDAO implements CrudDAO<Cliente> {
                 Cliente cliente = new Cliente(
                         rs.getInt("id_cliente"),
                         rs.getString("nombre"),
-                        rs.getString("dni")
-                );
+                        rs.getString("dni"),
+                        rs.getString("telefono"),
+                        rs.getString("direccion"),
+                        rs.getString("correo"),
+                        rs.getString("observaciones")
+                );               
 
                 lista.add(cliente);
             }
@@ -177,7 +193,11 @@ public class ClienteDAO implements CrudDAO<Cliente> {
                 Cliente cliente = new Cliente(
                         rs.getInt("id_cliente"),
                         rs.getString("nombre"),
-                        rs.getString("dni")
+                        rs.getString("dni"),
+                        rs.getString("telefono"),
+                        rs.getString("direccion"),
+                        rs.getString("correo"),
+                        rs.getString("observaciones")
                 );
 
                 lista.add(cliente);

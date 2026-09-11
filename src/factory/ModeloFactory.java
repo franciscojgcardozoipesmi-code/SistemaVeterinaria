@@ -36,6 +36,26 @@ public class ModeloFactory {
                 dni
         );
     }
+    
+    public static Cliente crearCliente(
+            int idCliente,
+            String nombre,
+            String dni,
+            String telefono,
+            String direccion,
+            String correo,
+            String observaciones
+    ) {
+        return new Cliente(
+                idCliente,
+                nombre,
+                dni,
+                telefono,
+                direccion,
+                correo,
+                observaciones
+        );
+    }
 
 
     public static Turno crearTurno(int idTurno,

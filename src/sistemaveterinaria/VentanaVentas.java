@@ -160,13 +160,11 @@ public class VentanaVentas extends javax.swing.JFrame {
         int fila = tblVentas.getSelectedRow();
 
         if (fila == -1) {
-
             Estilos.mostrarAdvertencia(
                     this,
                     "Atención",
                     "Seleccioná una venta para anular"
             );
-
             return;
         }
 
@@ -174,34 +172,172 @@ public class VentanaVentas extends javax.swing.JFrame {
                 tblVentas.getValueAt(fila, 0).toString()
         );
 
-        int opcion = javax.swing.JOptionPane.showConfirmDialog(
-                this,
-                "¿Está seguro de que desea anular la venta seleccionada?",
-                "Confirmar anulación",
-                javax.swing.JOptionPane.YES_NO_OPTION
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        "Confirmar anulación",
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(true);
+
+        java.awt.Color rojo =
+                new java.awt.Color(210, 70, 70);
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(0, 15)
+                );
+
+        panelPrincipal.setBackground(Estilos.BLANCO);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                rojo,
+                                2
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                20,
+                                18,
+                                20
+                        )
+                )
         );
 
-        if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "CONFIRMAR ANULACIÓN",
+                        javax.swing.SwingConstants.CENTER
+                );
 
+        lblTitulo.setFont(Estilos.fuente(20f));
+        lblTitulo.setForeground(Estilos.BLANCO);
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(rojo);
+
+        panelTitulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        10,
+                        15,
+                        10,
+                        15
+                )
+        );
+
+        panelTitulo.add(
+                lblTitulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JLabel lblMensaje =
+                new javax.swing.JLabel(
+                        "¿Seguro que querés anular la venta seleccionada?",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblMensaje.setFont(Estilos.fuente(13f));
+        lblMensaje.setForeground(Estilos.VERDE_OSCURO);
+
+        javax.swing.JButton btnCancelarDialogo =
+                new javax.swing.JButton("Cancelar");
+
+        javax.swing.JButton btnConfirmarDialogo =
+                new javax.swing.JButton("Confirmar");
+
+        Estilos.estilizarBoton(btnCancelarDialogo);
+        Estilos.estilizarBotonEliminar(btnConfirmarDialogo);
+
+        btnCancelarDialogo.setPreferredSize(
+                new java.awt.Dimension(115, 34)
+        );
+
+        btnConfirmarDialogo.setPreferredSize(
+                new java.awt.Dimension(125, 34)
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+        panelBotones.add(btnCancelarDialogo);
+        panelBotones.add(btnConfirmarDialogo);
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(0, 15)
+                );
+
+        contenido.setOpaque(false);
+
+        contenido.add(
+                lblMensaje,
+                java.awt.BorderLayout.CENTER
+        );
+
+        contenido.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        btnCancelarDialogo.addActionListener(e ->
+                dialogo.dispose()
+        );
+
+        btnConfirmarDialogo.addActionListener(e -> {
             try {
-
                 VentaController.eliminarVenta(idVenta);
 
-                javax.swing.JOptionPane.showMessageDialog(
+                dialogo.dispose();
+
+                Estilos.mostrarAdvertencia(
                         this,
-                        "Venta anulada correctamente."
+                        "Operación exitosa",
+                        "Venta anulada correctamente"
                 );
 
                 cargarVentas();
 
-            } catch (Exception e) {
+            } catch (Exception ex) {
+                dialogo.dispose();
 
-                javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
                         this,
-                        "Error al anular la venta: " + e.getMessage()
+                        "Error",
+                        "No se pudo anular la venta"
                 );
             }
-        }
+        });
+
+        dialogo.setContentPane(panelPrincipal);
+        dialogo.setSize(450, 180);
+        dialogo.setLocationRelativeTo(ventanaPadre);
+        dialogo.setVisible(true);
     }//GEN-LAST:event_btnEliminarVentaActionPerformed
 
     private void configurarDiseñoVentas() {
@@ -549,7 +685,7 @@ public class VentanaVentas extends javax.swing.JFrame {
 
         javax.swing.JLabel lblTitulo =
                 new javax.swing.JLabel(
-                        "GESTIÓN DE VENTAS"
+                        "Gestión de ventas"
                 );
 
         lblTitulo.setFont(
@@ -676,7 +812,7 @@ public class VentanaVentas extends javax.swing.JFrame {
                 java.awt.BorderLayout.CENTER
         );
 
-        Estilos.estilizarBoton(
+       Estilos.estilizarBoton(
                 btnCrearVenta
         );
 
@@ -692,26 +828,94 @@ public class VentanaVentas extends javax.swing.JFrame {
                 btnMostrarTodos
         );
 
-        java.awt.Dimension tamañoBoton =
+        Estilos.aplicarIcono(
+                btnCrearVenta,
+                "/imagenes/iconos/agregar.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnMostrarTodos,
+                "/imagenes/iconos/mostrar_todos.png",
+                18,
+                18
+        );
+
+        btnEliminarVenta.setIcon(
+                null
+        );
+
+        btnBuscarVenta.setText("");
+
+        btnBuscarVenta.setToolTipText(
+                "Buscar venta"
+        );
+
+        Estilos.aplicarIcono(
+                btnBuscarVenta,
+                "/imagenes/iconos/buscar.png",
+                20,
+                20
+        );
+
+        java.awt.Dimension tamañoBuscar =
                 new java.awt.Dimension(
-                        160,
+                        42,
                         38
                 );
 
+        btnBuscarVenta.setPreferredSize(
+                tamañoBuscar
+        );
+
+        btnBuscarVenta.setMinimumSize(
+                tamañoBuscar
+        );
+
+        btnBuscarVenta.setMaximumSize(
+                tamañoBuscar
+        );
+
+        javax.swing.JPanel panelBusqueda =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelBusqueda.setOpaque(false);
+
+        panelBusqueda.add(
+                btnBuscarVenta
+        );
+
+        tarjetaVentas.add(
+                panelBusqueda,
+                java.awt.BorderLayout.NORTH
+        );
+
         btnCrearVenta.setPreferredSize(
-                tamañoBoton
+                new java.awt.Dimension(
+                        175,
+                        38
+                )
         );
 
         btnEliminarVenta.setPreferredSize(
-                tamañoBoton
-        );
-
-        btnBuscarVenta.setPreferredSize(
-                tamañoBoton
+                new java.awt.Dimension(
+                        175,
+                        38
+                )
         );
 
         btnMostrarTodos.setPreferredSize(
-                tamañoBoton
+                new java.awt.Dimension(
+                        180,
+                        38
+                )
         );
 
         javax.swing.JPanel panelBotones =
@@ -723,9 +927,7 @@ public class VentanaVentas extends javax.swing.JFrame {
                         )
                 );
 
-        panelBotones.setOpaque(
-                false
-        );
+        panelBotones.setOpaque(false);
 
         panelBotones.add(
                 btnCrearVenta
@@ -733,10 +935,6 @@ public class VentanaVentas extends javax.swing.JFrame {
 
         panelBotones.add(
                 btnEliminarVenta
-        );
-
-        panelBotones.add(
-                btnBuscarVenta
         );
 
         panelBotones.add(

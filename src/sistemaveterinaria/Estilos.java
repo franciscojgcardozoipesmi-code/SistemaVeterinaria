@@ -309,6 +309,250 @@ public class Estilos {
                 }
         );
     }
+    public static void aplicarIcono(
+                javax.swing.JButton boton,
+                String ruta,
+                int ancho,
+                int alto
+        ) {
+
+            java.net.URL recurso =
+                    Estilos.class.getResource(
+                            ruta
+                    );
+
+            if (recurso == null) {
+
+                System.out.println(
+                        "No se encontró el ícono: "
+                        + ruta
+                );
+
+                return;
+            }
+
+            javax.swing.ImageIcon iconoOriginal =
+                    new javax.swing.ImageIcon(
+                            recurso
+                    );
+
+            java.awt.Image imagenEscalada =
+                    iconoOriginal.getImage()
+                            .getScaledInstance(
+                                    ancho,
+                                    alto,
+                                    java.awt.Image.SCALE_SMOOTH
+                            );
+
+            boton.setIcon(
+                    new javax.swing.ImageIcon(
+                            imagenEscalada
+                    )
+            );
+
+            boton.setIconTextGap(10);
+
+            boton.setHorizontalTextPosition(
+                    javax.swing.SwingConstants.RIGHT
+            );
+
+            boton.setVerticalTextPosition(
+                    javax.swing.SwingConstants.CENTER
+            );
+        }
+
+        public static void estilizarBotonEditar(
+            javax.swing.JButton boton
+    ) {
+
+        java.awt.Color azul =
+                new java.awt.Color(
+                        70,
+                        145,
+                        215
+                );
+
+        java.awt.Color azulHover =
+                new java.awt.Color(
+                        95,
+                        170,
+                        235
+                );
+
+        boton.setFont(
+                fuenteBoton()
+        );
+
+        boton.setBackground(
+                azul
+        );
+
+        boton.setForeground(
+                BLANCO
+        );
+
+        boton.setFocusPainted(false);
+        boton.setBorderPainted(false);
+
+        boton.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        boton.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(
+                            java.awt.event.MouseEvent evt
+                    ) {
+
+                        boton.setBackground(
+                                azulHover
+                        );
+                    }
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evt
+                    ) {
+
+                        boton.setBackground(
+                                azul
+                        );
+                    }
+                }
+        );
+    }
+    public static void estilizarBotonHistorial(
+            javax.swing.JButton boton
+    ) {
+
+        java.awt.Color rosa =
+                new java.awt.Color(
+                        215,
+                        105,
+                        155
+                );
+
+        java.awt.Color rosaHover =
+                new java.awt.Color(
+                        235,
+                        130,
+                        175
+                );
+
+        boton.setFont(
+                fuenteBoton()
+        );
+
+        boton.setBackground(
+                rosa
+        );
+
+        boton.setForeground(
+                BLANCO
+        );
+
+        boton.setFocusPainted(false);
+        boton.setBorderPainted(false);
+
+        boton.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        boton.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(
+                            java.awt.event.MouseEvent evt
+                    ) {
+
+                        boton.setBackground(
+                                rosaHover
+                        );
+                    }
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evt
+                    ) {
+
+                        boton.setBackground(
+                                rosa
+                        );
+                    }
+                }
+        );
+    }
+        public static void estilizarBotonVencidos(
+            javax.swing.JButton boton
+    ) {
+
+        java.awt.Color naranja =
+                new java.awt.Color(
+                        225,
+                        140,
+                        45
+                );
+
+        java.awt.Color naranjaHover =
+                new java.awt.Color(
+                        245,
+                        165,
+                        70
+                );
+
+        boton.setFont(
+                fuenteBoton()
+        );
+
+        boton.setBackground(
+                naranja
+        );
+
+        boton.setForeground(
+                BLANCO
+        );
+
+        boton.setFocusPainted(false);
+        boton.setBorderPainted(false);
+
+        boton.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        boton.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(
+                            java.awt.event.MouseEvent evt
+                    ) {
+
+                        boton.setBackground(
+                                naranjaHover
+                        );
+                    }
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evt
+                    ) {
+
+                        boton.setBackground(
+                                naranja
+                        );
+                    }
+                }
+        );
+    }
     public static void mostrarAdvertencia(
             java.awt.Component padre,
             String titulo,

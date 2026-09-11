@@ -5,6 +5,10 @@ public class Cliente extends Persona {
     private int idCliente;
     private String nombre;
     private String dni;
+    private String telefono;
+    private String direccion;
+    private String correo;
+    private String observaciones;
 
     public Cliente() {
         super(-1);
@@ -15,6 +19,25 @@ public class Cliente extends Persona {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.dni = dni;
+    }
+
+    public Cliente(
+            int idCliente,
+            String nombre,
+            String dni,
+            String telefono,
+            String direccion,
+            String correo,
+            String observaciones
+    ) {
+        super(idCliente);
+        this.idCliente = idCliente;
+        this.nombre = nombre;
+        this.dni = dni;
+        this.telefono = telefono;
+        this.direccion = direccion;
+        this.correo = correo;
+        this.observaciones = observaciones;
     }
 
     public int getIdCliente() {
@@ -40,6 +63,38 @@ public class Cliente extends Persona {
 
     public void setDni(String dni) {
         this.dni = dni;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     @Override

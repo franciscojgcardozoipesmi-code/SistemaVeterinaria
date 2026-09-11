@@ -8,6 +8,32 @@ import controller.ClienteController;
         private int idCliente = -1;
         private javax.swing.JLabel lblTituloFormulario;
         private VentanaPrincipal ventanaPrincipal;
+        private final javax.swing.JLabel lblTelefono =
+            new javax.swing.JLabel("Teléfono");
+
+        private final javax.swing.JLabel lblDireccion =
+                new javax.swing.JLabel("Dirección");
+
+        private final javax.swing.JLabel lblCorreo =
+                new javax.swing.JLabel("Correo");
+
+        private final javax.swing.JLabel lblObservaciones =
+                new javax.swing.JLabel("Observaciones");
+
+        private final javax.swing.JTextField txtTelefono =
+                new javax.swing.JTextField();
+
+        private final javax.swing.JTextField txtDireccion =
+                new javax.swing.JTextField();
+
+        private final javax.swing.JTextField txtCorreo =
+                new javax.swing.JTextField();
+
+        private final javax.swing.JTextArea txtObservaciones =
+                new javax.swing.JTextArea(3, 20);
+
+        private final javax.swing.JScrollPane scrollObservaciones =
+                new javax.swing.JScrollPane(txtObservaciones);
         private static final java.util.logging.Logger logger =
                 java.util.logging.Logger.getLogger(
                         VentanaCrearCliente.class.getName()
@@ -48,18 +74,47 @@ import controller.ClienteController;
     }
 
         public void cargarDatos(
+                        int id,
+                        String nombre,
+                        String dni
+                ) {
+
+                    idCliente = id;
+
+                    txtNombre.setText(nombre);
+                    txtDni.setText(dni);
+
+                    if (lblTituloFormulario != null) {
+
+                        lblTituloFormulario.setText(
+                                "EDITAR CLIENTE"
+                        );
+                    }
+
+                    setTitle(
+                            "Henry System Vet - Editar cliente"
+                    );
+                }
+
+                public void cargarDatos(
                 int id,
                 String nombre,
-                String dni
+                String dni,
+                String telefono,
+                String direccion,
+                String correo,
+                String observaciones
         ) {
-
             idCliente = id;
 
             txtNombre.setText(nombre);
             txtDni.setText(dni);
+            txtTelefono.setText(telefono);
+            txtDireccion.setText(direccion);
+            txtCorreo.setText(correo);
+            txtObservaciones.setText(observaciones);
 
             if (lblTituloFormulario != null) {
-
                 lblTituloFormulario.setText(
                         "EDITAR CLIENTE"
                 );
@@ -69,6 +124,8 @@ import controller.ClienteController;
                     "Henry System Vet - Editar cliente"
             );
         }
+        
+        
     
  
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -140,27 +197,71 @@ import controller.ClienteController;
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
+            String nombre =
+                    txtNombre.getText().trim();
 
-            String nombre = txtNombre.getText().trim();
-            String dni = txtDni.getText().trim();
+            String dni =
+                    txtDni.getText().trim();
 
-            if (nombre.isEmpty() || dni.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(
+            String telefono =
+                    txtTelefono.getText().trim();
+
+            String direccion =
+                    txtDireccion.getText().trim();
+
+            String correo =
+                    txtCorreo.getText().trim();
+
+            String observaciones =
+                    txtObservaciones.getText().trim();
+
+            if (nombre.isEmpty()
+                    || dni.isEmpty()
+                    || telefono.isEmpty()) {
+
+                Estilos.mostrarAdvertencia(
                         this,
-                        "Completar todos los campos"
+                        "Atención",
+                        "Completá nombre, DNI y teléfono"
                 );
+
                 return;
             }
 
-            ClienteController.guardarCliente(nombre, dni, idCliente);
+            if (!correo.isEmpty()
+                    && (!correo.contains("@")
+                    || !correo.contains("."))) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Atención",
+                        "Ingresá un correo válido"
+                );
+
+                return;
+            }
+
+            ClienteController.guardarCliente(
+                    nombre,
+                    dni,
+                    telefono,
+                    direccion,
+                    correo,
+                    observaciones,
+                    idCliente
+            );
+
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Cliente guardado"
+                    "Operación exitosa",
+                    idCliente == -1
+                            ? "Cliente guardado correctamente"
+                            : "Cliente actualizado correctamente"
             );
 
             if (ventanaPrincipal != null) {
                 ventanaPrincipal.mostrarClientes();
+
             } else {
                 VentanaClientes vc =
                         new VentanaClientes(rolUsuario);
@@ -170,9 +271,10 @@ import controller.ClienteController;
             }
 
         } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Error: " + e
+                    "Error",
+                    "No se pudo guardar el cliente"
             );
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
@@ -316,6 +418,10 @@ import controller.ClienteController;
 
             tarjetaFormulario.setBackground(
                     Estilos.BLANCO
+            );
+            
+            tarjetaFormulario.setPreferredSize(
+                    new java.awt.Dimension(560, 500)
             );
 
             tarjetaFormulario.setBorder(
@@ -613,6 +719,10 @@ import controller.ClienteController;
         tarjetaFormulario.setBackground(
                 Estilos.BLANCO
         );
+        
+        tarjetaFormulario.setPreferredSize(
+                new java.awt.Dimension(560, 500)
+        );
 
         tarjetaFormulario.setBorder(
                 javax.swing.BorderFactory.createCompoundBorder(
@@ -644,71 +754,87 @@ import controller.ClienteController;
         gbc.anchor =
                 java.awt.GridBagConstraints.WEST;
 
-        lblNombre.setFont(
+        javax.swing.JLabel[] etiquetas = {
+            lblNombre,
+            lblDni,
+            lblTelefono,
+            lblDireccion,
+            lblCorreo,
+            lblObservaciones
+        };
+
+        for (javax.swing.JLabel etiqueta : etiquetas) {
+            etiqueta.setFont(Estilos.fuenteNormal());
+            etiqueta.setForeground(Estilos.VERDE_OSCURO);
+        }
+
+        javax.swing.JTextField[] campos = {
+            txtNombre,
+            txtDni,
+            txtTelefono,
+            txtDireccion,
+            txtCorreo
+        };
+
+        for (javax.swing.JTextField campo : campos) {
+            campo.setFont(Estilos.fuenteNormal());
+            campo.setColumns(22);
+
+            campo.setPreferredSize(
+                    new java.awt.Dimension(300, 38)
+            );
+
+            campo.setMinimumSize(
+                    new java.awt.Dimension(300, 38)
+            );
+        }
+
+        txtObservaciones.setFont(
                 Estilos.fuenteNormal()
         );
 
-        lblDni.setFont(
-                Estilos.fuenteNormal()
+        txtObservaciones.setLineWrap(true);
+        txtObservaciones.setWrapStyleWord(true);
+
+        scrollObservaciones.setPreferredSize(
+                new java.awt.Dimension(300, 85)
         );
 
-        lblNombre.setForeground(
-                Estilos.VERDE_OSCURO
+        scrollObservaciones.setMinimumSize(
+                new java.awt.Dimension(300, 85)
         );
 
-        lblDni.setForeground(
-                Estilos.VERDE_OSCURO
-        );
+        for (int i = 0; i < campos.length; i++) {
+            gbc.gridx = 0;
+            gbc.gridy = i;
+            gbc.gridwidth = 1;
+            gbc.anchor = java.awt.GridBagConstraints.WEST;
 
-        txtNombre.setFont(
-                Estilos.fuenteNormal()
-        );
+            tarjetaFormulario.add(
+                    etiquetas[i],
+                    gbc
+            );
 
-        txtDni.setFont(
-                Estilos.fuenteNormal()
-        );
+            gbc.gridx = 1;
 
-        txtNombre.setPreferredSize(
-                new java.awt.Dimension(
-                        300,
-                        38
-                )
-        );
-
-        txtDni.setPreferredSize(
-                new java.awt.Dimension(
-                        300,
-                        38
-                )
-        );
+            tarjetaFormulario.add(
+                    campos[i],
+                    gbc
+            );
+        }
 
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 5;
 
         tarjetaFormulario.add(
-                lblNombre,
+                lblObservaciones,
                 gbc
         );
 
         gbc.gridx = 1;
 
         tarjetaFormulario.add(
-                txtNombre,
-                gbc
-        );
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-
-        tarjetaFormulario.add(
-                lblDni,
-                gbc
-        );
-
-        gbc.gridx = 1;
-
-        tarjetaFormulario.add(
-                txtDni,
+                scrollObservaciones,
                 gbc
         );
 
@@ -749,7 +875,7 @@ import controller.ClienteController;
         panelBotones.add(btnVolver);
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 6;
         gbc.gridwidth = 2;
 
         gbc.anchor =

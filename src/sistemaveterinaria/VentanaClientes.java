@@ -47,19 +47,24 @@ public class VentanaClientes extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return false;
+                return column == 6;
             }
         };
 
         modelo.addColumn("ID");
         modelo.addColumn("Nombre");
         modelo.addColumn("DNI");
+        modelo.addColumn("Teléfono");
+        modelo.addColumn("Dirección");
+        modelo.addColumn("Correo");
+        modelo.addColumn("Observaciones");
 
         for (Object[] fila : ClienteController.listarClientes()) {
             modelo.addRow(fila);
         }
 
         tblClientes.setModel(modelo);
+        configurarColumnasTabla();
     }
     
     private void buscarClientes(String filtro) {
@@ -72,19 +77,24 @@ public class VentanaClientes extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return false;
+                return column == 6;
             }
         };
 
         modelo.addColumn("ID");
         modelo.addColumn("Nombre");
         modelo.addColumn("DNI");
+        modelo.addColumn("Teléfono");
+        modelo.addColumn("Dirección");
+        modelo.addColumn("Correo");
+        modelo.addColumn("Observaciones");
 
         for (Object[] fila : ClienteController.buscarClientes(filtro)) {
             modelo.addRow(fila);
         }
 
         tblClientes.setModel(modelo);
+        configurarColumnasTabla();
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -477,50 +487,199 @@ public class VentanaClientes extends javax.swing.JFrame {
         int fila = tblClientes.getSelectedRow();
 
         if (fila == -1) {
-
             Estilos.mostrarAdvertencia(
                     this,
                     "Atención",
                     "Seleccioná un cliente"
             );
-
             return;
         }
 
-        int opcion = javax.swing.JOptionPane.showConfirmDialog(
-                this,
-                "¿Eliminar cliente?",
-                "Confirmar",
-                javax.swing.JOptionPane.YES_NO_OPTION
+        int idCliente = Integer.parseInt(
+                tblClientes.getValueAt(fila, 0).toString()
         );
 
-        if (opcion != javax.swing.JOptionPane.YES_OPTION) return;
+        String nombreCliente =
+                tblClientes.getValueAt(fila, 1).toString();
 
-        try {
-            int id = Integer.parseInt(tblClientes.getValueAt(fila, 0).toString());
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(this);
 
-            ClienteController.eliminarCliente(id);
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        "Confirmar eliminación",
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
 
-            javax.swing.JOptionPane.showMessageDialog(this, "Eliminado");
+        dialogo.setUndecorated(true);
 
-            cargarTabla();
+        java.awt.Color rojo =
+                new java.awt.Color(190, 45, 45);
 
-        } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error: " + e);
-        }        
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(0, 14)
+                );
+
+        panelPrincipal.setBackground(Estilos.BLANCO);
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                rojo,
+                                2
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                20,
+                                18,
+                                20
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "CONFIRMAR ELIMINACIÓN",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblTitulo.setFont(Estilos.fuente(20f));
+        lblTitulo.setForeground(Estilos.BLANCO);
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(rojo);
+
+        panelTitulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        10,
+                        15,
+                        10,
+                        15
+                )
+        );
+
+        panelTitulo.add(
+                lblTitulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JLabel lblMensaje =
+                new javax.swing.JLabel(
+                        "¿Seguro que querés eliminar al cliente "
+                        + nombreCliente + "?",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblMensaje.setFont(Estilos.fuente(13f));
+        lblMensaje.setForeground(Estilos.VERDE_OSCURO);
+
+        javax.swing.JButton btnCancelarDialogo =
+                new javax.swing.JButton("Cancelar");
+
+        javax.swing.JButton btnConfirmarDialogo =
+                new javax.swing.JButton("Confirmar");
+
+        Estilos.estilizarBoton(btnCancelarDialogo);
+        Estilos.estilizarBotonEliminar(btnConfirmarDialogo);
+
+        btnCancelarDialogo.setPreferredSize(
+                new java.awt.Dimension(115, 34)
+        );
+
+        btnConfirmarDialogo.setPreferredSize(
+                new java.awt.Dimension(125, 34)
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+        panelBotones.add(btnCancelarDialogo);
+        panelBotones.add(btnConfirmarDialogo);
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(0, 15)
+                );
+
+        contenido.setOpaque(false);
+
+        contenido.add(
+                lblMensaje,
+                java.awt.BorderLayout.CENTER
+        );
+
+        contenido.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        btnCancelarDialogo.addActionListener(e ->
+                dialogo.dispose()
+        );
+
+        btnConfirmarDialogo.addActionListener(e -> {
+            try {
+                ClienteController.eliminarCliente(idCliente);
+
+                dialogo.dispose();
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Operación exitosa",
+                        "Cliente eliminado correctamente"
+                );
+
+                cargarTabla();
+
+            } catch (Exception ex) {
+                dialogo.dispose();
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Error",
+                        "No se pudo eliminar el cliente"
+                );
+            }
+        });
+
+        dialogo.setContentPane(panelPrincipal);
+        dialogo.setSize(430, 180);
+        dialogo.setLocationRelativeTo(ventanaPadre);
+        dialogo.setVisible(true);
     }//GEN-LAST:event_btnEliminarClienteActionPerformed
 
     private void btnEditarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClienteActionPerformed
         int fila = tblClientes.getSelectedRow();
 
         if (fila == -1) {
-
             Estilos.mostrarAdvertencia(
                     this,
                     "Atención",
                     "Seleccioná un cliente"
             );
-
             return;
         }
 
@@ -534,12 +693,47 @@ public class VentanaClientes extends javax.swing.JFrame {
         String dni =
                 tblClientes.getValueAt(fila, 2).toString();
 
+        Object valorTelefono =
+                tblClientes.getValueAt(fila, 3);
+
+        Object valorDireccion =
+                tblClientes.getValueAt(fila, 4);
+
+        Object valorCorreo =
+                tblClientes.getValueAt(fila, 5);
+
+        Object valorObservaciones =
+                tblClientes.getValueAt(fila, 6);
+
+        String telefono =
+                valorTelefono == null
+                        ? ""
+                        : valorTelefono.toString();
+
+        String direccion =
+                valorDireccion == null
+                        ? ""
+                        : valorDireccion.toString();
+
+        String correo =
+                valorCorreo == null
+                        ? ""
+                        : valorCorreo.toString();
+
+        String observaciones =
+                valorObservaciones == null
+                        ? ""
+                        : valorObservaciones.toString();
+
         ventanaPrincipal.mostrarEditarCliente(
                 id,
                 nombre,
-                dni
+                dni,
+                telefono,
+                direccion,
+                correo,
+                observaciones
         );
-    
     }//GEN-LAST:event_btnEditarClienteActionPerformed
 
     private void btnCrearClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearClienteActionPerformed
@@ -992,6 +1186,57 @@ public class VentanaClientes extends javax.swing.JFrame {
         revalidate();
         repaint();
     }
+    private void configurarColumnasTabla() {
+        if (tblClientes.getColumnModel().getColumnCount() < 7) {
+            return;
+        }
+
+        javax.swing.table.TableColumn columnaId =
+                tblClientes.getColumnModel().getColumn(0);
+
+        columnaId.setMinWidth(0);
+        columnaId.setMaxWidth(0);
+        columnaId.setPreferredWidth(0);
+        columnaId.setResizable(false);
+
+        tblClientes.getColumnModel()
+                .getColumn(1)
+                .setPreferredWidth(170);
+
+        tblClientes.getColumnModel()
+                .getColumn(2)
+                .setPreferredWidth(110);
+
+        tblClientes.getColumnModel()
+                .getColumn(3)
+                .setPreferredWidth(130);
+
+        tblClientes.getColumnModel()
+                .getColumn(4)
+                .setPreferredWidth(220);
+
+        tblClientes.getColumnModel()
+                .getColumn(5)
+                .setPreferredWidth(210);
+
+        javax.swing.table.TableColumn columnaObservaciones =
+                tblClientes.getColumnModel().getColumn(6);
+
+        columnaObservaciones.setMinWidth(110);
+        columnaObservaciones.setMaxWidth(140);
+        columnaObservaciones.setPreferredWidth(120);
+        columnaObservaciones.setResizable(false);
+
+        columnaObservaciones.setCellRenderer(
+                new BotonObservacionesRenderer()
+        );
+
+        columnaObservaciones.setCellEditor(
+                new BotonObservacionesEditor()
+        );
+
+        tblClientes.setRowHeight(38);
+    }
     public javax.swing.JPanel obtenerPanelClientes() {
 
         javax.swing.JPanel panel =
@@ -1114,6 +1359,14 @@ public class VentanaClientes extends javax.swing.JFrame {
         Estilos.estilizarTabla(
                 tblClientes
         );
+        
+        javax.swing.table.TableColumn columnaId =
+            tblClientes.getColumnModel().getColumn(0);
+
+        columnaId.setMinWidth(0);
+        columnaId.setMaxWidth(0);
+        columnaId.setPreferredWidth(0);
+        columnaId.setResizable(false);
 
         javax.swing.table.DefaultTableCellRenderer centrado =
                 new javax.swing.table.DefaultTableCellRenderer();
@@ -1186,22 +1439,11 @@ public class VentanaClientes extends javax.swing.JFrame {
                         mostrarAnimalesDelCliente();
                     }
                 });
-        javax.swing.JPanel panelBotones =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.LEFT,
-                                10,
-                                0
-                        )
-                );
-
-        panelBotones.setOpaque(false);
-
         Estilos.estilizarBoton(
                 btnCrearCliente
         );
 
-        Estilos.estilizarBoton(
+        Estilos.estilizarBotonEditar(
                 btnEditarCliente
         );
 
@@ -1217,31 +1459,120 @@ public class VentanaClientes extends javax.swing.JFrame {
                 btnMostrarTodos
         );
 
-        java.awt.Dimension tamañoBoton =
+        Estilos.aplicarIcono(
+                btnCrearCliente,
+                "/imagenes/iconos/agregar.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnEditarCliente,
+                "/imagenes/iconos/editar.png",
+                18,
+                18
+        );
+
+        Estilos.aplicarIcono(
+                btnMostrarTodos,
+                "/imagenes/iconos/mostrar_todos.png",
+                18,
+                18
+        );
+
+        btnEliminarCliente.setIcon(
+                null
+        );
+
+        btnBuscarCliente.setText("");
+
+        btnBuscarCliente.setToolTipText(
+                "Buscar cliente"
+        );
+
+        Estilos.aplicarIcono(
+                btnBuscarCliente,
+                "/imagenes/iconos/buscar.png",
+                20,
+                20
+        );
+
+        java.awt.Dimension tamañoBuscar =
                 new java.awt.Dimension(
-                        165,
+                        42,
                         38
                 );
 
+        btnBuscarCliente.setPreferredSize(
+                tamañoBuscar
+        );
+
+        btnBuscarCliente.setMinimumSize(
+                tamañoBuscar
+        );
+
+        btnBuscarCliente.setMaximumSize(
+                tamañoBuscar
+        );
+
+        javax.swing.JPanel panelBusqueda =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                0,
+                                0
+                        )
+                );
+
+        panelBusqueda.setOpaque(false);
+
+        panelBusqueda.add(
+                btnBuscarCliente
+        );
+
+        tarjetaClientes.add(
+                panelBusqueda,
+                java.awt.BorderLayout.NORTH
+        );
+
         btnCrearCliente.setPreferredSize(
-                tamañoBoton
+                new java.awt.Dimension(
+                        175,
+                        38
+                )
         );
 
         btnEditarCliente.setPreferredSize(
-                tamañoBoton
+                new java.awt.Dimension(
+                        175,
+                        38
+                )
         );
 
         btnEliminarCliente.setPreferredSize(
-                tamañoBoton
-        );
-
-        btnBuscarCliente.setPreferredSize(
-                tamañoBoton
+                new java.awt.Dimension(
+                        175,
+                        38
+                )
         );
 
         btnMostrarTodos.setPreferredSize(
-                tamañoBoton
+                new java.awt.Dimension(
+                        180,
+                        38
+                )
         );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
 
         panelBotones.add(
                 btnCrearCliente
@@ -1253,10 +1584,6 @@ public class VentanaClientes extends javax.swing.JFrame {
 
         panelBotones.add(
                 btnEliminarCliente
-        );
-
-        panelBotones.add(
-                btnBuscarCliente
         );
 
         panelBotones.add(
@@ -1304,6 +1631,80 @@ public class VentanaClientes extends javax.swing.JFrame {
         );
 
         return panel;
+    }
+    
+    private class BotonObservacionesRenderer
+        extends javax.swing.JButton
+        implements javax.swing.table.TableCellRenderer {
+
+    public BotonObservacionesRenderer() {
+        setText("Ver");
+        Estilos.estilizarBoton(this);
+    }
+
+    @Override
+    public java.awt.Component getTableCellRendererComponent(
+            javax.swing.JTable tabla,
+            Object valor,
+            boolean seleccionado,
+            boolean tieneFoco,
+            int fila,
+            int columna
+    ) {
+        setText("Ver");
+        return this;
+    }
+}
+
+    private class BotonObservacionesEditor
+            extends javax.swing.AbstractCellEditor
+            implements javax.swing.table.TableCellEditor {
+
+        private final javax.swing.JButton boton;
+        private String observacion;
+
+        public BotonObservacionesEditor() {
+            boton = new javax.swing.JButton("Ver");
+
+            Estilos.estilizarBoton(boton);
+
+            boton.addActionListener(e -> {
+                fireEditingStopped();
+
+                String mensaje =
+                        observacion == null
+                        || observacion.trim().isEmpty()
+                                ? "Este cliente no tiene observaciones"
+                                : observacion;
+
+                Estilos.mostrarAdvertencia(
+                        VentanaClientes.this,
+                        "Observaciones",
+                        mensaje
+                );
+            });
+        }
+
+        @Override
+        public java.awt.Component getTableCellEditorComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                int fila,
+                int columna
+        ) {
+            observacion =
+                    valor == null
+                            ? ""
+                            : valor.toString();
+
+            return boton;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return observacion;
+        }
     }
     public static void main(String args[]) {
   
