@@ -24,14 +24,16 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
             if (editando) {
 
                 String sql =
-                        "UPDATE usuarios SET usuario = ?, password = ?, rol = ? WHERE id_usuario = ?";
+                        "UPDATE usuarios SET usuario = ?, password = ?, rol = ?, correo = ? "
+                        + "WHERE id_usuario = ?";
 
                 PreparedStatement pst = conn.prepareStatement(sql);
 
                 pst.setString(1, usuario.getUsuario());
                 pst.setString(2, usuario.getPassword());
                 pst.setString(3, usuario.getRol());
-                pst.setInt(4, usuario.getIdUsuario());
+                pst.setString(4, usuario.getCorreo());
+                pst.setInt(5, usuario.getIdUsuario());
 
                 pst.executeUpdate();
                 pst.close();
@@ -39,13 +41,15 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
             } else {
 
                 String sql =
-                        "INSERT INTO usuarios (usuario, password, rol) VALUES (?, ?, ?)";
+                        "INSERT INTO usuarios (usuario, password, rol, correo) "
+                        + "VALUES (?, ?, ?, ?)";
 
                 PreparedStatement pst = conn.prepareStatement(sql);
 
                 pst.setString(1, usuario.getUsuario());
                 pst.setString(2, usuario.getPassword());
                 pst.setString(3, usuario.getRol());
+                pst.setString(4, usuario.getCorreo());
 
                 pst.executeUpdate();
                 pst.close();
@@ -95,6 +99,10 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
                 usuario.setRol(
                         rs.getString("rol")
                 );
+                
+                usuario.setCorreo(
+                        rs.getString("correo")
+                );
 
                 lista.add(usuario);
             }
@@ -139,6 +147,7 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
                     + "WHERE CAST(id_usuario AS TEXT) LIKE ? "
                     + "OR LOWER(usuario) LIKE LOWER(?) "
                     + "OR LOWER(rol) LIKE LOWER(?) "
+                    + "OR LOWER(COALESCE(correo, '')) LIKE LOWER(?) "
                     + "ORDER BY usuario";
 
             PreparedStatement pst =
@@ -163,6 +172,11 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
                     3,
                     busqueda
             );
+            
+            pst.setString(
+                    4,
+                    busqueda
+            );
 
             ResultSet rs =
                     pst.executeQuery();
@@ -185,7 +199,11 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
                 usuario.setRol(
                         rs.getString(
                                 "rol"
-                        )
+                        )                                               
+                );
+                
+                usuario.setCorreo(
+                        rs.getString("correo")
                 );
 
                 lista.add(
@@ -345,5 +363,244 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
         }
 
         return rol;
+    }
+    public boolean existeCorreo(String correo) {
+
+        Connection conn = null;
+
+        try {
+
+            conn = Conexion.getInstancia().conectar();
+
+            String sql =
+                    "SELECT 1 FROM usuarios "
+                    + "WHERE LOWER(correo) = LOWER(?) "
+                    + "LIMIT 1";
+
+            PreparedStatement pst =
+                    conn.prepareStatement(sql);
+
+            pst.setString(
+                    1,
+                    correo.trim()
+            );
+
+            ResultSet rs =
+                    pst.executeQuery();
+
+            boolean existe =
+                    rs.next();
+
+            rs.close();
+            pst.close();
+
+            return existe;
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al buscar correo: " + e
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+    public boolean guardarCodigoRecuperacion(
+            String correo,
+            String codigoProtegido,
+            String vencimiento
+    ) {
+
+        Connection conn = null;
+
+        try {
+
+            conn = Conexion.getInstancia().conectar();
+
+            String sql =
+                    "UPDATE usuarios "
+                    + "SET codigo_recuperacion = ?, "
+                    + "vencimiento_codigo = ? "
+                    + "WHERE LOWER(correo) = LOWER(?)";
+
+            PreparedStatement pst =
+                    conn.prepareStatement(sql);
+
+            pst.setString(
+                    1,
+                    codigoProtegido
+            );
+
+            pst.setString(
+                    2,
+                    vencimiento
+            );
+
+            pst.setString(
+                    3,
+                    correo.trim()
+            );
+
+            int filasActualizadas =
+                    pst.executeUpdate();
+
+            pst.close();
+
+            return filasActualizadas > 0;
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al guardar código de recuperación: " + e
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+    public String[] obtenerDatosRecuperacion(
+            String correo
+    ) {
+
+        Connection conn = null;
+
+        try {
+
+            conn = Conexion.getInstancia().conectar();
+
+            String sql =
+                    "SELECT codigo_recuperacion, vencimiento_codigo "
+                    + "FROM usuarios "
+                    + "WHERE LOWER(correo) = LOWER(?)";
+
+            PreparedStatement pst =
+                    conn.prepareStatement(sql);
+
+            pst.setString(
+                    1,
+                    correo.trim()
+            );
+
+            ResultSet rs =
+                    pst.executeQuery();
+
+            if (rs.next()) {
+
+                String[] datos = {
+                    rs.getString("codigo_recuperacion"),
+                    rs.getString("vencimiento_codigo")
+                };
+
+                rs.close();
+                pst.close();
+
+                return datos;
+            }
+
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al obtener datos de recuperación: " + e
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+    public boolean cambiarPasswordPorCorreo(
+            String correo,
+            String nuevaPassword
+    ) {
+
+        Connection conn = null;
+
+        try {
+
+            conn = Conexion.getInstancia().conectar();
+
+            String sql =
+                    "UPDATE usuarios "
+                    + "SET password = ?, "
+                    + "codigo_recuperacion = NULL, "
+                    + "vencimiento_codigo = NULL "
+                    + "WHERE LOWER(correo) = LOWER(?)";
+
+            PreparedStatement pst =
+                    conn.prepareStatement(sql);
+
+            pst.setString(
+                    1,
+                    nuevaPassword
+            );
+
+            pst.setString(
+                    2,
+                    correo.trim()
+            );
+
+            int filasActualizadas =
+                    pst.executeUpdate();
+
+            pst.close();
+
+            return filasActualizadas > 0;
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al cambiar la contraseña: " + e
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
     }
 }

@@ -5,6 +5,10 @@ public class VentanaLogin extends javax.swing.JFrame {
     private javax.swing.JPanel panelFormulario;
     private final javax.swing.JButton btnSalir =
         new javax.swing.JButton("⏻");
+    private final javax.swing.JButton btnOlvidoPassword =
+            new javax.swing.JButton(
+                    "¿Olvidó su contraseña?"
+            );
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaLogin.class.getName());
 
    
@@ -313,7 +317,7 @@ public class VentanaLogin extends javax.swing.JFrame {
                 75,
                 355,
                 250,
-                195
+                225
         );
 
         panelFormulario.setBorder(
@@ -365,7 +369,44 @@ public class VentanaLogin extends javax.swing.JFrame {
                 190,
                 30
         );
+        btnOlvidoPassword.setBounds(
+                30,
+                192,
+                190,
+                24
+        );
 
+        btnOlvidoPassword.setFont(
+                Estilos.fuenteNormal()
+                        .deriveFont(12f)
+        );
+
+        btnOlvidoPassword.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        btnOlvidoPassword.setContentAreaFilled(
+                false
+        );
+
+        btnOlvidoPassword.setBorderPainted(
+                false
+        );
+
+        btnOlvidoPassword.setFocusPainted(
+                false
+        );
+
+        btnOlvidoPassword.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+        
+        btnOlvidoPassword.addActionListener(e ->
+                mostrarRecuperacionPassword()
+        );
+        
         lblUsuario.setFont(
                 Estilos.fuenteNormal()
         );
@@ -426,7 +467,7 @@ public class VentanaLogin extends javax.swing.JFrame {
         panelFormulario.add(txtPassword);
         panelFormulario.add(chkMostrarPassword);
         panelFormulario.add(btnIngresar);
-
+        panelFormulario.add(btnOlvidoPassword);
         panelLogin.add(lblLogo);
         panelLogin.add(panelFormulario);
 
@@ -500,8 +541,614 @@ public class VentanaLogin extends javax.swing.JFrame {
         getContentPane().repaint();
     }
 
+    private void mostrarRecuperacionPassword() {
+
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(
+                        this
+                );
+
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        "Recuperar contraseña",
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(true);
+        dialogo.setSize(430, 260);
+        dialogo.setLocationRelativeTo(this);
+        dialogo.setResizable(false);
+
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel();
+
+        panel.setBackground(
+                Estilos.BLANCO
+        );
+
+        panel.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                2,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                35,
+                                25,
+                                35
+                        )
+                )
+        );
+
+        panel.setLayout(
+                new javax.swing.BoxLayout(
+                        panel,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        javax.swing.JLabel titulo =
+                new javax.swing.JLabel(
+                        "RECUPERAR CONTRASEÑA"
+                );
+
+        titulo.setFont(
+                Estilos.fuente(20f)
+        );
+
+        titulo.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        titulo.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        javax.swing.JLabel indicacion =
+                new javax.swing.JLabel(
+                        "Ingresá el correo asociado a tu cuenta"
+                );
+
+        indicacion.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        indicacion.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        indicacion.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        javax.swing.JTextField txtCorreoRecuperacion =
+                new javax.swing.JTextField();
+
+        java.awt.Dimension tamañoCampo =
+                new java.awt.Dimension(
+                        320,
+                        36
+                );
+
+        txtCorreoRecuperacion.setPreferredSize(
+                tamañoCampo
+        );
+
+        txtCorreoRecuperacion.setMaximumSize(
+                tamañoCampo
+        );
+
+        txtCorreoRecuperacion.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtCorreoRecuperacion.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                4,
+                                8,
+                                4,
+                                8
+                        )
+                )
+        );
+
+        javax.swing.JButton btnEnviar =
+                new javax.swing.JButton(
+                        "Enviar código"
+                );
+
+        javax.swing.JButton btnCancelar =
+                new javax.swing.JButton(
+                        "Cancelar"
+                );
+
+        Estilos.estilizarBoton(
+                btnEnviar
+        );
+
+        Estilos.estilizarBotonEliminar(
+                btnCancelar
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+        panelBotones.add(btnEnviar);
+        panelBotones.add(btnCancelar);
+
+        panel.add(titulo);
+        panel.add(
+                javax.swing.Box.createVerticalStrut(18)
+        );
+        panel.add(indicacion);
+        panel.add(
+                javax.swing.Box.createVerticalStrut(10)
+        );
+        panel.add(txtCorreoRecuperacion);
+        panel.add(
+                javax.swing.Box.createVerticalStrut(18)
+        );
+        panel.add(panelBotones);
+
+        btnCancelar.addActionListener(e ->
+                dialogo.dispose()
+        );
+
+        btnEnviar.addActionListener(e -> {
+
+            String correo =
+                    txtCorreoRecuperacion.getText()
+                            .trim();
+
+            if (correo.isEmpty()) {
+
+                Estilos.mostrarAdvertencia(
+                        dialogo,
+                        "Atención",
+                        "Ingresá tu correo"
+                );
+
+                return;
+            }
+
+            btnEnviar.setEnabled(false);
+            btnEnviar.setText("Enviando...");
+
+            new javax.swing.SwingWorker<Boolean, Void>() {
+
+                @Override
+                protected Boolean doInBackground() {
+
+                    return UsuarioController
+                            .enviarCodigoRecuperacion(
+                                    correo
+                            );
+                }
+
+                @Override
+                protected void done() {
+
+                    try {
+
+                        boolean enviado =
+                                get();
+
+                        if (enviado) {
+
+                            dialogo.dispose();
+
+                            mostrarCambioPassword(
+                                    correo
+                            );
+                        } else {
+
+                            Estilos.mostrarAdvertencia(
+                                    dialogo,
+                                    "Atención",
+                                    "No se pudo enviar el código. Verificá el correo"
+                            );
+
+                            btnEnviar.setEnabled(true);
+                            btnEnviar.setText("Enviar código");
+                        }
+
+                    } catch (Exception ex) {
+
+                        Estilos.mostrarAdvertencia(
+                                dialogo,
+                                "Error",
+                                "No se pudo enviar el correo"
+                        );
+
+                        btnEnviar.setEnabled(true);
+                        btnEnviar.setText("Enviar código");
+                    }
+                }
+            }.execute();
+        });
+
+        dialogo.setContentPane(
+                panel
+        );
+
+        dialogo.setVisible(
+                true
+        );
+    }
     
-    
+    private void mostrarCambioPassword(
+            String correo
+    ) {
+
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(
+                        this
+                );
+
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        "Cambiar contraseña",
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(true);
+        dialogo.setSize(470, 390);
+        dialogo.setLocationRelativeTo(this);
+        dialogo.setResizable(false);
+
+        javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        panel.setBackground(
+                Estilos.BLANCO
+        );
+
+        panel.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                2,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                25,
+                                35,
+                                25,
+                                35
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        "RESTABLECER CONTRASEÑA"
+                );
+
+        javax.swing.JLabel lblIndicacion =
+                new javax.swing.JLabel(
+                        "Ingresá el código que enviamos a tu correo"
+                );
+
+        javax.swing.JLabel lblCodigo =
+                new javax.swing.JLabel(
+                        "Código:"
+                );
+
+        javax.swing.JLabel lblNuevaPassword =
+                new javax.swing.JLabel(
+                        "Contraseña nueva:"
+                );
+
+        javax.swing.JLabel lblConfirmarPassword =
+                new javax.swing.JLabel(
+                        "Confirmar contraseña:"
+                );
+
+        javax.swing.JTextField txtCodigo =
+                new javax.swing.JTextField();
+
+        javax.swing.JPasswordField txtNuevaPassword =
+                new javax.swing.JPasswordField();
+
+        javax.swing.JPasswordField txtConfirmarPassword =
+                new javax.swing.JPasswordField();
+
+        lblTitulo.setFont(
+                Estilos.fuente(20f)
+        );
+
+        lblTitulo.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblIndicacion.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblIndicacion.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        javax.swing.JLabel[] etiquetas = {
+            lblCodigo,
+            lblNuevaPassword,
+            lblConfirmarPassword
+        };
+
+        for (javax.swing.JLabel etiqueta : etiquetas) {
+
+            etiqueta.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            etiqueta.setForeground(
+                    Estilos.VERDE_OSCURO
+            );
+        }
+
+        javax.swing.JTextField[] campos = {
+            txtCodigo,
+            txtNuevaPassword,
+            txtConfirmarPassword
+        };
+
+        java.awt.Dimension tamañoCampo =
+                new java.awt.Dimension(
+                        230,
+                        36
+                );
+
+        for (javax.swing.JTextField campo : campos) {
+
+            campo.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            campo.setPreferredSize(
+                    tamañoCampo
+            );
+
+            campo.setBorder(
+                    javax.swing.BorderFactory.createCompoundBorder(
+                            javax.swing.BorderFactory.createLineBorder(
+                                    Estilos.VERDE_OSCURO
+                            ),
+                            javax.swing.BorderFactory.createEmptyBorder(
+                                    4,
+                                    8,
+                                    4,
+                                    8
+                            )
+                    )
+            );
+        }
+
+        javax.swing.JButton btnCambiar =
+                new javax.swing.JButton(
+                        "Cambiar contraseña"
+                );
+
+        javax.swing.JButton btnCancelar =
+                new javax.swing.JButton(
+                        "Cancelar"
+                );
+
+        Estilos.estilizarBoton(
+                btnCambiar
+        );
+
+        Estilos.estilizarBotonEliminar(
+                btnCancelar
+        );
+
+        java.awt.GridBagConstraints gbc =
+                new java.awt.GridBagConstraints();
+
+        gbc.insets =
+                new java.awt.Insets(
+                        8,
+                        8,
+                        8,
+                        8
+                );
+
+        gbc.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+
+        panel.add(
+                lblTitulo,
+                gbc
+        );
+
+        gbc.gridy = 1;
+
+        panel.add(
+                lblIndicacion,
+                gbc
+        );
+
+        gbc.gridwidth = 1;
+        gbc.gridy = 2;
+        gbc.gridx = 0;
+
+        panel.add(
+                lblCodigo,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        panel.add(
+                txtCodigo,
+                gbc
+        );
+
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+
+        panel.add(
+                lblNuevaPassword,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        panel.add(
+                txtNuevaPassword,
+                gbc
+        );
+
+        gbc.gridy = 4;
+        gbc.gridx = 0;
+
+        panel.add(
+                lblConfirmarPassword,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        panel.add(
+                txtConfirmarPassword,
+                gbc
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+        panelBotones.add(btnCambiar);
+        panelBotones.add(btnCancelar);
+
+        gbc.gridy = 5;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+
+        panel.add(
+                panelBotones,
+                gbc
+        );
+
+        btnCancelar.addActionListener(e ->
+                dialogo.dispose()
+        );
+
+        btnCambiar.addActionListener(e -> {
+
+            String codigo =
+                    txtCodigo.getText().trim();
+
+            String nuevaPassword =
+                    new String(
+                            txtNuevaPassword.getPassword()
+                    );
+
+            String confirmarPassword =
+                    new String(
+                            txtConfirmarPassword.getPassword()
+                    );
+
+            if (!codigo.matches("\\d{6}")) {
+
+                Estilos.mostrarAdvertencia(
+                        dialogo,
+                        "Atención",
+                        "Ingresá el código de 6 dígitos"
+                );
+
+                return;
+            }
+
+            if (nuevaPassword.length() < 6) {
+
+                Estilos.mostrarAdvertencia(
+                        dialogo,
+                        "Atención",
+                        "La contraseña debe tener al menos 6 caracteres"
+                );
+
+                return;
+            }
+
+            if (!nuevaPassword.equals(
+                    confirmarPassword
+            )) {
+
+                Estilos.mostrarAdvertencia(
+                        dialogo,
+                        "Atención",
+                        "Las contraseñas no coinciden"
+                );
+
+                return;
+            }
+
+            boolean cambiado =
+                    UsuarioController
+                            .restablecerPassword(
+                                    correo,
+                                    codigo,
+                                    nuevaPassword
+                            );
+
+            if (cambiado) {
+
+                dialogo.dispose();
+
+                Estilos.mostrarAdvertencia(
+                        VentanaLogin.this,
+                        "Operación exitosa",
+                        "La contraseña fue cambiada correctamente"
+                );
+
+                txtUsuario.setText("");
+                txtPassword.setText("");
+
+            } else {
+
+                Estilos.mostrarAdvertencia(
+                        dialogo,
+                        "Atención",
+                        "El código es incorrecto o está vencido"
+                );
+            }
+        });
+
+        dialogo.setContentPane(
+                panel
+        );
+
+        dialogo.setVisible(
+                true
+        );
+    }
     
     public static void main(String args[]) {
       

@@ -5,6 +5,11 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
     private int idUsuario = -1;
     private String rolUsuario;
     private VentanaPrincipal ventanaPrincipal;
+    private final javax.swing.JLabel lblCorreo =
+        new javax.swing.JLabel("Correo");
+
+    private final javax.swing.JTextField txtCorreo =
+            new javax.swing.JTextField();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaDatosUsuario.class.getName());
 
  
@@ -29,6 +34,29 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
         this.ventanaPrincipal = ventanaPrincipal;
 
         txtPassword.setText("");
+
+        configurarBotonCancelar();
+    }
+    
+    public VentanaDatosUsuario(
+            int idUsuario,
+            String usuario,
+            String rol,
+            String correo,
+            String rolUsuario,
+            VentanaPrincipal ventanaPrincipal
+    ) {
+
+        initComponents();
+
+        this.idUsuario = idUsuario;
+        this.rolUsuario = rolUsuario;
+        this.ventanaPrincipal = ventanaPrincipal;
+
+        txtUsuario.setText(usuario);
+        txtPassword.setText("");
+        txtCorreo.setText(correo == null ? "" : correo);
+        cmbRol.setSelectedItem(rol);
 
         configurarBotonCancelar();
     }
@@ -163,14 +191,26 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
 
             String usuario = txtUsuario.getText().trim();
             String password = new String(txtPassword.getPassword()).trim();
+            String correo = txtCorreo.getText().trim();
             String rol = cmbRol.getSelectedItem().toString();
 
-            if (usuario.isEmpty() || password.isEmpty()) {
+            if (usuario.isEmpty() || password.isEmpty() || correo.isEmpty()) {
 
                 Estilos.mostrarAdvertencia(
                         this,
                         "Atención",
-                        "Completá usuario y contraseña"
+                        "Completá usuario, contraseña y correo"
+                );
+
+                return;
+            }
+            
+            if (!correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Atención",
+                        "Ingresá un correo válido"
                 );
 
                 return;
@@ -181,7 +221,8 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
                 UsuarioController.registrarUsuario(
                         usuario,
                         password,
-                        rol
+                        rol,
+                        correo
                 );
 
                 Estilos.mostrarAdvertencia(
@@ -196,7 +237,8 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
                         idUsuario,
                         usuario,
                         password,
-                        rol
+                        rol,
+                        correo
                 );
 
                 Estilos.mostrarAdvertencia(
@@ -401,7 +443,25 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
         cmbRol.setMinimumSize(
                 tamañoCampo
         );
+        lblCorreo.setFont(
+                Estilos.fuenteNormal()
+        );
 
+        lblCorreo.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        txtCorreo.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtCorreo.setPreferredSize(
+                tamañoCampo
+        );
+
+        txtCorreo.setMinimumSize(
+                tamañoCampo
+        );
         java.awt.GridBagConstraints gbc =
                 new java.awt.GridBagConstraints();
 
@@ -455,6 +515,23 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 2;
+        gbc.weightx = 0;
+
+        tarjeta.add(
+                lblCorreo,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+
+        tarjeta.add(
+                txtCorreo,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
         gbc.weightx = 0;
 
         tarjeta.add(

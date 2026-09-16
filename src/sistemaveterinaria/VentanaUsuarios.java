@@ -61,6 +61,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
         modelo.addColumn("ID");
         modelo.addColumn("Usuario");
+        modelo.addColumn("Correo");
         modelo.addColumn("Rol");
 
         for (Object[] fila : UsuarioController.listarUsuarios()) {
@@ -68,6 +69,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
             modelo.addRow(new Object[]{
                 fila[0],
                 fila[1],
+                fila[4],
                 fila[3]
             });
         }
@@ -97,7 +99,9 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         modelo.addColumn(
                 "Usuario"
         );
-
+        modelo.addColumn(
+                "Correo"
+        );
         modelo.addColumn(
                 "Rol"
         );
@@ -109,6 +113,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                     new Object[]{
                         fila[0],
                         fila[1],
+                        fila[4],
                         fila[3]
                     }
             );
@@ -233,15 +238,27 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                         1
                 ).toString();
 
-        String rol =
+        Object valorCorreo =
                 tblUsuarios.getValueAt(
                         fila,
                         2
+                );
+
+        String correo =
+                valorCorreo == null
+                        ? ""
+                        : valorCorreo.toString();
+
+        String rol =
+                tblUsuarios.getValueAt(
+                        fila,
+                        3
                 ).toString();
 
         ventanaPrincipal.mostrarEditarUsuario(
                 idUsuario,
                 usuario,
+                correo,
                 rol
         );
     }//GEN-LAST:event_btnEditarUsuarioActionPerformed

@@ -6,6 +6,7 @@ public class Usuario extends Persona {
     private String usuario;
     private String password;
     private String rol;
+    private String correo;
 
     public Usuario() {
         super(-1);
@@ -54,5 +55,12 @@ public class Usuario extends Persona {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 }

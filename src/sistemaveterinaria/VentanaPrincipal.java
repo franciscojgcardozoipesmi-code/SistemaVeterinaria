@@ -1672,6 +1672,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     public void mostrarEditarUsuario(
             int idUsuario,
             String usuario,
+            String correo,
             String rol
     ) {
 
@@ -1680,6 +1681,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         idUsuario,
                         usuario,
                         rol,
+                        correo,
                         rolUsuario,
                         this
                 );
