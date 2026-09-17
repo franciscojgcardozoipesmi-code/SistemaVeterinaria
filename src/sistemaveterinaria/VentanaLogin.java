@@ -119,9 +119,10 @@ public class VentanaLogin extends javax.swing.JFrame {
         String password = new String(txtPassword.getPassword());
 
         if (usuario.isEmpty() || password.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Completar usuario y contraseña"
+                    "Atención",
+                    "Completá usuario y contraseña"
             );
             return;
         }
@@ -135,9 +136,10 @@ public class VentanaLogin extends javax.swing.JFrame {
                     password
             );
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Bienvenido"
+                    "Inicio de sesión",
+                    "Bienvenido, " + usuario
             );
 
             VentanaPrincipal vp = new VentanaPrincipal(rol);
@@ -147,11 +149,11 @@ public class VentanaLogin extends javax.swing.JFrame {
 
         } else {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Inicio de sesión",
                     "Usuario o contraseña incorrectos"
             );
-
             txtPassword.setText("");
         }
     }//GEN-LAST:event_btnIngresarActionPerformed

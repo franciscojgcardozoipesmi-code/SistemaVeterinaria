@@ -926,6 +926,60 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         btnBuscarUsuario.setMinimumSize(tamañoBuscar);
         btnBuscarUsuario.setMaximumSize(tamañoBuscar);
 
+        javax.swing.JButton btnInicio =
+                new javax.swing.JButton(
+                        "Inicio"
+                );
+
+        Estilos.estilizarBoton(
+                btnInicio
+        );
+
+        Estilos.aplicarIcono(
+                btnInicio,
+                "/imagenes/iconos/inicio.png",
+                18,
+                18
+        );
+
+        btnInicio.setPreferredSize(
+                new java.awt.Dimension(
+                        110,
+                        38
+                )
+        );
+
+        btnInicio.addActionListener(e -> {
+
+            java.awt.Window ventana =
+                    javax.swing.SwingUtilities.getWindowAncestor(
+                            btnInicio
+                    );
+
+            if (ventana instanceof VentanaPrincipal) {
+
+                VentanaPrincipal principal =
+                        (VentanaPrincipal) ventana;
+
+                principal.mostrarInicio();
+            }
+        });
+
+        javax.swing.JPanel panelInicio =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInicio.setOpaque(false);
+
+        panelInicio.add(
+                btnInicio
+        );
+
         javax.swing.JPanel panelBusqueda =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
@@ -936,10 +990,30 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                 );
 
         panelBusqueda.setOpaque(false);
-        panelBusqueda.add(btnBuscarUsuario);
+
+        panelBusqueda.add(
+                btnBuscarUsuario
+        );
+
+        javax.swing.JPanel panelAccionesSuperiores =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelAccionesSuperiores.setOpaque(false);
+
+        panelAccionesSuperiores.add(
+                panelInicio,
+                java.awt.BorderLayout.WEST
+        );
+
+        panelAccionesSuperiores.add(
+                panelBusqueda,
+                java.awt.BorderLayout.EAST
+        );
 
         tarjetaUsuarios.add(
-                panelBusqueda,
+                panelAccionesSuperiores,
                 java.awt.BorderLayout.NORTH
         );
 

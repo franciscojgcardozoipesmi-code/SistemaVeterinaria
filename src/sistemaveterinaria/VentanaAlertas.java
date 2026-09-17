@@ -380,8 +380,86 @@ public class VentanaAlertas extends javax.swing.JFrame {
                 )
         );
 
-        tarjetaAlertas.add(
+        javax.swing.JButton btnInicio =
+                new javax.swing.JButton(
+                        "Inicio"
+                );
+
+        Estilos.estilizarBoton(
+                btnInicio
+        );
+
+        Estilos.aplicarIcono(
+                btnInicio,
+                "/imagenes/iconos/inicio.png",
+                18,
+                18
+        );
+
+        btnInicio.setPreferredSize(
+                new java.awt.Dimension(
+                        110,
+                        38
+                )
+        );
+
+        btnInicio.addActionListener(e -> {
+
+            java.awt.Window ventana =
+                    javax.swing.SwingUtilities.getWindowAncestor(
+                            btnInicio
+                    );
+
+            if (ventana instanceof VentanaPrincipal) {
+
+                VentanaPrincipal principal =
+                        (VentanaPrincipal) ventana;
+
+                principal.mostrarInicio();
+            }
+        });
+
+        javax.swing.JPanel panelInicio =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInicio.setOpaque(false);
+
+        panelInicio.add(
+                btnInicio
+        );
+
+        lblTipoAlerta.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        javax.swing.JPanel panelSuperior =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                20,
+                                0
+                        )
+                );
+
+        panelSuperior.setOpaque(false);
+
+        panelSuperior.add(
+                panelInicio,
+                java.awt.BorderLayout.WEST
+        );
+
+        panelSuperior.add(
                 lblTipoAlerta,
+                java.awt.BorderLayout.CENTER
+        );
+
+        tarjetaAlertas.add(
+                panelSuperior,
                 java.awt.BorderLayout.NORTH
         );
 
@@ -661,8 +739,94 @@ public class VentanaAlertas extends javax.swing.JFrame {
                 )
         );
 
-        tarjetaAlertas.add(
+        javax.swing.JButton btnInicio =
+                new javax.swing.JButton(
+                        "Inicio"
+                );
+
+        Estilos.estilizarBoton(
+                btnInicio
+        );
+
+        Estilos.aplicarIcono(
+                btnInicio,
+                "/imagenes/iconos/inicio.png",
+                18,
+                18
+        );
+
+        btnInicio.setPreferredSize(
+                new java.awt.Dimension(
+                        110,
+                        38
+                )
+        );
+
+        btnInicio.addActionListener(e -> {
+
+            java.awt.Window ventana =
+                    javax.swing.SwingUtilities.getWindowAncestor(
+                            btnInicio
+                    );
+
+            if (ventana instanceof VentanaPrincipal) {
+
+                VentanaPrincipal principal =
+                        (VentanaPrincipal) ventana;
+
+                principal.mostrarInicio();
+            }
+        });
+
+        javax.swing.JPanel panelInicio =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInicio.setOpaque(false);
+
+        panelInicio.add(
+                btnInicio
+        );
+
+        lblTipoAlerta.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        javax.swing.JPanel panelSuperior =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                20,
+                                0
+                        )
+                );
+
+        panelSuperior.setOpaque(false);
+
+        panelSuperior.add(
+                panelInicio,
+                java.awt.BorderLayout.WEST
+        );
+        panelSuperior.add(
+                javax.swing.Box.createRigidArea(
+                        new java.awt.Dimension(
+                                110,
+                                38
+                        )
+                ),
+                java.awt.BorderLayout.EAST
+        );
+        panelSuperior.add(
                 lblTipoAlerta,
+                java.awt.BorderLayout.CENTER
+        );
+
+        tarjetaAlertas.add(
+                panelSuperior,
                 java.awt.BorderLayout.NORTH
         );
 

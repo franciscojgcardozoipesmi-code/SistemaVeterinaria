@@ -248,38 +248,37 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     
     private void revisarAlertasProductos() {
 
-        int cantidad =
-                ProductoController.contarProximosAVencer();
+            int cantidad =
+                    ProductoController.contarProximosAVencer();
 
-        if (cantidad > 0) {
+            if (cantidad > 0) {
 
-            lblAlertaProductos.setText(
-                    "⚠ " + cantidad
-                    + " producto(s) próximo(s) a vencer"
-            );
-
-            if (!alertaProductosMostrada) {
-
-                javax.swing.JOptionPane.showMessageDialog(
-                        this,
-                        "Hay " + cantidad
-                        + " producto(s) que vencen en los próximos 7 días.",
-                        "Alerta de vencimiento",
-                        javax.swing.JOptionPane.WARNING_MESSAGE
+                lblAlertaProductos.setText(
+                        "⚠ " + cantidad
+                        + " producto(s) próximo(s) a vencer"
                 );
 
-                alertaProductosMostrada = true;
+                if (!alertaProductosMostrada) {
+
+                    Estilos.mostrarAdvertencia(
+                            this,
+                            "Alerta de vencimiento",
+                            "Hay " + cantidad
+                            + " producto(s) que vencen en los próximos 7 días."
+                    );
+
+                    alertaProductosMostrada = true;
+                }
+
+            } else {
+
+                lblAlertaProductos.setText(
+                        "Sin productos próximos a vencer"
+                );
             }
-
-        } else {
-
-            lblAlertaProductos.setText(
-                    "Sin productos próximos a vencer"
-            );
         }
-    }
-    
-    private void revisarAlertasTurnos() {
+
+        private void revisarAlertasTurnos() {
 
         int cantidad =
                 TurnoController.contarTurnosProximos();
@@ -293,12 +292,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
             if (!alertaTurnosMostrada) {
 
-                javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
                         this,
-                        "Hay " + cantidad
-                        + " turno(s) programado(s) para hoy o mañana.",
                         "Alerta de turnos",
-                        javax.swing.JOptionPane.INFORMATION_MESSAGE
+                        "Hay " + cantidad
+                        + " turno(s) programado(s) para hoy o mañana."
                 );
 
                 alertaTurnosMostrada = true;
@@ -401,6 +399,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelMenu.add(
                 javax.swing.Box.createVerticalStrut(25)
         );
+        
+       
         Estilos.estilizarBotonMenu(btnAnimales);
         Estilos.estilizarBotonMenu(btnClientes);
         Estilos.estilizarBotonMenu(btnTurnos);
@@ -992,7 +992,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         revalidate();
         repaint();
     }
-    
+    public void mostrarInicio() {
+
+        configurarDiseñoPrincipal();
+
+        revisarAlertasProductos();
+        revisarAlertasTurnos();
+    }
     public void mostrarClientes() {
 
         VentanaClientes ventanaClientes =

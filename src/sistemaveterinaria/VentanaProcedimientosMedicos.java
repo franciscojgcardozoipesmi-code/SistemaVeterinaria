@@ -1329,6 +1329,51 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
                 tamañoBuscar
         );
 
+        javax.swing.JButton btnInicio =
+                new javax.swing.JButton(
+                        "Inicio"
+                );
+
+        Estilos.estilizarBoton(
+                btnInicio
+        );
+
+        Estilos.aplicarIcono(
+                btnInicio,
+                "/imagenes/iconos/inicio.png",
+                18,
+                18
+        );
+
+        btnInicio.setPreferredSize(
+                new java.awt.Dimension(
+                        110,
+                        38
+                )
+        );
+
+        btnInicio.addActionListener(e -> {
+
+            if (ventanaPrincipal != null) {
+                ventanaPrincipal.mostrarInicio();
+            }
+        });
+
+        javax.swing.JPanel panelInicio =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInicio.setOpaque(false);
+
+        panelInicio.add(
+                btnInicio
+        );
+
         javax.swing.JPanel panelBusqueda =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
@@ -1344,8 +1389,25 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
                 btnBuscarProcedimiento
         );
 
-        tarjetaProcedimientos.add(
+        javax.swing.JPanel panelAccionesSuperiores =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelAccionesSuperiores.setOpaque(false);
+
+        panelAccionesSuperiores.add(
+                panelInicio,
+                java.awt.BorderLayout.WEST
+        );
+
+        panelAccionesSuperiores.add(
                 panelBusqueda,
+                java.awt.BorderLayout.EAST
+        );
+
+        tarjetaProcedimientos.add(
+                panelAccionesSuperiores,
                 java.awt.BorderLayout.NORTH
         );
 

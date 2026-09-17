@@ -602,7 +602,7 @@ public class Estilos {
 
         javax.swing.JLabel lblTitulo =
                 new javax.swing.JLabel(
-                        titulo.toUpperCase(),
+                        titulo,
                         javax.swing.SwingConstants.CENTER
                 );
 
@@ -720,9 +720,20 @@ public class Estilos {
                 panelPrincipal
         );
 
+        dialogo.pack();
+
+        java.awt.Dimension tamañoNecesario =
+                dialogo.getPreferredSize();
+
         dialogo.setSize(
-                370,
-                170
+                Math.max(
+                        370,
+                        tamañoNecesario.width
+                ),
+                Math.max(
+                        170,
+                        tamañoNecesario.height
+                )
         );
 
         dialogo.setLocationRelativeTo(

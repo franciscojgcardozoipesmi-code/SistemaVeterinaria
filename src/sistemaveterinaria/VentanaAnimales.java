@@ -1502,6 +1502,66 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 tamañoBotonBaja
         );
 
+        javax.swing.JButton btnInicio =
+                new javax.swing.JButton(
+                        "Inicio"
+                );
+
+        Estilos.estilizarBoton(
+                btnInicio
+        );
+        
+        Estilos.aplicarIcono(
+                btnInicio,
+                "/imagenes/iconos/inicio.png",
+                18,
+                18
+        );
+
+        java.awt.Dimension tamañoInicio =
+                new java.awt.Dimension(
+                        110,
+                        38
+                );
+
+        btnInicio.setPreferredSize(
+                tamañoInicio
+        );
+
+        btnInicio.setMinimumSize(
+                tamañoInicio
+        );
+
+        btnInicio.setMaximumSize(
+                tamañoInicio
+        );
+
+        btnInicio.setToolTipText(
+                "Volver al inicio"
+        );
+
+        btnInicio.addActionListener(e -> {
+
+            if (ventanaPrincipal != null) {
+                ventanaPrincipal.mostrarInicio();
+            }
+        });
+
+        javax.swing.JPanel panelInicio =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInicio.setOpaque(false);
+
+        panelInicio.add(
+                btnInicio
+        );
+
         javax.swing.JPanel panelBusqueda =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
@@ -1517,8 +1577,25 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 txtBuscar
         );
 
-        tarjetaAnimales.add(
+        javax.swing.JPanel panelAccionesSuperiores =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelAccionesSuperiores.setOpaque(false);
+
+        panelAccionesSuperiores.add(
+                panelInicio,
+                java.awt.BorderLayout.WEST
+        );
+
+        panelAccionesSuperiores.add(
                 panelBusqueda,
+                java.awt.BorderLayout.EAST
+        );
+
+        tarjetaAnimales.add(
+                panelAccionesSuperiores,
                 java.awt.BorderLayout.NORTH
         );
 

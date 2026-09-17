@@ -14,6 +14,8 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
 
         configurarDiseñoReportes();
         prepararTablaVacia();
+        configurarCampoFecha(txtDesde);
+        configurarCampoFecha(txtHasta);
     }
     
     public VentanaReportesVentas(String rolUsuario) {
@@ -27,6 +29,8 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
 
         configurarDiseñoReportes();
         prepararTablaVacia();
+        configurarCampoFecha(txtDesde);
+        configurarCampoFecha(txtHasta);
     }
     
     public VentanaReportesVentas(
@@ -40,6 +44,8 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
         this.ventanaPrincipal = ventanaPrincipal;
 
         prepararTablaVacia();
+        configurarCampoFecha(txtDesde);
+        configurarCampoFecha(txtHasta);
     }
 
     @SuppressWarnings("unchecked")
@@ -593,10 +599,7 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
         panelFiltros.add(txtHasta);
         panelFiltros.add(btnGenerarReporte);
 
-        tarjetaReporte.add(
-                panelFiltros,
-                java.awt.BorderLayout.NORTH
-        );
+        
 
         Estilos.estilizarTabla(
                 tblReporteVentas
@@ -837,7 +840,7 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
         tarjetaReporte.setBackground(
                 Estilos.BLANCO
         );
-
+        
         tarjetaReporte.setBorder(
                 javax.swing.BorderFactory.createCompoundBorder(
                         javax.swing.BorderFactory.createLineBorder(
@@ -919,12 +922,82 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
         panelFiltros.add(lblHasta);
         panelFiltros.add(txtHasta);
         panelFiltros.add(btnGenerarReporte);
-
+        
         tarjetaReporte.add(
                 panelFiltros,
                 java.awt.BorderLayout.NORTH
         );
+        
 
+        javax.swing.JButton btnInicio =
+                new javax.swing.JButton(
+                        "Inicio"
+                );
+
+        Estilos.estilizarBoton(
+                btnInicio
+        );
+
+        Estilos.aplicarIcono(
+                btnInicio,
+                "/imagenes/iconos/inicio.png",
+                18,
+                18
+        );
+
+        btnInicio.setPreferredSize(
+                new java.awt.Dimension(
+                        110,
+                        38
+                )
+        );
+
+        btnInicio.addActionListener(e -> {
+
+            if (ventanaPrincipal != null) {
+                ventanaPrincipal.mostrarInicio();
+            }
+        });
+
+        javax.swing.JPanel panelInicio =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInicio.setOpaque(false);
+
+        panelInicio.add(
+                btnInicio
+        );
+
+        javax.swing.JPanel panelSuperior =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                20,
+                                0
+                        )
+                );
+
+        panelSuperior.setOpaque(false);
+
+        panelSuperior.add(
+                panelInicio,
+                java.awt.BorderLayout.WEST
+        );
+        
+        panelSuperior.add(
+                panelFiltros,
+                java.awt.BorderLayout.CENTER
+        );
+
+        tarjetaReporte.add(
+                panelSuperior,
+                java.awt.BorderLayout.NORTH
+        );
         Estilos.estilizarTabla(
                 tblReporteVentas
         );
@@ -1012,6 +1085,175 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
         );
 
         return panel;
+    }
+    private void configurarCampoFecha(
+            javax.swing.JTextField campo
+    ) {
+
+        javax.swing.text.AbstractDocument documento =
+                (javax.swing.text.AbstractDocument)
+                        campo.getDocument();
+
+        documento.setDocumentFilter(
+                new javax.swing.text.DocumentFilter() {
+
+            private String formatearFecha(
+                    String texto
+            ) {
+
+                String numeros =
+                        texto.replaceAll(
+                                "[^0-9]",
+                                ""
+                        );
+
+                if (numeros.length() > 8) {
+
+                    numeros =
+                            numeros.substring(
+                                    0,
+                                    8
+                            );
+                }
+
+                StringBuilder resultado =
+                        new StringBuilder();
+
+                if (numeros.length() > 0) {
+
+                    resultado.append(
+                            numeros.substring(
+                                    0,
+                                    Math.min(
+                                            2,
+                                            numeros.length()
+                                    )
+                            )
+                    );
+                }
+
+                if (numeros.length() >= 2) {
+                    resultado.append("/");
+                }
+
+                if (numeros.length() > 2) {
+
+                    resultado.append(
+                            numeros.substring(
+                                    2,
+                                    Math.min(
+                                            4,
+                                            numeros.length()
+                                    )
+                            )
+                    );
+                }
+
+                if (numeros.length() >= 4) {
+                    resultado.append("/");
+                }
+
+                if (numeros.length() > 4) {
+
+                    resultado.append(
+                            numeros.substring(
+                                    4
+                            )
+                    );
+                }
+
+                return resultado.toString();
+            }
+
+            @Override
+            public void insertString(
+                    FilterBypass fb,
+                    int desplazamiento,
+                    String texto,
+                    javax.swing.text.AttributeSet atributos
+            ) throws javax.swing.text.BadLocationException {
+
+                replace(
+                        fb,
+                        desplazamiento,
+                        0,
+                        texto,
+                        atributos
+                );
+            }
+
+            @Override
+            public void replace(
+                    FilterBypass fb,
+                    int desplazamiento,
+                    int cantidad,
+                    String texto,
+                    javax.swing.text.AttributeSet atributos
+            ) throws javax.swing.text.BadLocationException {
+
+                String textoActual =
+                        fb.getDocument().getText(
+                                0,
+                                fb.getDocument().getLength()
+                        );
+
+                String textoNuevo =
+                        textoActual.substring(
+                                0,
+                                desplazamiento
+                        )
+                        + (texto == null ? "" : texto)
+                        + textoActual.substring(
+                                desplazamiento + cantidad
+                        );
+
+                fb.replace(
+                        0,
+                        fb.getDocument().getLength(),
+                        formatearFecha(textoNuevo),
+                        atributos
+                );
+            }
+
+            @Override
+            public void remove(
+                    FilterBypass fb,
+                    int desplazamiento,
+                    int cantidad
+            ) throws javax.swing.text.BadLocationException {
+
+                String textoActual =
+                        fb.getDocument().getText(
+                                0,
+                                fb.getDocument().getLength()
+                        );
+
+                if (cantidad == 1
+                        && desplazamiento < textoActual.length()
+                        && textoActual.charAt(desplazamiento) == '/'
+                        && desplazamiento > 0) {
+
+                    desplazamiento--;
+                    cantidad = 2;
+                }
+
+                String textoNuevo =
+                        textoActual.substring(
+                                0,
+                                desplazamiento
+                        )
+                        + textoActual.substring(
+                                desplazamiento + cantidad
+                        );
+
+                fb.replace(
+                        0,
+                        fb.getDocument().getLength(),
+                        formatearFecha(textoNuevo),
+                        null
+                );
+            }
+        });
     }
     public static void main(String args[]) {
       
