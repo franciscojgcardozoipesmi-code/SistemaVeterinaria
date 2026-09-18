@@ -188,9 +188,21 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-         try {
+        try {
 
-            String dueno = txtDueno.getText();
+            String dueno = txtDueno.getText().trim();
+
+            if (cmbAnimal.getSelectedItem() == null) {
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Atención",
+                        "Seleccioná un animal"
+                );
+
+                return;
+            }
+
             String itemAnimal =
                     cmbAnimal.getSelectedItem().toString();
 
@@ -200,40 +212,53 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
 
             String animal =
                     itemAnimal.split(" - ")[1];
-            String dni = txtDni.getText();
-            String fecha = txtFecha.getText();
-            String hora = txtHora.getText();
-            String motivo = txtMotivo.getText();
-            
-            if (dueno.isEmpty() || animal.isEmpty() || dni.isEmpty() ||
-                fecha.isEmpty() || hora.isEmpty() || motivo.isEmpty()) {
 
-                JOptionPane.showMessageDialog(this, "Completar todos los campos");
+            String dni = txtDni.getText().trim();
+            String fecha = txtFecha.getText().trim();
+            String hora = txtHora.getText().trim();
+            String motivo = txtMotivo.getText().trim();
+
+            if (dueno.isEmpty()
+                    || animal.isEmpty()
+                    || dni.isEmpty()
+                    || fecha.isEmpty()
+                    || hora.isEmpty()
+                    || motivo.isEmpty()) {
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Atención",
+                        "Completá todos los campos obligatorios"
+                );
+
                 return;
             }
 
             TurnoController.guardarTurno(
-                                        dueno,
-                                        dni,
-                                        idAnimal,
-                                        animal,
-                                        fecha,
-                                        hora,
-                                        motivo,
-                                        idTurno
-                                );
-                        if (reprogramando) {
+                    dueno,
+                    dni,
+                    idAnimal,
+                    animal,
+                    fecha,
+                    hora,
+                    motivo,
+                    idTurno
+            );
+
+            if (reprogramando) {
+
                 TurnoController.cambiarEstado(
                         idTurno,
                         "PENDIENTE"
                 );
-            }                    
+            }
+
             Estilos.mostrarAdvertencia(
                     this,
                     "Operación exitosa",
                     "Turno guardado correctamente"
             );
-            
+
             if (ventanaPrincipal != null) {
 
                 ventanaPrincipal.mostrarTurnos();
@@ -244,12 +269,17 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
                         new VentanaTurnos(rolUsuario);
 
                 vt.setVisible(true);
-
                 this.dispose();
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e);
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Error",
+                    "No se pudo guardar el turno: "
+                    + e.getMessage()
+            );
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
     public void cargarDatos(int id, String dueno, String animal, String fecha, String hora, String motivo, String dni) {

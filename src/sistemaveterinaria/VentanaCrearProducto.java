@@ -168,9 +168,10 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
                     || stockTexto.isEmpty()
                     || fechaTexto.isEmpty()) {
 
-                javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
                         this,
-                        "Completar todos los campos"
+                        "Atención",
+                        "Completá todos los campos obligatorios"
                 );
 
                 return;
@@ -208,16 +209,19 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
             }
         } catch (DateTimeParseException e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    "La fecha debe tener formato DD/MM/AAAA"
+                    "Atención",
+                    "La fecha debe tener formato día/mes/año y ser válida"
             );
 
         } catch (Exception e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Error: " + e
+                    "Error",
+                    "No se pudo guardar el producto: "
+                    + e.getMessage()
             );
         }
     

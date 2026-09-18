@@ -833,8 +833,9 @@ public class VentanaTurnos extends javax.swing.JFrame {
                     nuevoEstado
             );
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Operación exitosa",
                     "Estado actualizado correctamente"
             );
 
@@ -842,9 +843,11 @@ public class VentanaTurnos extends javax.swing.JFrame {
 
         } catch (Exception e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Error: " + e.getMessage()
+                    "Error",
+                    "No se pudo actualizar el estado: "
+                    + e.getMessage()
             );
         }
     }//GEN-LAST:event_btnCambiarEstadoActionPerformed
@@ -978,7 +981,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
 
 
         lblTitulo.setText(
-                "GESTIÓN DE TURNOS"
+                "Gestión de turnos"
         );
 
         lblTitulo.setFont(

@@ -156,9 +156,10 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
                     || edadTexto.isEmpty()
                     || cmbCliente.getSelectedItem() == null) {
 
-                javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
                         this,
-                        "Completar todos los campos obligatorios"
+                        "Atención",
+                        "Completá todos los campos obligatorios"
                 );
 
                 return;
@@ -202,18 +203,19 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
                 this.dispose();
             }
 
-        } catch (NumberFormatException e) {
-
-            javax.swing.JOptionPane.showMessageDialog(
-                    this,
-                    "La edad debe ser un número válido"
-            );
+        Estilos.mostrarAdvertencia(
+                this,
+                "Atención",
+                "La edad debe ser un número válido"
+        );
 
         } catch (Exception e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Error: " + e
+                    "Error",
+                    "No se pudo guardar el animal: "
+                    + e.getMessage()
             );
         }
     }//GEN-LAST:event_btnGuardarActionPerformed

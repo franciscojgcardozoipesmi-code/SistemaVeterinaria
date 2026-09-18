@@ -230,8 +230,9 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
 
             } catch (DateTimeParseException e) {
 
-                javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
                         this,
+                        "Atención",
                         "La fecha debe tener formato dd/MM/yyyy y ser válida"
                 );
 
@@ -244,9 +245,10 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
                     || descripcion.isEmpty()
                     || cmbAnimal.getSelectedItem() == null) {
                 
-                javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
                         this,
-                        "Completar todos los campos obligatorios"
+                        "Atención",
+                        "Completá todos los campos obligatorios"
                 );
 
                 return;
@@ -295,16 +297,19 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
 
         } catch (NumberFormatException e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Atención",
                     "El monto debe ser un número válido"
             );
 
         } catch (Exception e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Error: " + e
+                    "Error",
+                    "No se pudo guardar el procedimiento: "
+                    + e.getMessage()
             );
         }
     

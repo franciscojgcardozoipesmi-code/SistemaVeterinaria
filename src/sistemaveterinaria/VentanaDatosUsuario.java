@@ -264,9 +264,11 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
 
         } catch (Exception e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Error: " + e.getMessage()
+                    "Error",
+                    "No se pudo guardar el usuario: "
+                    + e.getMessage()
             );
         }
     }//GEN-LAST:event_btnGuardarActionPerformed

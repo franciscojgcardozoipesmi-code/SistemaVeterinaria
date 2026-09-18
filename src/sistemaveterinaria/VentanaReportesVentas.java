@@ -184,9 +184,10 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
 
             if (desde.isEmpty() || hasta.isEmpty()) {
 
-                javax.swing.JOptionPane.showMessageDialog(
+                Estilos.mostrarAdvertencia(
                         this,
-                        "Completar las fechas Desde y Hasta"
+                        "Atención",
+                        "Completá las fechas Desde y Hasta"
                 );
 
                 return;
@@ -384,9 +385,11 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
 
         } catch (Exception e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Error: " + e.getMessage()
+                    "Error",
+                    "No se pudo generar el reporte: "
+                    + e.getMessage()
             );
         }
     }//GEN-LAST:event_btnGenerarReporteActionPerformed
@@ -781,7 +784,7 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
 
         javax.swing.JLabel lblTitulo =
                 new javax.swing.JLabel(
-                        "REPORTES DE VENTAS"
+                        "Reportes de ventas"
                 );
 
         lblTitulo.setFont(

@@ -742,4 +742,63 @@ public class Estilos {
 
         dialogo.setVisible(true);
     }
+    public static javax.swing.ImageIcon crearIconoColor(
+            String ruta,
+            int ancho,
+            int alto,
+            java.awt.Color color
+    ) {
+
+        javax.swing.ImageIcon original =
+                new javax.swing.ImageIcon(
+                        Estilos.class.getResource(ruta)
+                );
+
+        java.awt.image.BufferedImage imagen =
+                new java.awt.image.BufferedImage(
+                        ancho,
+                        alto,
+                        java.awt.image.BufferedImage.TYPE_INT_ARGB
+                );
+
+        java.awt.Graphics2D graficos =
+                imagen.createGraphics();
+
+        graficos.setRenderingHint(
+                java.awt.RenderingHints.KEY_INTERPOLATION,
+                java.awt.RenderingHints.VALUE_INTERPOLATION_BICUBIC
+        );
+
+        graficos.drawImage(
+                original.getImage(),
+                0,
+                0,
+                ancho,
+                alto,
+                null
+        );
+
+        graficos.dispose();
+
+        for (int y = 0; y < alto; y++) {
+
+            for (int x = 0; x < ancho; x++) {
+
+                int pixel = imagen.getRGB(x, y);
+                int transparencia = (pixel >>> 24) & 0xFF;
+
+                if (transparencia > 0) {
+
+                    imagen.setRGB(
+                            x,
+                            y,
+                            (transparencia << 24)
+                            | (color.getRGB() & 0x00FFFFFF)
+                    );
+                }
+            }
+        }
+
+        return new javax.swing.ImageIcon(imagen);
+    }
 }

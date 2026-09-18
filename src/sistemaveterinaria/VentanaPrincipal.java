@@ -223,8 +223,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         } catch (UsuarioNoAutorizadoException e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
+                    "Acceso denegado",
                     e.getMessage()
             );
         }
@@ -254,8 +255,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             if (cantidad > 0) {
 
                 lblAlertaProductos.setText(
-                        "⚠ " + cantidad
-                        + " producto(s) próximo(s) a vencer"
+                        cantidad
+                        + " producto(s) por vencer"
                 );
 
                 if (!alertaProductosMostrada) {
@@ -286,7 +287,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         if (cantidad > 0) {
 
             lblAlertaTurnos.setText(
-                    "📅 " + cantidad
+                    cantidad
                     + " turno(s) próximo(s)"
             );
 
@@ -370,7 +371,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         );
 
         lblTituloMenu = new javax.swing.JLabel(
-                "MENÚ PRINCIPAL"
+                "Menú principal"
         );
 
         lblTituloMenu.setFont(
@@ -516,19 +517,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 javax.swing.Box.createVerticalStrut(8)
         );
 
-        panelMenu.add(btnAlertas);
-
-        panelMenu.add(
-                javax.swing.Box.createVerticalStrut(8)
-        );
-
-        panelMenu.add(btnUsuarios);
-        panelMenu.add(
-                javax.swing.Box.createVerticalStrut(
-                        8
-                )
-        );
-
         javax.swing.JButton btnCerrarSesion =
                 new javax.swing.JButton(
                         "Cerrar sesión"
@@ -598,43 +586,126 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         
         javax.swing.JPanel panelSuperior =
                 new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.RIGHT,
-                                30,
-                                20
-                        )
+                        new java.awt.BorderLayout()
                 );
 
         panelSuperior.setOpaque(false);
+
+        panelSuperior.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        20,
+                        30,
+                        10,
+                        30
+                )
+        );
 
         javax.swing.JPanel panelSesion =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
                                 java.awt.FlowLayout.CENTER,
-                                18,
-                                10
+                                8,
+                                8
                         )
                 );
 
         panelSesion.setBackground(
-                Estilos.VERDE_OSCURO
+                Estilos.BLANCO
         );
 
+        panelSesion.setPreferredSize(
+                new java.awt.Dimension(
+                        245,
+                        42
+                )
+        );
+
+        panelSesion.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createMatteBorder(
+                                0,
+                                0,
+                                6,
+                                6,
+                                new java.awt.Color(
+                                        24,
+                                        135,
+                                        95
+                                )
+                        ),
+                        javax.swing.BorderFactory.createCompoundBorder(
+                                javax.swing.BorderFactory.createLineBorder(
+                                        Estilos.VERDE_OSCURO,
+                                        1,
+                                        true
+                                ),
+                                javax.swing.BorderFactory.createEmptyBorder(
+                                        2,
+                                        10,
+                                        2,
+                                        10
+                                )
+                        )
+                )
+        );
+
+        String rolMostrado =
+                rolUsuario == null
+                ? ""
+                : rolUsuario.toLowerCase();
+
         lblRolSesion = new javax.swing.JLabel(
-                "Sesión: " + rolUsuario
+                "Sesión actual: " + rolMostrado
         );
 
         lblRolSesion.setFont(
-                Estilos.fuenteBoton()
+                Estilos.fuente(13f)
         );
 
         lblRolSesion.setForeground(
-                Estilos.BLANCO
+                Estilos.VERDE_OSCURO
         );
 
         panelSesion.add(lblRolSesion);
 
-        panelSuperior.add(panelSesion);
+        javax.swing.JPanel panelAccesos =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.RIGHT,
+                                10,
+                                0
+                        )
+                );
+
+        panelAccesos.setOpaque(false);
+
+        Estilos.estilizarBotonVencidos(
+                btnAlertas
+        );
+        Estilos.estilizarBotonEditar(
+                btnUsuarios
+        );
+
+        btnAlertas.setPreferredSize(
+                new java.awt.Dimension(145, 40)
+        );
+
+        btnUsuarios.setPreferredSize(
+                new java.awt.Dimension(145, 40)
+        );
+
+        panelAccesos.add(btnAlertas);
+        panelAccesos.add(btnUsuarios);
+
+        panelSuperior.add(
+                panelSesion,
+                java.awt.BorderLayout.WEST
+        );
+
+        panelSuperior.add(
+                panelAccesos,
+                java.awt.BorderLayout.EAST
+        );
 
         panelContenido.add(
                 panelSuperior,
@@ -642,13 +713,21 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         );
 
 
-        panelBienvenida = new javax.swing.JPanel();
+        panelBienvenida =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
 
         panelBienvenida.setOpaque(false);
 
-        panelBienvenida.setLayout(
+        javax.swing.JPanel contenidoBienvenida =
+                new javax.swing.JPanel();
+
+        contenidoBienvenida.setOpaque(false);
+
+        contenidoBienvenida.setLayout(
                 new javax.swing.BoxLayout(
-                        panelBienvenida,
+                        contenidoBienvenida,
                         javax.swing.BoxLayout.Y_AXIS
                 )
         );
@@ -659,7 +738,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 );
 
         lblBienvenido.setFont(
-                Estilos.fuente(26f)
+                Estilos.fuente(32f)
         );
 
         lblBienvenido.setForeground(
@@ -675,7 +754,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         );
 
         lblBienvenida.setFont(
-                Estilos.fuente(36f)
+                Estilos.fuente(48f)
         );
 
         lblBienvenida.setForeground(
@@ -686,20 +765,33 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 java.awt.Component.CENTER_ALIGNMENT
         );
 
-        panelBienvenida.add(
-                javax.swing.Box.createVerticalGlue()
+        contenidoBienvenida.add(lblBienvenido);
+
+        contenidoBienvenida.add(
+                javax.swing.Box.createVerticalStrut(10)
         );
 
-        panelBienvenida.add(lblBienvenido);
+        contenidoBienvenida.add(lblBienvenida);
+
+        java.awt.GridBagConstraints gbcBienvenida =
+                new java.awt.GridBagConstraints();
+
+        gbcBienvenida.gridx = 0;
+        gbcBienvenida.gridy = 0;
+        gbcBienvenida.anchor =
+                java.awt.GridBagConstraints.CENTER;
+
+        gbcBienvenida.insets =
+                new java.awt.Insets(
+                        0,
+                        0,
+                        20,
+                        0
+                );
 
         panelBienvenida.add(
-                javax.swing.Box.createVerticalStrut(15)
-        );
-
-        panelBienvenida.add(lblBienvenida);
-
-        panelBienvenida.add(
-                javax.swing.Box.createVerticalGlue()
+                contenidoBienvenida,
+                gbcBienvenida
         );
 
         panelContenido.add(
@@ -718,7 +810,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelNotificaciones.setPreferredSize(
                 new java.awt.Dimension(
                         380,
-                        0
+                        390
                 )
         );
 
@@ -728,18 +820,47 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         javax.swing.BoxLayout.Y_AXIS
                 )
         );
+        
+        panelBienvenida.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        0,
+                        0,
+                        45,
+                        0
+                )
+        );
 
         panelNotificaciones.setBorder(
-                javax.swing.BorderFactory.createEmptyBorder(
-                        35,
-                        25,
-                        35,
-                        25
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createMatteBorder(
+                                0,
+                                0,
+                                8,
+                                8,
+                                new java.awt.Color(
+                                        24,
+                                        135,
+                                        95
+                                )
+                        ),
+                        javax.swing.BorderFactory.createCompoundBorder(
+                                javax.swing.BorderFactory.createLineBorder(
+                                        Estilos.VERDE_OSCURO,
+                                        1,
+                                        true
+                                ),
+                                javax.swing.BorderFactory.createEmptyBorder(
+                                        35,
+                                        25,
+                                        35,
+                                        25
+                                )
+                        )
                 )
         );
 
         lblTituloNotificaciones.setText(
-                "NOTIFICACIONES"
+                "Notificaciones"
         );
 
         lblTituloNotificaciones.setFont(
@@ -776,16 +897,29 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         
         tarjetaTurnos.setBorder(
                 javax.swing.BorderFactory.createCompoundBorder(
-                        javax.swing.BorderFactory.createLineBorder(
-                                Estilos.VERDE_OSCURO,
-                                1,
-                                true
+                        javax.swing.BorderFactory.createMatteBorder(
+                                0,
+                                0,
+                                5,
+                                5,
+                                new java.awt.Color(
+                                        190,
+                                        220,
+                                        208
+                                )
                         ),
-                        javax.swing.BorderFactory.createEmptyBorder(
-                                20,
-                                20,
-                                20,
-                                20
+                        javax.swing.BorderFactory.createCompoundBorder(
+                                javax.swing.BorderFactory.createLineBorder(
+                                        Estilos.VERDE_OSCURO,
+                                        1,
+                                        true
+                                ),
+                                javax.swing.BorderFactory.createEmptyBorder(
+                                        20,
+                                        20,
+                                        20,
+                                        20
+                                )
                         )
                 )
         );
@@ -808,25 +942,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 )
         );
 
-        tarjetaTurnos.setBorder(
-                javax.swing.BorderFactory.createCompoundBorder(
-                        javax.swing.BorderFactory.createLineBorder(
-                                Estilos.VERDE_OSCURO,
-                                1,
-                                true
-                        ),
-                        javax.swing.BorderFactory.createEmptyBorder(
-                                20,
-                                20,
-                                20,
-                                20
-                        )
-                )
-        );
+     
 
         javax.swing.JLabel tituloTurnos =
                 new javax.swing.JLabel(
-                        "TURNOS PRÓXIMOS"
+                        "Turnos próximos"
                 );
 
         tituloTurnos.setFont(
@@ -850,11 +970,40 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 java.awt.BorderLayout.NORTH
         );
 
+        javax.swing.JPanel panelMensajeTurnos =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                8,
+                                0
+                        )
+                );
+
+        panelMensajeTurnos.setOpaque(false);
+
+        javax.swing.ImageIcon iconoCampana =
+                Estilos.crearIconoColor(
+                        "/imagenes/iconos/alertas.png",
+                        18,
+                        18,
+                        Estilos.VERDE_OSCURO
+                );
+
+        javax.swing.JLabel lblCampanaTurnos =
+                new javax.swing.JLabel(
+                        iconoCampana
+                );
+
+        lblCampanaTurnos.setOpaque(false);
+        lblCampanaTurnos.setBorder(null);
+
+        panelMensajeTurnos.add(lblCampanaTurnos);
+        panelMensajeTurnos.add(lblAlertaTurnos);
+
         tarjetaTurnos.add(
-                lblAlertaTurnos,
+                panelMensajeTurnos,
                 java.awt.BorderLayout.CENTER
         );
-
         panelNotificaciones.add(
                 tarjetaTurnos
         );
@@ -893,34 +1042,40 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 )
         );
 
-        tarjetaProductos.setBorder(
-                javax.swing.BorderFactory.createEmptyBorder(
-                        20,
-                        20,
-                        20,
-                        20
-                )
-        );
+        
         
         tarjetaProductos.setBorder(
                 javax.swing.BorderFactory.createCompoundBorder(
-                        javax.swing.BorderFactory.createLineBorder(
-                                Estilos.VERDE_OSCURO,
-                                1,
-                                true
+                        javax.swing.BorderFactory.createMatteBorder(
+                                0,
+                                0,
+                                5,
+                                5,
+                                new java.awt.Color(
+                                        190,
+                                        220,
+                                        208
+                                )
                         ),
-                        javax.swing.BorderFactory.createEmptyBorder(
-                                20,
-                                20,
-                                20,
-                                20
+                        javax.swing.BorderFactory.createCompoundBorder(
+                                javax.swing.BorderFactory.createLineBorder(
+                                        Estilos.VERDE_OSCURO,
+                                        1,
+                                        true
+                                ),
+                                javax.swing.BorderFactory.createEmptyBorder(
+                                        20,
+                                        20,
+                                        20,
+                                        20
+                                )
                         )
                 )
         );
 
         javax.swing.JLabel tituloProductos =
                 new javax.swing.JLabel(
-                        "PRODUCTOS POR VENCER"
+                        "Productos por vencer"
                 );
 
         tituloProductos.setFont(
@@ -944,8 +1099,30 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 java.awt.BorderLayout.NORTH
         );
 
+        javax.swing.JPanel panelMensajeProductos =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                8,
+                                0
+                        )
+                );
+
+        panelMensajeProductos.setOpaque(false);
+
+        javax.swing.JLabel lblCampanaProductos =
+                new javax.swing.JLabel(
+                        iconoCampana
+                );
+
+        lblCampanaProductos.setOpaque(false);
+        lblCampanaProductos.setBorder(null);
+
+        panelMensajeProductos.add(lblCampanaProductos);
+        panelMensajeProductos.add(lblAlertaProductos);
+
         tarjetaProductos.add(
-                lblAlertaProductos,
+                panelMensajeProductos,
                 java.awt.BorderLayout.CENTER
         );
 
@@ -971,7 +1148,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         contenedorNotificaciones.add(
                 panelNotificaciones,
-                java.awt.BorderLayout.CENTER
+                java.awt.BorderLayout.NORTH
         );
 
         panelContenido.add(

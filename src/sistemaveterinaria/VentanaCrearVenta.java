@@ -328,10 +328,11 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
             );      
         } catch (Exception e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    "Error: " + e.getClass().getSimpleName()
-                    + " - " + e.getMessage()
+                    "Error",
+                    "No se pudo agregar el producto: "
+                    + e.getMessage()
             );
         }
     
@@ -376,9 +377,11 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
 
         } catch (Exception e) {
 
-            javax.swing.JOptionPane.showMessageDialog(
+            Estilos.mostrarAdvertencia(
                     this,
-                    e.getMessage()
+                    "Error",
+                    "No se pudo guardar la venta: "
+                    + e.getMessage()
             );
         }  
     }//GEN-LAST:event_btnGuardarActionPerformed
