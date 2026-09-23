@@ -1484,7 +1484,29 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
         filaPrincipal.add(
                 btnMostrarTodos
         );
+        javax.swing.JButton btnTiposProcedimiento =
+                new javax.swing.JButton(
+                        "Tipos de procedimiento"
+                );
 
+        Estilos.estilizarBoton(
+                btnTiposProcedimiento
+        );
+
+        btnTiposProcedimiento.setPreferredSize(
+                new java.awt.Dimension(
+                        250,
+                        38
+                )
+        );
+
+        btnTiposProcedimiento.addActionListener(e -> {
+
+            if (ventanaPrincipal != null) {
+
+                ventanaPrincipal.mostrarTiposProcedimiento();
+            }
+        });
         javax.swing.JPanel filaBaja =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
@@ -1499,7 +1521,9 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
         filaBaja.add(
                 btnDarDeBajaRegistro
         );
-
+        filaBaja.add(
+                btnTiposProcedimiento
+        );
         panelBotones.add(
                 filaPrincipal
         );

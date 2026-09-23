@@ -5,15 +5,19 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import controller.TipoProcedimientoController;
 public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
     private String rolUsuario;
     private int idProcedimiento = -1;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaAgregarProcedimiento.class.getName());
     private VentanaPrincipal ventanaPrincipal;
+    private final javax.swing.JComboBox<String> cmbTipo =
+        new javax.swing.JComboBox<>();
     public VentanaAgregarProcedimiento() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarAnimales();
+        configurarTipos();
     }
 
     public VentanaAgregarProcedimiento(String rolUsuario) {
@@ -21,6 +25,7 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
         this.rolUsuario = rolUsuario;
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarAnimales();
+        configurarTipos();
     }
     
     public VentanaAgregarProcedimiento(
@@ -34,6 +39,7 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
         this.ventanaPrincipal = ventanaPrincipal;
 
         cargarAnimales();
+        configurarTipos();
     }
     
     public void cargarDatos(int idProcedimiento,
@@ -46,7 +52,9 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
 
         this.idProcedimiento = idProcedimiento;
                 
-        txtTipo.setText(tipo);
+        cmbTipo.setSelectedItem(
+                tipo
+        );
         chkEmergencia.setSelected(emergencia);
         txtMonto.setText(String.valueOf(monto));
         txtDescripcion.setText(descripcion);
@@ -60,7 +68,38 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
             }
         }
     }
+    private void configurarTipos() {
 
+        TipoProcedimientoController.inicializarCatalogo();
+
+        java.awt.Dimension tamañoTipo =
+                new java.awt.Dimension(
+                        250,
+                        32
+                );
+
+        cmbTipo.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbTipo.setPreferredSize(
+                tamañoTipo
+        );
+
+        cmbTipo.setMinimumSize(
+                tamañoTipo
+        );
+
+        cmbTipo.removeAllItems();
+
+        for (String tipo
+                : TipoProcedimientoController.listarTipos()) {
+
+            cmbTipo.addItem(
+                    tipo
+            );
+        }
+    }
     private void cargarAnimales() {
 
         cmbAnimal.removeAllItems();
@@ -213,20 +252,48 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+            try {
 
+            Object tipoSeleccionado =
+                    cmbTipo.getSelectedItem();
 
-        try {
+            String montoTexto =
+                    txtMonto.getText().trim();
 
-            String tipo = txtTipo.getText().trim();
-            String montoTexto = txtMonto.getText().trim();
-            String fecha = txtFecha.getText().trim();
+            String fecha =
+                    txtFecha.getText().trim();
+
+            String descripcion =
+                    txtDescripcion.getText().trim();
+
+            if (tipoSeleccionado == null
+                    || montoTexto.isEmpty()
+                    || fecha.isEmpty()
+                    || descripcion.isEmpty()
+                    || cmbAnimal.getSelectedItem() == null) {
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Atención",
+                        "Completá todos los campos obligatorios"
+                );
+
+                return;
+            }
+
             try {
 
                 DateTimeFormatter formato =
-                        DateTimeFormatter.ofPattern("dd/MM/uuuu")
-                                .withResolverStyle(ResolverStyle.STRICT);
+                        DateTimeFormatter
+                                .ofPattern("dd/MM/uuuu")
+                                .withResolverStyle(
+                                        ResolverStyle.STRICT
+                                );
 
-                LocalDate.parse(fecha, formato);
+                LocalDate.parse(
+                        fecha,
+                        formato
+                );
 
             } catch (DateTimeParseException e) {
 
@@ -238,33 +305,26 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
 
                 return;
             }
-            String descripcion = txtDescripcion.getText().trim();
-            if (tipo.isEmpty()
-                    || montoTexto.isEmpty()
-                    || fecha.isEmpty()
-                    || descripcion.isEmpty()
-                    || cmbAnimal.getSelectedItem() == null) {
-                
-                Estilos.mostrarAdvertencia(
-                        this,
-                        "Atención",
-                        "Completá todos los campos obligatorios"
-                );
 
-                return;
-            }
+            String tipo =
+                    tipoSeleccionado.toString();
 
-            double monto = Double.parseDouble(montoTexto);
+            double monto =
+                    Double.parseDouble(
+                            montoTexto
+                    );
 
-            boolean emergencia = chkEmergencia.isSelected();
+            boolean emergencia =
+                    chkEmergencia.isSelected();
 
             String animalSeleccionado =
                     cmbAnimal.getSelectedItem().toString();
 
-            int idAnimal = Integer.parseInt(
-                    animalSeleccionado.split(" - ")[0]
-            );
-            
+            int idAnimal =
+                    Integer.parseInt(
+                            animalSeleccionado.split(" - ")[0]
+                    );
+
             ProcedimientoMedicoController.guardarProcedimiento(
                     tipo,
                     emergencia,
@@ -288,11 +348,13 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
             } else {
 
                 VentanaProcedimientosMedicos vp =
-                        new VentanaProcedimientosMedicos(rolUsuario);
+                        new VentanaProcedimientosMedicos(
+                                rolUsuario
+                        );
 
                 vp.setVisible(true);
 
-                this.dispose();
+                dispose();
             }
 
         } catch (NumberFormatException e) {
@@ -312,7 +374,6 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
                     + e.getMessage()
             );
         }
-    
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -477,20 +538,30 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
         tarjeta.add(lblTipo, gbc);
 
         gbc.gridx = 1;
-        txtTipo.setPreferredSize(
+
+        cmbTipo.setPreferredSize(
                 new java.awt.Dimension(
                         250,
                         32
                 )
         );
-        tarjeta.add(txtTipo, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        tarjeta.add(lblEmergencia, gbc);
+        tarjeta.add(
+                cmbTipo,
+                gbc
+        );
 
         gbc.gridx = 1;
-        tarjeta.add(chkEmergencia, gbc);
+        gbc.gridy = 4;
+
+        chkEmergencia.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        tarjeta.add(
+                chkEmergencia,
+                gbc
+        );
 
         gbc.gridx = 0;
         gbc.gridy = 5;

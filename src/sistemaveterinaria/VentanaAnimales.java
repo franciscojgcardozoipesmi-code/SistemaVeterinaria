@@ -50,14 +50,15 @@ public class VentanaAnimales extends javax.swing.JFrame {
     private void cargarTabla() {
 
         javax.swing.table.DefaultTableModel modelo =
-            new javax.swing.table.DefaultTableModel() {
+                new javax.swing.table.DefaultTableModel() {
 
             @Override
             public boolean isCellEditable(
                     int row,
                     int column
             ) {
-                return false;
+
+                return column == 6;
             }
         };
 
@@ -67,12 +68,29 @@ public class VentanaAnimales extends javax.swing.JFrame {
         modelo.addColumn("Raza");
         modelo.addColumn("Edad");
         modelo.addColumn("Cliente");
+        modelo.addColumn("Acciones");
 
-        for (Object[] fila : AnimalController.listarAnimales()) {
-            modelo.addRow(fila);
+        for (Object[] fila
+                : AnimalController.listarAnimales()) {
+
+            Object[] filaCompleta =
+                    java.util.Arrays.copyOf(
+                            fila,
+                            7
+                    );
+
+            filaCompleta[6] = "";
+
+            modelo.addRow(
+                    filaCompleta
+            );
         }
 
-        tblAnimales.setModel(modelo);
+        tblAnimales.setModel(
+                modelo
+        );
+
+        configurarColumnaAcciones();
     }
 
     
@@ -843,10 +861,22 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 nombreAnimal
         );
     }//GEN-LAST:event_btnHistorialMedicoActionPerformed
-    private void buscarAnimales(String filtro) {
+    private void buscarAnimales(
+            String filtro
+    ) {
 
         javax.swing.table.DefaultTableModel modelo =
-                new javax.swing.table.DefaultTableModel();
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+
+                return column == 6;
+            }
+        };
 
         modelo.addColumn("ID");
         modelo.addColumn("Nombre");
@@ -854,12 +884,65 @@ public class VentanaAnimales extends javax.swing.JFrame {
         modelo.addColumn("Raza");
         modelo.addColumn("Edad");
         modelo.addColumn("Cliente");
+        modelo.addColumn("Acciones");
 
-        for (Object[] fila : AnimalController.buscarAnimales(filtro)) {
-            modelo.addRow(fila);
+        for (Object[] fila
+                : AnimalController.buscarAnimales(filtro)) {
+
+            Object[] filaCompleta =
+                    java.util.Arrays.copyOf(
+                            fila,
+                            7
+                    );
+
+            filaCompleta[6] = "";
+
+            modelo.addRow(
+                    filaCompleta
+            );
         }
 
-        tblAnimales.setModel(modelo);
+        tblAnimales.setModel(
+                modelo
+        );
+
+        configurarColumnaAcciones();
+    }
+    private void configurarColumnaAcciones() {
+
+        if (tblAnimales.getColumnCount() < 7) {
+            return;
+        }
+
+        javax.swing.table.TableColumn columnaId =
+                tblAnimales.getColumnModel()
+                        .getColumn(0);
+
+        columnaId.setMinWidth(0);
+        columnaId.setMaxWidth(0);
+        columnaId.setPreferredWidth(0);
+        columnaId.setResizable(false);
+
+        javax.swing.table.TableColumn columnaAcciones =
+                tblAnimales.getColumnModel()
+                        .getColumn(6);
+
+        columnaAcciones.setMinWidth(95);
+        columnaAcciones.setMaxWidth(95);
+        columnaAcciones.setPreferredWidth(95);
+        columnaAcciones.setResizable(false);
+
+        columnaAcciones.setCellRenderer(
+                new RenderizadorAcciones()
+        );
+
+        columnaAcciones.setCellEditor(
+                new EditorAcciones()
+        );
+
+        tblAnimales.setRowHeight(
+                38
+        );
     }
     private void configurarDiseñoAnimales() {
 
@@ -1599,72 +1682,55 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 java.awt.BorderLayout.NORTH
         );
 
+        javax.swing.JButton btnCatalogo =
+                new javax.swing.JButton(
+                        "Especies y razas"
+                );
+
+        Estilos.estilizarBoton(
+                btnCatalogo
+        );
+
+        btnCatalogo.setPreferredSize(
+                new java.awt.Dimension(
+                        220,
+                        38
+                )
+        );
+
+        btnCatalogo.addActionListener(e -> {
+
+            if (ventanaPrincipal != null) {
+
+                ventanaPrincipal.mostrarCatalogoAnimales();
+            }
+        });
+
         javax.swing.JPanel panelBotones =
-                new javax.swing.JPanel();
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                10,
+                                0
+                        )
+                );
 
         panelBotones.setOpaque(false);
 
-        panelBotones.setLayout(
-                new javax.swing.BoxLayout(
-                        panelBotones,
-                        javax.swing.BoxLayout.Y_AXIS
-                )
-        );
-
-        javax.swing.JPanel filaPrincipal =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.LEFT,
-                                10,
-                                0
-                        )
-                );
-
-        filaPrincipal.setOpaque(false);
-
-        filaPrincipal.add(
+        panelBotones.add(
                 btnAgregarAnimal
         );
 
-        filaPrincipal.add(
-                btnEditarAnimal
-        );
-
-        filaPrincipal.add(
+        panelBotones.add(
                 btnHistorialMedico
         );
 
-        filaPrincipal.add(
+        panelBotones.add(
                 btnMostrarTodos
         );
 
-        javax.swing.JPanel filaBaja =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.LEFT,
-                                10,
-                                0
-                        )
-                );
-
-        filaBaja.setOpaque(false);
-
-        filaBaja.add(
-                btnDarDeBajaRegistro
-        );
-
         panelBotones.add(
-                filaPrincipal
-        );
-
-        panelBotones.add(
-                javax.swing.Box.createVerticalStrut(
-                        10
-                )
-        );
-
-        panelBotones.add(
-                filaBaja
+                btnCatalogo
         );
 
         tarjetaAnimales.add(
@@ -1908,6 +1974,310 @@ public class VentanaAnimales extends javax.swing.JFrame {
 
                 return;
             }
+        }
+    }
+    private class RenderizadorAcciones
+        extends javax.swing.JPanel
+        implements javax.swing.table.TableCellRenderer {
+
+    private final javax.swing.JButton btnEditar =
+            crearBotonEditar();
+
+    private final javax.swing.JButton btnEliminar =
+            crearBotonEliminar();
+
+    public RenderizadorAcciones() {
+
+            setLayout(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            5,
+                            5
+                    )
+            );
+
+            setOpaque(true);
+
+            add(
+                    btnEditar
+            );
+
+            add(
+                    btnEliminar
+            );
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable table,
+                Object value,
+                boolean isSelected,
+                boolean hasFocus,
+                int row,
+                int column
+        ) {
+
+            if (isSelected) {
+
+                setBackground(
+                        table.getSelectionBackground()
+                );
+
+            } else {
+
+                setBackground(
+                        table.getBackground()
+                );
+            }
+
+            return this;
+        }
+    }
+    private class EditorAcciones
+        extends javax.swing.AbstractCellEditor
+        implements javax.swing.table.TableCellEditor {
+
+    private final javax.swing.JPanel panel =
+            new javax.swing.JPanel(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            4,
+                            3
+                    )
+            );
+
+    private final javax.swing.JButton btnEditar =
+            crearBotonEditar();
+
+    private final javax.swing.JButton btnEliminar =
+            crearBotonEliminar();
+
+    private int filaActual = -1;
+
+    public EditorAcciones() {
+
+            panel.setOpaque(true);
+
+            panel.add(
+                    btnEditar
+            );
+
+            panel.add(
+                    btnEliminar
+            );
+
+            btnEditar.addActionListener(e -> {
+
+                int fila =
+                        filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblAnimales.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    btnEditarAnimalActionPerformed(
+                            null
+                    );
+                }
+            });
+
+            btnEliminar.addActionListener(e -> {
+
+                int fila =
+                        filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblAnimales.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    btnDarDeBajaRegistroActionPerformed(
+                            null
+                    );
+                }
+            });
+        }
+
+        @Override
+        public java.awt.Component getTableCellEditorComponent(
+                javax.swing.JTable table,
+                Object value,
+                boolean isSelected,
+                int row,
+                int column
+        ) {
+
+            filaActual = row;
+
+            panel.setBackground(
+                    table.getSelectionBackground()
+            );
+
+            return panel;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+
+            return "";
+        }
+    }
+    private javax.swing.JButton crearBotonEditar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEditar(
+                boton
+        );
+
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/editar.png",
+                16,
+                16
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(
+                        36,
+                        28
+                );  
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText(
+                "Editar animal"
+        );
+
+        boton.setFocusable(false);
+
+        return boton;
+    }
+
+    private javax.swing.JButton crearBotonEliminar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEliminar(
+                boton
+        );
+
+        boton.setText("");
+
+        boton.setIcon(
+                new IconoPapelera()
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(
+                        36,
+                        28
+                );
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText(
+                "Dar de baja el animal"
+        );
+
+        boton.setFocusable(false);
+
+        return boton;
+    }
+    private static class IconoPapelera
+            implements javax.swing.Icon {
+
+        @Override
+        public int getIconWidth() {
+
+            return 16;
+        }
+
+        @Override
+        public int getIconHeight() {
+
+            return 16;
+        }
+
+        @Override
+        public void paintIcon(
+                java.awt.Component componente,
+                java.awt.Graphics graficos,
+                int x,
+                int y
+        ) {
+
+            java.awt.Graphics2D g2 =
+                    (java.awt.Graphics2D)
+                            graficos.create();
+
+            g2.setColor(
+                    java.awt.Color.WHITE
+            );
+
+            g2.setStroke(
+                    new java.awt.BasicStroke(
+                            1.8f,
+                            java.awt.BasicStroke.CAP_ROUND,
+                            java.awt.BasicStroke.JOIN_ROUND
+                    )
+            );
+
+            g2.drawLine(
+                    x + 2,
+                    y + 4,
+                    x + 14,
+                    y + 4
+            );
+
+            g2.drawLine(
+                    x + 6,
+                    y + 2,
+                    x + 10,
+                    y + 2
+            );
+
+            g2.drawRoundRect(
+                    x + 4,
+                    y + 5,
+                    8,
+                    9,
+                    1,
+                    1
+            );
+
+            g2.drawLine(
+                    x + 7,
+                    y + 7,
+                    x + 7,
+                    y + 12
+            );
+
+            g2.drawLine(
+                    x + 9,
+                    y + 7,
+                    x + 9,
+                    y + 12
+            );
+
+            g2.dispose();
         }
     }
     public static void main(String args[]) {

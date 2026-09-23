@@ -1310,6 +1310,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelContenido.repaint();
     }
     
+    public void mostrarCatalogoAnimales() {
+
+        PanelCatalogoAnimales catalogo =
+                new PanelCatalogoAnimales(
+                        this
+                );
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                catalogo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
+    
     public void mostrarCrearAnimal() {
 
         VentanaAgregarAnimal ventanaAgregarAnimal =
@@ -1586,7 +1604,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelContenido.revalidate();
         panelContenido.repaint();
     }
-    
+    public void mostrarTiposProcedimiento() {
+
+        PanelTiposProcedimiento panelTipos =
+                new PanelTiposProcedimiento(
+                        this
+                );
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                panelTipos,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
     public void mostrarCrearProcedimiento() {
 
         VentanaAgregarProcedimiento ventana =

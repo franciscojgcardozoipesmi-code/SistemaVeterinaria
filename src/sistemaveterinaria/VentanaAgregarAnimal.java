@@ -1,11 +1,17 @@
 package sistemaveterinaria;
 import controller.ClienteController;
 import controller.AnimalController;
+import controller.CatalogoAnimalController;
 public class VentanaAgregarAnimal extends javax.swing.JFrame {
     private String rolUsuario;
     private int idAnimal = -1;
     private javax.swing.JLabel lblTituloFormulario;
     private VentanaPrincipal ventanaPrincipal;
+    private final javax.swing.JComboBox<String> cmbEspecie =
+            new javax.swing.JComboBox<>();
+
+    private final javax.swing.JComboBox<String> cmbRaza =
+            new javax.swing.JComboBox<>();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaAgregarAnimal.class.getName());
 
     
@@ -14,6 +20,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarClientes();
         aplicarDiseñoCrearEditarAnimales();
+        configurarCatalogo();       
     }
 
     public VentanaAgregarAnimal(String rolUsuario) {
@@ -22,6 +29,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cargarClientes();
         aplicarDiseñoCrearEditarAnimales();
+        configurarCatalogo();
     }
     
     public VentanaAgregarAnimal(
@@ -36,6 +44,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
 
         cargarClientes();
         aplicarDiseñoCrearEditarAnimales();
+        configurarCatalogo();
     }
   
     @SuppressWarnings("unchecked")
@@ -143,17 +152,24 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+            try {
 
-        try {
+            String nombre =
+                    txtNombre.getText().trim();
 
-            String nombre = txtNombre.getText().trim();
-            String especie = txtEspecie.getText().trim();
-            String raza = txtRaza.getText().trim();
-            String edadTexto = txtEdad.getText().trim();
+            String edadTexto =
+                    txtEdad.getText().trim();
+
+            Object especieSeleccionada =
+                    cmbEspecie.getSelectedItem();
+
+            Object razaSeleccionada =
+                    cmbRaza.getSelectedItem();
 
             if (nombre.isEmpty()
-                    || especie.isEmpty()
                     || edadTexto.isEmpty()
+                    || especieSeleccionada == null
+                    || razaSeleccionada == null
                     || cmbCliente.getSelectedItem() == null) {
 
                 Estilos.mostrarAdvertencia(
@@ -164,15 +180,32 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
 
                 return;
             }
+            if (!nombre.matches("[\\p{L} '-]+")) {
 
-            int edad = Integer.parseInt(edadTexto);
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Atención",
+                        "El nombre del animal no puede contener números"
+                );
+
+                return;
+            }    
+            String especie =
+                    especieSeleccionada.toString();
+
+            String raza =
+                    razaSeleccionada.toString();
+
+            int edad =
+                    Integer.parseInt(edadTexto);
 
             String clienteSeleccionado =
                     cmbCliente.getSelectedItem().toString();
 
-            int idCliente = Integer.parseInt(
-                    clienteSeleccionado.split(" - ")[0]
-            );
+            int idCliente =
+                    Integer.parseInt(
+                            clienteSeleccionado.split(" - ")[0]
+                    );
 
             AnimalController.guardarAnimal(
                     nombre,
@@ -200,14 +233,16 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
 
                 va.setVisible(true);
 
-                this.dispose();
+                dispose();
             }
 
-        Estilos.mostrarAdvertencia(
-                this,
-                "Atención",
-                "La edad debe ser un número válido"
-        );
+        } catch (NumberFormatException e) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "La edad debe ser un número válido"
+            );
 
         } catch (Exception e) {
 
@@ -253,7 +288,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
             );
         }
     }
-    
+        
     public void cargarDatos(int idAnimal,
                             String nombre,
                             String especie,
@@ -264,8 +299,11 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         this.idAnimal = idAnimal;
 
         txtNombre.setText(nombre);
-        txtEspecie.setText(especie);
-        txtRaza.setText(raza);
+        cmbEspecie.setSelectedItem(especie);
+
+        cargarRazas();
+
+        cmbRaza.setSelectedItem(raza);
         txtEdad.setText(String.valueOf(edad));
 
         for (int i = 0; i < cmbCliente.getItemCount(); i++) {
@@ -292,6 +330,57 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         }
 
         setTitle("Henry System Vet - Editar animal");
+    }
+    
+    private void configurarCatalogo() {
+
+        java.awt.Dimension tamañoSelector =
+                new java.awt.Dimension(
+                        300,
+                        38
+                );
+
+        cmbEspecie.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbRaza.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbEspecie.setPreferredSize(
+                tamañoSelector
+        );
+
+        cmbEspecie.setMinimumSize(
+                tamañoSelector
+        );
+
+        cmbRaza.setPreferredSize(
+                tamañoSelector
+        );
+
+        cmbRaza.setMinimumSize(
+                tamañoSelector
+        );
+
+        CatalogoAnimalController.inicializarCatalogo();
+
+        cmbEspecie.removeAllItems();
+
+        for (String especie
+                : CatalogoAnimalController.listarEspecies()) {
+
+            cmbEspecie.addItem(
+                    especie
+            );
+        }
+
+        cmbEspecie.addActionListener(
+                evento -> cargarRazas()
+        );
+
+        cargarRazas();
     }
     private void aplicarDiseñoCrearEditarAnimales() {
 
@@ -464,11 +553,9 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
 
         javax.swing.JTextField[] campos = {
             txtNombre,
-            txtEspecie,
-            txtRaza,
             txtEdad
         };
-
+        
         for (javax.swing.JTextField campo : campos) {
             campo.setFont(
                     Estilos.fuenteNormal()
@@ -481,7 +568,27 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
                     )
             );
         }
+        javax.swing.JComboBox<String>[] selectores =
+                new javax.swing.JComboBox[]{
+                    cmbEspecie,
+                    cmbRaza,
+                    cmbCliente
+                };
 
+        for (javax.swing.JComboBox<String> selector
+                : selectores) {
+
+            selector.setFont(
+                    Estilos.fuenteNormal()
+            );
+
+            selector.setPreferredSize(
+                    new java.awt.Dimension(
+                            300,
+                            38
+                    )
+            );
+        }
         cmbCliente.setFont(
                 Estilos.fuenteNormal()
         );
@@ -519,7 +626,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         gbc.gridx = 1;
 
         tarjetaFormulario.add(
-                txtEspecie,
+                cmbEspecie,
                 gbc
         );
 
@@ -534,7 +641,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         gbc.gridx = 1;
 
         tarjetaFormulario.add(
-                txtRaza,
+                cmbRaza,
                 gbc
         );
 
@@ -737,7 +844,10 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
                 );
 
         contenedorTitulo.setOpaque(false);
-        contenedorTitulo.add(panelTitulo);
+
+        contenedorTitulo.add(
+                panelTitulo
+        );
 
         panelEncabezado.add(
                 contenedorTitulo
@@ -812,72 +922,147 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
             );
         }
 
-        javax.swing.JTextField[] campos = {
-            txtNombre,
-            txtEspecie,
-            txtRaza,
-            txtEdad
-        };
+        java.awt.Dimension tamañoCampo =
+                new java.awt.Dimension(
+                        300,
+                        38
+                );
 
-        for (javax.swing.JTextField campo : campos) {
+        txtNombre.setFont(
+                Estilos.fuenteNormal()
+        );
 
-            campo.setFont(
-                    Estilos.fuenteNormal()
-            );
+        txtNombre.setPreferredSize(
+                tamañoCampo
+        );
 
-            campo.setPreferredSize(
-                    new java.awt.Dimension(
-                            300,
-                            38
-                    )
-            );
-        }
+        txtNombre.setMinimumSize(
+                tamañoCampo
+        );
+
+        txtEdad.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtEdad.setPreferredSize(
+                tamañoCampo
+        );
+
+        txtEdad.setMinimumSize(
+                tamañoCampo
+        );
+
+        cmbEspecie.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbEspecie.setPreferredSize(
+                tamañoCampo
+        );
+
+        cmbEspecie.setMinimumSize(
+                tamañoCampo
+        );
+
+        cmbRaza.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbRaza.setPreferredSize(
+                tamañoCampo
+        );
+
+        cmbRaza.setMinimumSize(
+                tamañoCampo
+        );
 
         cmbCliente.setFont(
                 Estilos.fuenteNormal()
         );
 
         cmbCliente.setPreferredSize(
-                new java.awt.Dimension(
-                        300,
-                        38
-                )
+                tamañoCampo
+        );
+
+        cmbCliente.setMinimumSize(
+                tamañoCampo
         );
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        tarjetaFormulario.add(lblNombre, gbc);
+        gbc.gridwidth = 1;
+
+        tarjetaFormulario.add(
+                lblNombre,
+                gbc
+        );
 
         gbc.gridx = 1;
-        tarjetaFormulario.add(txtNombre, gbc);
+
+        tarjetaFormulario.add(
+                txtNombre,
+                gbc
+        );
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        tarjetaFormulario.add(lblEspecie, gbc);
+
+        tarjetaFormulario.add(
+                lblEspecie,
+                gbc
+        );
 
         gbc.gridx = 1;
-        tarjetaFormulario.add(txtEspecie, gbc);
+
+        tarjetaFormulario.add(
+                cmbEspecie,
+                gbc
+        );
 
         gbc.gridx = 0;
         gbc.gridy = 2;
-        tarjetaFormulario.add(lblRaza, gbc);
+
+        tarjetaFormulario.add(
+                lblRaza,
+                gbc
+        );
 
         gbc.gridx = 1;
-        tarjetaFormulario.add(txtRaza, gbc);
+
+        tarjetaFormulario.add(
+                cmbRaza,
+                gbc
+        );
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        tarjetaFormulario.add(lblEdad, gbc);
+
+        tarjetaFormulario.add(
+                lblEdad,
+                gbc
+        );
 
         gbc.gridx = 1;
-        tarjetaFormulario.add(txtEdad, gbc);
+
+        tarjetaFormulario.add(
+                txtEdad,
+                gbc
+        );
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        tarjetaFormulario.add(lblCliente, gbc);
+
+        tarjetaFormulario.add(
+                lblCliente,
+                gbc
+        );
 
         gbc.gridx = 1;
-        tarjetaFormulario.add(cmbCliente, gbc);
+
+        tarjetaFormulario.add(
+                cmbCliente,
+                gbc
+        );
 
         Estilos.estilizarBoton(
                 btnGuardar
@@ -912,8 +1097,13 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
 
         panelBotones.setOpaque(false);
 
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnVolver);
+        panelBotones.add(
+                btnGuardar
+        );
+
+        panelBotones.add(
+                btnVolver
+        );
 
         gbc.gridx = 0;
         gbc.gridy = 5;
@@ -955,6 +1145,85 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         );
 
         return panel;
+    }
+
+private void cargarRazas() {
+
+    Object especieSeleccionada =
+            cmbEspecie.getSelectedItem();
+
+    cmbRaza.removeAllItems();
+
+    if (especieSeleccionada == null) {
+        return;
+    }
+
+    for (String raza
+            : CatalogoAnimalController
+                    .listarRazasPorEspecie(
+                            especieSeleccionada.toString()
+                    )) {
+
+        cmbRaza.addItem(raza);
+    }
+}
+
+    private void bloquearNumerosEnNombre() {
+
+        javax.swing.text.AbstractDocument documento =
+                (javax.swing.text.AbstractDocument)
+                        txtNombre.getDocument();
+
+        documento.setDocumentFilter(
+                new javax.swing.text.DocumentFilter() {
+
+            private boolean esValido(String texto) {
+
+                return texto.matches(
+                        "[\\p{L}áéíóúÁÉÍÓÚñÑüÜ '-]*"
+                );
+            }
+
+            @Override
+            public void insertString(
+                    FilterBypass filtro,
+                    int posicion,
+                    String texto,
+                    javax.swing.text.AttributeSet atributos
+            ) throws javax.swing.text.BadLocationException {
+
+                if (texto != null && esValido(texto)) {
+
+                    super.insertString(
+                            filtro,
+                            posicion,
+                            texto,
+                            atributos
+                    );
+                }
+            }
+
+            @Override
+            public void replace(
+                    FilterBypass filtro,
+                    int posicion,
+                    int longitud,
+                    String texto,
+                    javax.swing.text.AttributeSet atributos
+            ) throws javax.swing.text.BadLocationException {
+
+                if (texto == null || esValido(texto)) {
+
+                    super.replace(
+                            filtro,
+                            posicion,
+                            longitud,
+                            texto,
+                            atributos
+                    );
+                }
+            }
+        });
     }
     public static void main(String args[]) {
 
