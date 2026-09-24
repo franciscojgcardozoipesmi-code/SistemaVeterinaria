@@ -6,7 +6,9 @@ public class VentanaVentas extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaVentas.class.getName());
     private VentanaPrincipal ventanaPrincipal;
     private javax.swing.JButton btnBuscarVenta;
-    private javax.swing.JButton btnMostrarTodos;
+    private javax.swing.JButton btnActualizarTabla;
+    private javax.swing.JTextField campoBuscarVenta;
+    private boolean eventosAccionesVentasConfigurados = false;
     public VentanaVentas() {
         initComponents();
 
@@ -55,7 +57,7 @@ public class VentanaVentas extends javax.swing.JFrame {
                         int row,
                         int column
                 ) {
-                    return false;
+                    return column == 9;
                 }
             };
 
@@ -67,13 +69,132 @@ public class VentanaVentas extends javax.swing.JFrame {
         modelo.addColumn("Subtotal");
         modelo.addColumn("Total");
         modelo.addColumn("Medio de pago");
+        modelo.addColumn("Estado");
+        modelo.addColumn("Acciones");
 
-       for (Object[] fila : VentaController.listarVentasConDetalle()) {
-            modelo.addRow(fila);
+       for (Object[] fila
+                : VentaController.listarVentasConDetalle()) {
+
+            Object[] filaCompleta =
+                    java.util.Arrays.copyOf(
+                            fila,
+                            10
+                    );
+
+            filaCompleta[9] = "";
+
+            modelo.addRow(
+                    filaCompleta
+            );
         }
 
        tblVentas.setModel(modelo);
+       configurarColorEstadoVentas();
+       configurarColumnaAccionesVentas();
    }
+    
+    private void configurarColorEstadoVentas() {
+
+        javax.swing.table.DefaultTableCellRenderer renderer =
+                new javax.swing.table.DefaultTableCellRenderer() {
+
+            @Override
+            public java.awt.Component getTableCellRendererComponent(
+                    javax.swing.JTable table,
+                    Object value,
+                    boolean isSelected,
+                    boolean hasFocus,
+                    int row,
+                    int column
+            ) {
+
+                java.awt.Component componente =
+                        super.getTableCellRendererComponent(
+                                table,
+                                value,
+                                isSelected,
+                                hasFocus,
+                                row,
+                                column
+                        );
+
+                int filaModelo =
+                        table.convertRowIndexToModel(row);
+
+                Object valorEstado =
+                        table.getModel().getValueAt(
+                                filaModelo,
+                                8
+                        );
+
+                boolean anulada =
+                        valorEstado != null
+                        && "ANULADA".equalsIgnoreCase(
+                                valorEstado.toString()
+                        );
+
+                if (!isSelected) {
+
+                    if (anulada) {
+
+                        componente.setBackground(
+                                new java.awt.Color(
+                                        255,
+                                        220,
+                                        220
+                                )
+                        );
+
+                        componente.setForeground(
+                                new java.awt.Color(
+                                        190,
+                                        55,
+                                        55
+                                )
+                        );
+
+                    } else {
+
+                        componente.setBackground(
+                                Estilos.BLANCO
+                        );
+
+                        componente.setForeground(
+                                Estilos.VERDE_OSCURO
+                        );
+                    }
+                }
+                int columnaModelo =
+                        table.convertColumnIndexToModel(
+                                column
+                        );
+
+                if (columnaModelo == 1
+                        || columnaModelo == 3
+                        || columnaModelo == 4
+                        || columnaModelo == 5
+                        || columnaModelo == 6
+                        || columnaModelo == 7) {
+
+                    setHorizontalAlignment(
+                            javax.swing.SwingConstants.CENTER
+                    );
+
+                } else {
+
+                    setHorizontalAlignment(
+                            javax.swing.SwingConstants.LEFT
+                    );
+                }
+                return componente;
+            }
+        };
+
+        tblVentas.setDefaultRenderer(
+                Object.class,
+                renderer
+        );
+    }
        
         
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -310,20 +431,38 @@ public class VentanaVentas extends javax.swing.JFrame {
         );
 
         btnConfirmarDialogo.addActionListener(e -> {
+
             try {
-                VentaController.eliminarVenta(idVenta);
+
+                boolean anulada =
+                        VentaController.anularVenta(
+                                idVenta
+                        );
 
                 dialogo.dispose();
 
-                Estilos.mostrarAdvertencia(
-                        this,
-                        "Operación exitosa",
-                        "Venta anulada correctamente"
-                );
+                if (anulada) {
+
+                    Estilos.mostrarAdvertencia(
+                            this,
+                            "Operación exitosa",
+                            "Venta anulada correctamente. "
+                            + "El stock fue restaurado"
+                    );
+
+                } else {
+
+                    Estilos.mostrarAdvertencia(
+                            this,
+                            "Atención",
+                            "La venta seleccionada ya estaba anulada"
+                    );
+                }
 
                 cargarVentas();
 
             } catch (Exception ex) {
+
                 dialogo.dispose();
 
                 Estilos.mostrarAdvertencia(
@@ -498,42 +637,8 @@ public class VentanaVentas extends javax.swing.JFrame {
                         400
                 )
         );
-
-
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblVentas.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(1)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(3)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(4)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(5)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(6)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(7)
-                .setCellRenderer(centrado);
+     
+        
 
 
         tarjetaVentas.add(
@@ -770,43 +875,7 @@ public class VentanaVentas extends javax.swing.JFrame {
 
         scrollVentas.setBorder(
                 javax.swing.BorderFactory.createEmptyBorder()
-        );
-
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblVentas.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(1)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(3)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(4)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(5)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(6)
-                .setCellRenderer(centrado);
-
-        tblVentas.getColumnModel()
-                .getColumn(7)
-                .setCellRenderer(centrado);
-
+        );   
         tarjetaVentas.add(
                 scrollVentas,
                 java.awt.BorderLayout.CENTER
@@ -825,7 +894,7 @@ public class VentanaVentas extends javax.swing.JFrame {
         );
 
         Estilos.estilizarBoton(
-                btnMostrarTodos
+                btnActualizarTabla
         );
 
         Estilos.aplicarIcono(
@@ -836,7 +905,7 @@ public class VentanaVentas extends javax.swing.JFrame {
         );
 
         Estilos.aplicarIcono(
-                btnMostrarTodos,
+                btnActualizarTabla,
                 "/imagenes/iconos/mostrar_todos.png",
                 18,
                 18
@@ -921,17 +990,55 @@ public class VentanaVentas extends javax.swing.JFrame {
         panelInicio.add(
                 btnInicio
         );
+        btnActualizarTabla.setPreferredSize(
+                new java.awt.Dimension(
+                        210,
+                        38
+                )
+        );
 
+        campoBuscarVenta.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        campoBuscarVenta.setPreferredSize(
+                new java.awt.Dimension(
+                        340,
+                        38
+                )
+        );
+
+        campoBuscarVenta.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                10,
+                                0,
+                                10
+                        )
+                )
+        );
         javax.swing.JPanel panelBusqueda =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
                                 java.awt.FlowLayout.RIGHT,
-                                0,
+                                8,
                                 0
                         )
                 );
 
         panelBusqueda.setOpaque(false);
+
+        panelBusqueda.add(
+                btnActualizarTabla
+        );
+
+        panelBusqueda.add(
+                campoBuscarVenta
+        );
 
         panelBusqueda.add(
                 btnBuscarVenta
@@ -966,19 +1073,15 @@ public class VentanaVentas extends javax.swing.JFrame {
                 )
         );
 
-        btnEliminarVenta.setPreferredSize(
-                new java.awt.Dimension(
-                        175,
-                        38
-                )
+       
+        campoBuscarVenta.setHorizontalAlignment(
+                javax.swing.SwingConstants.LEFT
         );
 
-        btnMostrarTodos.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
+        javax.swing.SwingUtilities.invokeLater(() ->
+                campoBuscarVenta.setCaretPosition(0)
         );
+        
 
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
@@ -995,13 +1098,9 @@ public class VentanaVentas extends javax.swing.JFrame {
                 btnCrearVenta
         );
 
-        panelBotones.add(
-                btnEliminarVenta
-        );
+        
 
-        panelBotones.add(
-                btnMostrarTodos
-        );
+        
 
         tarjetaVentas.add(
                 panelBotones,
@@ -1037,7 +1136,7 @@ public class VentanaVentas extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return false;
+                return column == 9;
             }
         };
 
@@ -1072,38 +1171,515 @@ public class VentanaVentas extends javax.swing.JFrame {
         modelo.addColumn(
                 "Medio de pago"
         );
+        
+        modelo.addColumn(
+                "Estado"
+        );
+        modelo.addColumn(
+                "Acciones"
+        );
 
         for (Object[] fila
                 : VentaController.buscarVentas(filtro)) {
 
+            Object[] filaCompleta =
+                    java.util.Arrays.copyOf(
+                            fila,
+                            10
+                    );
+
+            filaCompleta[9] = "";
+
             modelo.addRow(
-                    fila
+                    filaCompleta
             );
         }
 
         tblVentas.setModel(
                 modelo
         );
+        configurarColorEstadoVentas();
+        configurarColumnaAccionesVentas();
+    }
+    private void configurarColumnaAccionesVentas() {
+
+        if (tblVentas.getColumnCount() < 10) {
+            return;
+        }
+
+        javax.swing.table.TableColumn columnaId =
+                tblVentas.getColumnModel()
+                        .getColumn(0);
+
+        columnaId.setMinWidth(0);
+        columnaId.setMaxWidth(0);
+        columnaId.setPreferredWidth(0);
+        columnaId.setResizable(false);
+
+        javax.swing.table.TableColumn columnaAcciones =
+                tblVentas.getColumnModel()
+                        .getColumn(9);
+
+        columnaAcciones.setMinWidth(85);
+        columnaAcciones.setMaxWidth(85);
+        columnaAcciones.setPreferredWidth(85);
+        columnaAcciones.setResizable(false);
+
+        columnaAcciones.setCellRenderer(
+                new RenderizadorAnularVenta()
+        );
+
+        columnaAcciones.setCellEditor(
+                new EditorAnularVenta()
+        );
+
+        tblVentas.setRowHeight(32);
+        if (!eventosAccionesVentasConfigurados) {
+
+            eventosAccionesVentasConfigurados = true;
+
+            tblVentas.addMouseMotionListener(
+                    new java.awt.event.MouseMotionAdapter() {
+
+                @Override
+                public void mouseMoved(
+                        java.awt.event.MouseEvent e
+                ) {
+
+                    int fila =
+                            tblVentas.rowAtPoint(
+                                    e.getPoint()
+                            );
+
+                    int columnaVista =
+                            tblVentas.columnAtPoint(
+                                    e.getPoint()
+                            );
+
+                    boolean sobreAcciones =
+                            fila >= 0
+                            && columnaVista >= 0
+                            && tblVentas.convertColumnIndexToModel(
+                                    columnaVista
+                            ) == 9;
+
+                    boolean ventaActiva = false;
+
+                    if (sobreAcciones) {
+
+                        int filaModelo =
+                                tblVentas.convertRowIndexToModel(
+                                        fila
+                                );
+
+                        Object estado =
+                                tblVentas.getModel().getValueAt(
+                                        filaModelo,
+                                        8
+                                );
+
+                        ventaActiva =
+                                estado != null
+                                && !"ANULADA".equalsIgnoreCase(
+                                        estado.toString()
+                                );
+                    }
+
+                    tblVentas.setCursor(
+                            sobreAcciones && ventaActiva
+                                    ? java.awt.Cursor.getPredefinedCursor(
+                                            java.awt.Cursor.HAND_CURSOR
+                                    )
+                                    : java.awt.Cursor.getDefaultCursor()
+                    );
+
+                    tblVentas.repaint();
+                }
+            });
+
+            tblVentas.addMouseListener(
+                    new java.awt.event.MouseAdapter() {
+
+                @Override
+                public void mouseExited(
+                        java.awt.event.MouseEvent e
+                ) {
+
+                    tblVentas.setCursor(
+                            java.awt.Cursor.getDefaultCursor()
+                    );
+
+                    tblVentas.repaint();
+                }
+            });
+        }
+    }
+    private class RenderizadorAnularVenta
+        extends javax.swing.JPanel
+        implements javax.swing.table.TableCellRenderer {
+
+    private final javax.swing.JButton boton =
+            crearBotonAnularVenta();
+    
+    private final java.awt.Color colorNormal =
+        boton.getBackground();
+
+    public RenderizadorAnularVenta() {
+
+            setLayout(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            0,
+                            5
+                    )
+            );
+
+            setOpaque(true);
+            add(boton);
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable table,
+                Object value,
+                boolean isSelected,
+                boolean hasFocus,
+                int row,
+                int column
+        ) {
+
+            int filaModelo =
+                    table.convertRowIndexToModel(row);
+
+            Object estado =
+                    table.getModel().getValueAt(
+                            filaModelo,
+                            8
+                    );
+
+            boolean anulada =
+                    estado != null
+                    && "ANULADA".equalsIgnoreCase(
+                            estado.toString()
+                    );
+
+            boton.setEnabled(
+                    !anulada
+            );
+            
+            boolean mouseEncima = false;
+
+            java.awt.Point posicionMouse =
+                    table.getMousePosition();
+
+            if (posicionMouse != null && !anulada) {
+
+                int filaMouse =
+                        table.rowAtPoint(
+                                posicionMouse
+                        );
+
+                int columnaMouse =
+                        table.columnAtPoint(
+                                posicionMouse
+                        );
+
+                mouseEncima =
+                        filaMouse == row
+                        && columnaMouse == column;
+            }
+
+            boton.setBackground(
+                    mouseEncima
+                            ? new java.awt.Color(
+                                    255,
+                                    165,
+                                    165
+                            )
+                            : colorNormal
+            );
+
+            boton.setToolTipText(
+                    anulada
+                            ? "La venta ya está anulada"
+                            : "Anular venta"
+            );
+
+            if (isSelected) {
+
+                setBackground(
+                        table.getSelectionBackground()
+                );
+
+            } else if (anulada) {
+
+                setBackground(
+                        new java.awt.Color(
+                                255,
+                                220,
+                                220
+                        )
+                );
+
+            } else {
+
+                setBackground(
+                        Estilos.BLANCO
+                );
+            }
+
+            return this;
+        }
+    }
+    private class EditorAnularVenta
+            extends javax.swing.AbstractCellEditor
+            implements javax.swing.table.TableCellEditor {
+
+        private final javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                5
+                        )
+                );
+
+        private final javax.swing.JButton boton =
+                crearBotonAnularVenta();
+
+        private int filaActual = -1;
+
+        public EditorAnularVenta() {
+
+            panel.setOpaque(true);
+            panel.add(boton);
+
+            boton.addActionListener(e -> {
+
+                int fila = filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblVentas.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    btnEliminarVentaActionPerformed(
+                            null
+                    );
+                }
+            });
+        }
+
+        @Override
+        public java.awt.Component getTableCellEditorComponent(
+                javax.swing.JTable table,
+                Object value,
+                boolean isSelected,
+                int row,
+                int column
+        ) {
+
+            filaActual = row;
+
+            int filaModelo =
+                    table.convertRowIndexToModel(row);
+
+            Object estado =
+                    table.getModel().getValueAt(
+                            filaModelo,
+                            8
+                    );
+
+            boolean anulada =
+                    estado != null
+                    && "ANULADA".equalsIgnoreCase(
+                            estado.toString()
+                    );
+
+            boton.setEnabled(
+                    !anulada
+            );
+
+            panel.setBackground(
+                    anulada
+                            ? new java.awt.Color(
+                                    255,
+                                    220,
+                                    220
+                            )
+                            : table.getSelectionBackground()
+            );
+
+            return panel;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+
+            return "";
+        }
+    }
+    
+    private javax.swing.JButton crearBotonAnularVenta() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEliminar(
+                boton
+        );
+
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/eliminar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(
+                        30,
+                        22
+                );
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        boton.setToolTipText(
+                "Anular venta"
+        );
+
+        return boton;
     }
     private void inicializarBotonesVentas() {
 
         btnBuscarVenta =
+                new javax.swing.JButton();
+
+        btnActualizarTabla =
                 new javax.swing.JButton(
-                        "Buscar"
+                        "Actualizar tabla"
                 );
 
-        btnMostrarTodos =
-                new javax.swing.JButton(
-                        "Mostrar todos"
+        campoBuscarVenta =
+                new javax.swing.JTextField(
+                        "Buscar por fecha, producto o pago"
                 );
 
-        btnBuscarVenta.addActionListener(e ->
-                mostrarDialogoBuscarVentas()
+        campoBuscarVenta.setForeground(
+                new java.awt.Color(
+                        145,
+                        145,
+                        145
+                )
         );
 
-        btnMostrarTodos.addActionListener(e ->
-                cargarVentas()
+        campoBuscarVenta.addFocusListener(
+                new java.awt.event.FocusAdapter() {
+
+            @Override
+            public void focusGained(
+                    java.awt.event.FocusEvent evt
+            ) {
+
+                if (campoBuscarVenta.getText().equals(
+                        "Buscar por fecha, producto o pago"
+                )) {
+
+                    campoBuscarVenta.setText("");
+
+                    campoBuscarVenta.setForeground(
+                            Estilos.VERDE_OSCURO
+                    );
+                }
+                campoBuscarVenta.setCaretPosition(0);
+            }
+
+            @Override
+            public void focusLost(
+                    java.awt.event.FocusEvent evt
+            ) {
+
+                if (campoBuscarVenta.getText()
+                        .trim().isEmpty()) {
+
+                    campoBuscarVenta.setText(
+                            "Buscar por fecha, producto o pago"
+                    );
+
+                    campoBuscarVenta.setForeground(
+                            new java.awt.Color(
+                                    145,
+                                    145,
+                                    145
+                            )
+                    );
+                }
+                campoBuscarVenta.setCaretPosition(0);
+            }
+        });
+
+        btnBuscarVenta.addActionListener(e -> {
+
+            String filtro =
+                    campoBuscarVenta.getText().trim();
+
+            if (filtro.isEmpty()
+                    || filtro.equals(
+                            "Buscar por fecha, producto o pago"
+                    )) {
+
+                cargarVentas();
+
+            } else {
+
+                buscarVentas(
+                        filtro
+                );
+            }
+        });
+
+        campoBuscarVenta.addActionListener(e ->
+                btnBuscarVenta.doClick()
         );
+
+        btnActualizarTabla.addActionListener(e -> {
+
+            cargarVentas();
+
+            campoBuscarVenta.setText(
+                    "Buscar por fecha, producto o pago"
+            );
+
+            campoBuscarVenta.setForeground(
+                    new java.awt.Color(
+                            145,
+                            145,
+                            145
+                    )
+            );
+
+            tblVentas.requestFocusInWindow();
+
+            javax.swing.SwingUtilities.invokeLater(() ->
+                    campoBuscarVenta.setCaretPosition(0)
+            );
+        });
     }
     
     private void mostrarDialogoBuscarVentas() {

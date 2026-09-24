@@ -7,7 +7,7 @@ public class VentanaClientes extends javax.swing.JFrame {
     private VentanaPrincipal ventanaPrincipal;
     private javax.swing.JPanel panelAnimalesCliente;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaClientes.class.getName());
-
+    private javax.swing.JTextField campoBusquedaClientes;
     public VentanaClientes() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
@@ -47,7 +47,7 @@ public class VentanaClientes extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return column == 6;
+                return column == 6 || column == 7;
             }
         };
 
@@ -58,9 +58,19 @@ public class VentanaClientes extends javax.swing.JFrame {
         modelo.addColumn("Dirección");
         modelo.addColumn("Correo");
         modelo.addColumn("Observaciones");
+        modelo.addColumn("Acciones");
 
         for (Object[] fila : ClienteController.listarClientes()) {
-            modelo.addRow(fila);
+            modelo.addRow(new Object[]{
+                fila[0],
+                fila[1],
+                fila[2],
+                fila[3],
+                fila[4],
+                fila[5],
+                fila[6],
+                ""
+            });
         }
 
         tblClientes.setModel(modelo);
@@ -70,14 +80,14 @@ public class VentanaClientes extends javax.swing.JFrame {
     private void buscarClientes(String filtro) {
 
         javax.swing.table.DefaultTableModel modelo =
-            new javax.swing.table.DefaultTableModel() {
+                new javax.swing.table.DefaultTableModel() {
 
             @Override
             public boolean isCellEditable(
                     int row,
                     int column
             ) {
-                return column == 6;
+                return column == 6 || column == 7;
             }
         };
 
@@ -88,9 +98,21 @@ public class VentanaClientes extends javax.swing.JFrame {
         modelo.addColumn("Dirección");
         modelo.addColumn("Correo");
         modelo.addColumn("Observaciones");
+        modelo.addColumn("Acciones");
 
-        for (Object[] fila : ClienteController.buscarClientes(filtro)) {
-            modelo.addRow(fila);
+        for (Object[] fila
+                : ClienteController.buscarClientes(filtro)) {
+
+            modelo.addRow(new Object[]{
+                fila[0],
+                fila[1],
+                fila[2],
+                fila[3],
+                fila[4],
+                fila[5],
+                fila[6],
+                ""
+            });
         }
 
         tblClientes.setModel(modelo);
@@ -208,279 +230,34 @@ public class VentanaClientes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarTodosActionPerformed
-        cargarTabla();        
+        cargarTabla();
+
+        campoBusquedaClientes.setText(
+                "Buscar por nombre o DNI"
+        );
+
+        campoBusquedaClientes.setForeground(
+                new java.awt.Color(140, 140, 140)
+        );
+
+        campoBusquedaClientes.setCaretPosition(0);      
     }//GEN-LAST:event_btnMostrarTodosActionPerformed
 
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-            java.awt.Window ventanaPadre =
-                javax.swing.SwingUtilities.getWindowAncestor(this);
+        String texto =
+                campoBusquedaClientes.getText().trim();
 
-        javax.swing.JDialog dialogo =
-                new javax.swing.JDialog(
-                        ventanaPadre,
-                        "Buscar cliente",
-                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
-                );
+        if (texto.isEmpty()
+                || texto.equals(
+                        "Buscar por nombre o DNI"
+                )) {
 
-        dialogo.setUndecorated(true);
+            cargarTabla();
+            return;
+        }
 
-        javax.swing.JPanel panelPrincipal =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout(
-                                0,
-                                20
-                        )
-                );
-
-        panelPrincipal.setBackground(
-                Estilos.BLANCO
-        );
-
-        panelPrincipal.setBorder(
-                javax.swing.BorderFactory.createCompoundBorder(
-                        javax.swing.BorderFactory.createLineBorder(
-                                Estilos.VERDE_OSCURO,
-                                2
-                        ),
-                        javax.swing.BorderFactory.createEmptyBorder(
-                                0,
-                                25,
-                                25,
-                                25
-                        )
-                )
-        );
-
-        javax.swing.JLabel lblTitulo =
-                new javax.swing.JLabel(
-                        "BUSCAR CLIENTE",
-                        javax.swing.SwingConstants.CENTER
-                );
-
-        lblTitulo.setFont(
-                Estilos.fuente(20f)
-        );
-
-        lblTitulo.setForeground(
-                Estilos.BLANCO
-        );
-
-        javax.swing.JPanel panelTitulo =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout()
-                );
-
-        panelTitulo.setBackground(
-                Estilos.VERDE_OSCURO
-        );
-
-        panelTitulo.setBorder(
-                javax.swing.BorderFactory.createEmptyBorder(
-                        12,
-                        20,
-                        12,
-                        20
-                )
-        );
-
-        panelTitulo.add(
-                lblTitulo,
-                java.awt.BorderLayout.CENTER
-        );
-
-        javax.swing.JPanel panelCentro =
-                new javax.swing.JPanel();
-
-        panelCentro.setOpaque(false);
-
-        panelCentro.setLayout(
-                new javax.swing.BoxLayout(
-                        panelCentro,
-                        javax.swing.BoxLayout.Y_AXIS
-                )
-        );
-
-        javax.swing.JLabel lblBuscar =
-                new javax.swing.JLabel(
-                        "Buscar por nombre o DNI:"
-                );
-
-        lblBuscar.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        lblBuscar.setForeground(
-                Estilos.VERDE_OSCURO
-        );
-
-        lblBuscar.setAlignmentX(
-                java.awt.Component.LEFT_ALIGNMENT
-        );
-
-        javax.swing.JTextField campoBuscar =
-                new javax.swing.JTextField();
-
-        campoBuscar.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        campoBuscar.setMaximumSize(
-                new java.awt.Dimension(
-                        Integer.MAX_VALUE,
-                        38
-                )
-        );
-
-        campoBuscar.setPreferredSize(
-                new java.awt.Dimension(
-                        280,
-                        34
-                )
-        );
-
-        campoBuscar.setAlignmentX(
-                java.awt.Component.LEFT_ALIGNMENT
-        );
-
-        panelCentro.add(
-                lblBuscar
-        );
-
-        panelCentro.add(
-                javax.swing.Box.createVerticalStrut(10)
-        );
-
-        panelCentro.add(
-                campoBuscar
-        );
-
-        javax.swing.JButton btnBuscarDialogo =
-                new javax.swing.JButton(
-                        "Buscar"
-                );
-
-        javax.swing.JButton btnCancelarDialogo =
-                new javax.swing.JButton(
-                        "Cancelar"
-                );
-
-        Estilos.estilizarBoton(
-                btnBuscarDialogo
-        );
-
-        Estilos.estilizarBoton(
-                btnCancelarDialogo
-        );
-
-        btnBuscarDialogo.setPreferredSize(
-                new java.awt.Dimension(
-                        105,
-                        34
-                )
-        );
-
-        btnCancelarDialogo.setPreferredSize(
-                new java.awt.Dimension(
-                        105,
-                        34
-                )
-        );
-
-        javax.swing.JPanel panelBotones =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.RIGHT,
-                                10,
-                                0
-                        )
-                );
-
-        panelBotones.setOpaque(false);
-
-        panelBotones.add(
-                btnCancelarDialogo
-        );
-
-        panelBotones.add(
-                btnBuscarDialogo
-        );
-
-        javax.swing.JPanel contenido =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout(
-                                0,
-                                20
-                        )
-                );
-
-        contenido.setOpaque(false);
-
-        contenido.setBorder(
-                javax.swing.BorderFactory.createEmptyBorder(
-                        5,
-                        0,
-                        0,
-                        0
-                )
-        );
-
-        contenido.add(
-                panelCentro,
-                java.awt.BorderLayout.CENTER
-        );
-
-        contenido.add(
-                panelBotones,
-                java.awt.BorderLayout.SOUTH
-        );
-
-        panelPrincipal.add(
-                panelTitulo,
-                java.awt.BorderLayout.NORTH
-        );
-
-        panelPrincipal.add(
-                contenido,
-                java.awt.BorderLayout.CENTER
-        );
-
-        btnCancelarDialogo.addActionListener(e ->
-                dialogo.dispose()
-        );
-
-        btnBuscarDialogo.addActionListener(e -> {
-
-            String texto =
-                    campoBuscar.getText().trim();
-
-            if (!texto.isEmpty()) {
-
-                buscarClientes(texto);
-
-                dialogo.dispose();
-            }
-        });
-
-        campoBuscar.addActionListener(e ->
-                btnBuscarDialogo.doClick()
-        );
-
-        dialogo.setContentPane(
-                panelPrincipal
-        );
-
-        dialogo.setSize(
-                370,
-                200
-        );
-
-        dialogo.setLocationRelativeTo(
-                ventanaPadre
-        );
-
-        campoBuscar.requestFocusInWindow();
-
-        dialogo.setVisible(true);       
+        buscarClientes(texto);
+    
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
@@ -1024,22 +801,7 @@ public class VentanaClientes extends javax.swing.JFrame {
         Estilos.estilizarTabla(
                 tblClientes
         );
-        
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblClientes.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblClientes.getColumnModel()
-                .getColumn(2)
-                .setCellRenderer(centrado);
-
+               
         scrollClientes.setBorder(
                 javax.swing.BorderFactory.createEmptyBorder()
         );
@@ -1187,7 +949,8 @@ public class VentanaClientes extends javax.swing.JFrame {
         repaint();
     }
     private void configurarColumnasTabla() {
-        if (tblClientes.getColumnModel().getColumnCount() < 7) {
+
+        if (tblClientes.getColumnModel().getColumnCount() < 8) {
             return;
         }
 
@@ -1198,33 +961,42 @@ public class VentanaClientes extends javax.swing.JFrame {
         columnaId.setMaxWidth(0);
         columnaId.setPreferredWidth(0);
         columnaId.setResizable(false);
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
 
-        tblClientes.getColumnModel()
-                .getColumn(1)
-                .setPreferredWidth(170);
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
 
         tblClientes.getColumnModel()
                 .getColumn(2)
-                .setPreferredWidth(110);
+                .setCellRenderer(centrado);
+        tblClientes.getColumnModel()
+                .getColumn(1)
+                .setPreferredWidth(160);
+
+        tblClientes.getColumnModel()
+                .getColumn(2)
+                .setPreferredWidth(95);
 
         tblClientes.getColumnModel()
                 .getColumn(3)
-                .setPreferredWidth(130);
+                .setPreferredWidth(120);
 
         tblClientes.getColumnModel()
                 .getColumn(4)
-                .setPreferredWidth(220);
+                .setPreferredWidth(190);
 
         tblClientes.getColumnModel()
                 .getColumn(5)
-                .setPreferredWidth(210);
+                .setPreferredWidth(180);
 
         javax.swing.table.TableColumn columnaObservaciones =
                 tblClientes.getColumnModel().getColumn(6);
 
-        columnaObservaciones.setMinWidth(110);
-        columnaObservaciones.setMaxWidth(140);
-        columnaObservaciones.setPreferredWidth(120);
+        columnaObservaciones.setMinWidth(105);
+        columnaObservaciones.setMaxWidth(105);
+        columnaObservaciones.setPreferredWidth(105);
         columnaObservaciones.setResizable(false);
 
         columnaObservaciones.setCellRenderer(
@@ -1235,7 +1007,75 @@ public class VentanaClientes extends javax.swing.JFrame {
                 new BotonObservacionesEditor()
         );
 
-        tblClientes.setRowHeight(38);
+        javax.swing.table.TableColumn columnaAcciones =
+                tblClientes.getColumnModel().getColumn(7);
+
+        columnaAcciones.setMinWidth(95);
+        columnaAcciones.setMaxWidth(95);
+        columnaAcciones.setPreferredWidth(95);
+        columnaAcciones.setResizable(false);
+
+        columnaAcciones.setCellRenderer(
+                new RenderizadorAcciones()
+        );
+
+        columnaAcciones.setCellEditor(
+                new EditorAcciones()
+        );
+        tblClientes.addMouseMotionListener(
+                new java.awt.event.MouseMotionAdapter() {
+
+            @Override
+            public void mouseMoved(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                int fila =
+                        tblClientes.rowAtPoint(
+                                e.getPoint()
+                        );
+
+                int columnaVista =
+                        tblClientes.columnAtPoint(
+                                e.getPoint()
+                        );
+
+                boolean sobreAcciones =
+                        fila >= 0
+                        && columnaVista >= 0
+                        && tblClientes.convertColumnIndexToModel(
+                                columnaVista
+                        ) == 7;
+
+                tblClientes.setCursor(
+                        sobreAcciones
+                                ? java.awt.Cursor.getPredefinedCursor(
+                                        java.awt.Cursor.HAND_CURSOR
+                                )
+                                : java.awt.Cursor.getDefaultCursor()
+                );
+
+                tblClientes.repaint();
+            }
+        });
+
+        tblClientes.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseExited(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                tblClientes.setCursor(
+                        java.awt.Cursor.getDefaultCursor()
+                );
+
+                tblClientes.repaint();
+            }
+        });
+        tblClientes.setRowHeight(32);
+        tblClientes.repaint();
     }
     public javax.swing.JPanel obtenerPanelClientes() {
 
@@ -1368,20 +1208,7 @@ public class VentanaClientes extends javax.swing.JFrame {
         columnaId.setPreferredWidth(0);
         columnaId.setResizable(false);
 
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblClientes.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblClientes.getColumnModel()
-                .getColumn(2)
-                .setCellRenderer(centrado);
+        
 
         scrollClientes.setBorder(
                 javax.swing.BorderFactory.createEmptyBorder()
@@ -1560,20 +1387,118 @@ public class VentanaClientes extends javax.swing.JFrame {
                 btnInicio
         );
 
+        campoBusquedaClientes =
+                new javax.swing.JTextField(
+                        "Buscar por nombre o DNI"
+                );
+
+        campoBusquedaClientes.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        campoBusquedaClientes.setForeground(
+                new java.awt.Color(140, 140, 140)
+        );
+
+        campoBusquedaClientes.setPreferredSize(
+                new java.awt.Dimension(270, 38)
+        );
+
+        campoBusquedaClientes.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                10,
+                                0,
+                                10
+                        )
+                )
+        );
+
+        campoBusquedaClientes.setCaretPosition(0);
+
+        campoBusquedaClientes.addFocusListener(
+                new java.awt.event.FocusAdapter() {
+
+            @Override
+            public void focusGained(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaClientes.getText().equals(
+                        "Buscar por nombre o DNI"
+                )) {
+
+                    campoBusquedaClientes.setText("");
+
+                    campoBusquedaClientes.setForeground(
+                            Estilos.VERDE_OSCURO
+                    );
+                }
+            }
+
+            @Override
+            public void focusLost(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaClientes.getText()
+                        .trim().isEmpty()) {
+
+                    campoBusquedaClientes.setText(
+                            "Buscar por nombre o DNI"
+                    );
+
+                    campoBusquedaClientes.setForeground(
+                            new java.awt.Color(
+                                    140,
+                                    140,
+                                    140
+                            )
+                    );
+
+                    campoBusquedaClientes.setCaretPosition(0);
+                }
+            }
+        });
+
+        campoBusquedaClientes.addActionListener(e ->
+                btnBuscarCliente.doClick()
+        );
+
+        btnMostrarTodos.setText(
+                "Actualizar tabla"
+        );
+
+        btnMostrarTodos.setPreferredSize(
+                new java.awt.Dimension(205, 38)
+        );
+
+        btnMostrarTodos.setMinimumSize(
+                new java.awt.Dimension(205, 38)
+        );
+
+        btnMostrarTodos.setMaximumSize(
+                new java.awt.Dimension(205, 38)
+        );
+
         javax.swing.JPanel panelBusqueda =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
                                 java.awt.FlowLayout.RIGHT,
-                                0,
+                                8,
                                 0
                         )
                 );
 
         panelBusqueda.setOpaque(false);
 
-        panelBusqueda.add(
-                btnBuscarCliente
-        );
+        panelBusqueda.add(btnMostrarTodos);
+        panelBusqueda.add(campoBusquedaClientes);
+        panelBusqueda.add(btnBuscarCliente);
 
         javax.swing.JPanel panelAccionesSuperiores =
                 new javax.swing.JPanel(
@@ -1618,13 +1543,6 @@ public class VentanaClientes extends javax.swing.JFrame {
                 )
         );
 
-        btnMostrarTodos.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
-        );
-
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
@@ -1638,18 +1556,6 @@ public class VentanaClientes extends javax.swing.JFrame {
 
         panelBotones.add(
                 btnCrearCliente
-        );
-
-        panelBotones.add(
-                btnEditarCliente
-        );
-
-        panelBotones.add(
-                btnEliminarCliente
-        );
-
-        panelBotones.add(
-                btnMostrarTodos
         );
 
         javax.swing.JPanel zonaInferior =
@@ -1767,6 +1673,269 @@ public class VentanaClientes extends javax.swing.JFrame {
         public Object getCellEditorValue() {
             return observacion;
         }
+    }
+    
+    private class RenderizadorAcciones
+            extends javax.swing.JPanel
+            implements javax.swing.table.TableCellRenderer {
+
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        private final java.awt.Color colorEditarNormal =
+                btnEditar.getBackground();
+
+        private final java.awt.Color colorEliminarNormal =
+                btnEliminar.getBackground();
+
+        public RenderizadorAcciones() {
+
+            setLayout(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            4,
+                            4
+                    )
+            );
+
+            setOpaque(true);
+
+            add(btnEditar);
+            add(btnEliminar);
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                boolean tieneFoco,
+                int fila,
+                int columna
+        ) {
+
+            setBackground(
+                    seleccionado
+                            ? tabla.getSelectionBackground()
+                            : tabla.getBackground()
+            );
+
+            boolean sobreEditar = false;
+            boolean sobreEliminar = false;
+
+            java.awt.Point posicionMouse =
+                    tabla.getMousePosition();
+
+            if (posicionMouse != null) {
+
+                int filaMouse =
+                        tabla.rowAtPoint(posicionMouse);
+
+                int columnaMouse =
+                        tabla.columnAtPoint(posicionMouse);
+
+                if (filaMouse == fila
+                        && columnaMouse == columna) {
+
+                    java.awt.Rectangle celda =
+                            tabla.getCellRect(
+                                    fila,
+                                    columna,
+                                    false
+                            );
+
+                    int posicionDentro =
+                            posicionMouse.x - celda.x;
+
+                    if (posicionDentro < celda.width / 2) {
+                        sobreEditar = true;
+                    } else {
+                        sobreEliminar = true;
+                    }
+                }
+            }
+
+            btnEditar.setBackground(
+                    sobreEditar
+                            ? colorEditarNormal.brighter()
+                            : colorEditarNormal
+            );
+
+            btnEliminar.setBackground(
+                    sobreEliminar
+                            ? new java.awt.Color(
+                                    255,
+                                    165,
+                                    165
+                            )
+                            : colorEliminarNormal
+            );
+
+            return this;
+        }
+    }
+
+    private class EditorAcciones
+            extends javax.swing.AbstractCellEditor
+            implements javax.swing.table.TableCellEditor {
+
+        private final javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                4,
+                                4
+                        )
+                );
+
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        private int filaActual = -1;
+
+        public EditorAcciones() {
+
+            panel.setOpaque(true);
+
+            panel.add(btnEditar);
+            panel.add(btnEliminar);
+
+            btnEditar.addActionListener(e -> {
+
+                int fila = filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblClientes.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    btnEditarClienteActionPerformed(null);
+                }
+            });
+
+            btnEliminar.addActionListener(e -> {
+
+                int fila = filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblClientes.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    btnEliminarClienteActionPerformed(null);
+                }
+            });
+        }
+
+        @Override
+        public java.awt.Component getTableCellEditorComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                int fila,
+                int columna
+        ) {
+
+            filaActual = fila;
+
+            panel.setBackground(
+                    tabla.getSelectionBackground()
+            );
+
+            return panel;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return "";
+        }
+    }
+
+    private javax.swing.JButton crearBotonEditar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEditar(boton);
+
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/editar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(26, 22);
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText("Editar cliente");
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+    }
+
+    private javax.swing.JButton crearBotonEliminar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEliminar(boton);
+
+        boton.setOpaque(true);
+        boton.setContentAreaFilled(true);
+        boton.setBorderPainted(false);
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/eliminar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(30, 22);
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText("Eliminar cliente");
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
     }
     public static void main(String args[]) {
   

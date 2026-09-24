@@ -5,6 +5,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
     private VentanaPrincipal ventanaPrincipal;
     private javax.swing.JButton btnBuscarUsuario;
     private javax.swing.JButton btnMostrarTodos;
+    private javax.swing.JTextField campoBusquedaUsuarios;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaUsuarios.class.getName());
 
    
@@ -55,7 +56,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return false;
+                return column == 4;
             }
         };
 
@@ -63,23 +64,29 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         modelo.addColumn("Usuario");
         modelo.addColumn("Correo");
         modelo.addColumn("Rol");
+        modelo.addColumn("Acciones");
 
-        for (Object[] fila : UsuarioController.listarUsuarios()) {
+        for (Object[] fila
+                : UsuarioController.listarUsuarios()) {
 
             modelo.addRow(new Object[]{
                 fila[0],
                 fila[1],
                 fila[4],
-                fila[3]
+                fila[3],
+                ""
             });
         }
 
         tblUsuarios.setModel(modelo);
+
+        configurarColumnasUsuarios();
     }
     
     private void buscarUsuarios(
             String filtro
     ) {
+
         javax.swing.table.DefaultTableModel modelo =
                 new javax.swing.table.DefaultTableModel() {
 
@@ -88,40 +95,80 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return false;
+                return column == 4;
             }
         };
 
-        modelo.addColumn(
-                "ID"
-        );
-
-        modelo.addColumn(
-                "Usuario"
-        );
-        modelo.addColumn(
-                "Correo"
-        );
-        modelo.addColumn(
-                "Rol"
-        );
+        modelo.addColumn("ID");
+        modelo.addColumn("Usuario");
+        modelo.addColumn("Correo");
+        modelo.addColumn("Rol");
+        modelo.addColumn("Acciones");
 
         for (Object[] fila
                 : UsuarioController.buscarUsuarios(filtro)) {
 
-            modelo.addRow(
-                    new Object[]{
-                        fila[0],
-                        fila[1],
-                        fila[4],
-                        fila[3]
-                    }
-            );
+            modelo.addRow(new Object[]{
+                fila[0],
+                fila[1],
+                fila[4],
+                fila[3],
+                ""
+            });
         }
 
-        tblUsuarios.setModel(
-                modelo
+        tblUsuarios.setModel(modelo);
+
+        configurarColumnasUsuarios();
+    }
+    private void configurarColumnasUsuarios() {
+
+        if (tblUsuarios.getColumnCount() < 5) {
+            return;
+        }
+
+        javax.swing.table.TableColumn columnaId =
+                tblUsuarios.getColumnModel()
+                        .getColumn(0);
+
+        columnaId.setMinWidth(0);
+        columnaId.setMaxWidth(0);
+        columnaId.setPreferredWidth(0);
+        columnaId.setResizable(false);
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
         );
+
+        tblUsuarios.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        tblUsuarios.getColumnModel()
+                .getColumn(3)
+                .setCellRenderer(centrado);
+
+        javax.swing.table.TableColumn columnaAcciones =
+                tblUsuarios.getColumnModel()
+                        .getColumn(4);
+
+        columnaAcciones.setMinWidth(75);
+        columnaAcciones.setMaxWidth(75);
+        columnaAcciones.setPreferredWidth(75);
+        columnaAcciones.setResizable(false);
+
+        columnaAcciones.setCellRenderer(
+                new RenderizadorAcciones()
+        );
+
+        columnaAcciones.setCellEditor(
+                new EditorAcciones()
+        );
+
+        tblUsuarios.setRowHeight(32);
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -601,22 +648,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                         400
                 )
         );
-
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblUsuarios.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblUsuarios.getColumnModel()
-                .getColumn(2)
-                .setCellRenderer(centrado);
-
+       
         tarjetaUsuarios.add(
                 jScrollPane1,
                 java.awt.BorderLayout.CENTER
@@ -855,26 +887,64 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         Estilos.estilizarTabla(
                 tblUsuarios
         );
+        
+        tblUsuarios.addMouseMotionListener(
+                new java.awt.event.MouseMotionAdapter() {
+
+            @Override
+            public void mouseMoved(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                int fila =
+                        tblUsuarios.rowAtPoint(
+                                e.getPoint()
+                        );
+
+                int columnaVista =
+                        tblUsuarios.columnAtPoint(
+                                e.getPoint()
+                        );
+
+                boolean sobreAcciones =
+                        fila >= 0
+                        && columnaVista >= 0
+                        && tblUsuarios.convertColumnIndexToModel(
+                                columnaVista
+                        ) == 4;
+
+                tblUsuarios.setCursor(
+                        sobreAcciones
+                                ? java.awt.Cursor.getPredefinedCursor(
+                                        java.awt.Cursor.HAND_CURSOR
+                                )
+                                : java.awt.Cursor.getDefaultCursor()
+                );
+
+                tblUsuarios.repaint();
+            }
+        });
+
+        tblUsuarios.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseExited(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                tblUsuarios.setCursor(
+                        java.awt.Cursor.getDefaultCursor()
+                );
+
+                tblUsuarios.repaint();
+            }
+        });
 
         jScrollPane1.setBorder(
                 javax.swing.BorderFactory.createEmptyBorder()
         );
-
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblUsuarios.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblUsuarios.getColumnModel()
-                .getColumn(2)
-                .setCellRenderer(centrado);
-
+       
         tarjetaUsuarios.add(
                 jScrollPane1,
                 java.awt.BorderLayout.CENTER
@@ -980,20 +1050,111 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                 btnInicio
         );
 
+        campoBusquedaUsuarios =
+                new javax.swing.JTextField(
+                        "Buscar por usuario, correo o rol"
+                );
+
+        campoBusquedaUsuarios.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        campoBusquedaUsuarios.setForeground(
+                new java.awt.Color(140, 140, 140)
+        );
+
+        campoBusquedaUsuarios.setPreferredSize(
+                new java.awt.Dimension(280, 38)
+        );
+
+        campoBusquedaUsuarios.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                10,
+                                0,
+                                10
+                        )
+                )
+        );
+
+        campoBusquedaUsuarios.setCaretPosition(0);
+
+        campoBusquedaUsuarios.addFocusListener(
+                new java.awt.event.FocusAdapter() {
+
+            @Override
+            public void focusGained(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaUsuarios.getText()
+                        .equals(
+                                "Buscar por usuario, correo o rol"
+                        )) {
+
+                    campoBusquedaUsuarios.setText("");
+
+                    campoBusquedaUsuarios.setForeground(
+                            Estilos.VERDE_OSCURO
+                    );
+                }
+            }
+
+            @Override
+            public void focusLost(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaUsuarios.getText()
+                        .trim()
+                        .isEmpty()) {
+
+                    campoBusquedaUsuarios.setText(
+                            "Buscar por usuario, correo o rol"
+                    );
+
+                    campoBusquedaUsuarios.setForeground(
+                            new java.awt.Color(140, 140, 140)
+                    );
+
+                    campoBusquedaUsuarios.setCaretPosition(0);
+                }
+            }
+        });
+
+        campoBusquedaUsuarios.addActionListener(e ->
+                btnBuscarUsuario.doClick()
+        );
+
+        btnMostrarTodos.setText(
+                "Actualizar tabla"
+        );
+
+        java.awt.Dimension tamañoActualizar =
+                new java.awt.Dimension(220, 38);
+
+        btnMostrarTodos.setPreferredSize(tamañoActualizar);
+        btnMostrarTodos.setMinimumSize(tamañoActualizar);
+        btnMostrarTodos.setMaximumSize(tamañoActualizar);
+
         javax.swing.JPanel panelBusqueda =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
                                 java.awt.FlowLayout.RIGHT,
-                                0,
+                                8,
                                 0
                         )
                 );
 
         panelBusqueda.setOpaque(false);
 
-        panelBusqueda.add(
-                btnBuscarUsuario
-        );
+        panelBusqueda.add(btnMostrarTodos);
+        panelBusqueda.add(campoBusquedaUsuarios);
+        panelBusqueda.add(btnBuscarUsuario);
 
         javax.swing.JPanel panelAccionesSuperiores =
                 new javax.swing.JPanel(
@@ -1029,9 +1190,6 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                 new java.awt.Dimension(180, 38)
         );
 
-        btnMostrarTodos.setPreferredSize(
-                new java.awt.Dimension(180, 38)
-        );
 
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
@@ -1045,9 +1203,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         panelBotones.setOpaque(false);
 
         panelBotones.add(btnCrearUsuario);
-        panelBotones.add(btnEditarUsuario);
-        panelBotones.add(btnEliminarUsuario);
-        panelBotones.add(btnMostrarTodos);
+
 
         tarjetaUsuarios.add(
                 panelBotones,
@@ -1074,24 +1230,56 @@ public class VentanaUsuarios extends javax.swing.JFrame {
     private void inicializarBotonesUsuarios() {
 
         btnBuscarUsuario =
-                new javax.swing.JButton(
-                        "Buscar"
-                );
+                new javax.swing.JButton("Buscar");
 
         btnMostrarTodos =
-                new javax.swing.JButton(
-                        "Mostrar todos"
-                );
+                new javax.swing.JButton("Actualizar tabla");
 
         btnBuscarUsuario.addActionListener(e ->
-                mostrarDialogoBuscarUsuarios()
+                buscarDesdeCampo()
         );
 
-        btnMostrarTodos.addActionListener(e ->
-                cargarTabla()
-        );
+        btnMostrarTodos.addActionListener(e -> {
+
+            cargarTabla();
+
+            if (campoBusquedaUsuarios != null) {
+
+                campoBusquedaUsuarios.setText(
+                        "Buscar por usuario, correo o rol"
+                );
+
+                campoBusquedaUsuarios.setForeground(
+                        new java.awt.Color(140, 140, 140)
+                );
+
+                campoBusquedaUsuarios.setCaretPosition(0);
+            }
+        });
     }
-    
+    private void buscarDesdeCampo() {
+
+        if (campoBusquedaUsuarios == null) {
+            return;
+        }
+
+        String texto =
+                campoBusquedaUsuarios
+                        .getText()
+                        .trim();
+
+        if (texto.isEmpty()
+                || texto.equals(
+                        "Buscar por usuario, correo o rol"
+                )) {
+
+            cargarTabla();
+            return;
+        }
+
+        buscarUsuarios(texto);
+    }
+
     private void mostrarDialogoBuscarUsuarios() {
 
         java.awt.Window ventanaPadre =
@@ -1382,6 +1570,264 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                 true
         );
     }
+    private class RenderizadorAcciones
+            extends javax.swing.JPanel
+            implements javax.swing.table.TableCellRenderer {
+
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        private final java.awt.Color colorEditarNormal =
+                btnEditar.getBackground();
+
+        private final java.awt.Color colorEliminarNormal =
+                btnEliminar.getBackground();
+
+        public RenderizadorAcciones() {
+
+            setLayout(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            4,
+                            4
+                    )
+            );
+
+            setOpaque(true);
+
+            add(btnEditar);
+            add(btnEliminar);
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                boolean tieneFoco,
+                int fila,
+                int columna
+        ) {
+
+            setBackground(
+                    seleccionado
+                            ? tabla.getSelectionBackground()
+                            : tabla.getBackground()
+            );
+
+            boolean sobreEditar = false;
+            boolean sobreEliminar = false;
+
+            java.awt.Point posicionMouse =
+                    tabla.getMousePosition();
+
+            if (posicionMouse != null) {
+
+                int filaMouse =
+                        tabla.rowAtPoint(posicionMouse);
+
+                int columnaMouse =
+                        tabla.columnAtPoint(posicionMouse);
+
+                if (filaMouse == fila
+                        && columnaMouse == columna) {
+
+                    java.awt.Rectangle celda =
+                            tabla.getCellRect(
+                                    fila,
+                                    columna,
+                                    false
+                            );
+
+                    int posicionDentro =
+                            posicionMouse.x - celda.x;
+
+                    if (posicionDentro < celda.width / 2) {
+                        sobreEditar = true;
+                    } else {
+                        sobreEliminar = true;
+                    }
+                }
+            }
+
+            btnEditar.setBackground(
+                    sobreEditar
+                            ? colorEditarNormal.brighter()
+                            : colorEditarNormal
+            );
+
+            btnEliminar.setBackground(
+                    sobreEliminar
+                            ? new java.awt.Color(255, 165, 165)
+                            : colorEliminarNormal
+            );
+
+            return this;
+        }
+    }
+
+    private class EditorAcciones
+            extends javax.swing.AbstractCellEditor
+            implements javax.swing.table.TableCellEditor {
+
+        private final javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                4,
+                                4
+                        )
+                );
+
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        private int filaActual = -1;
+
+        public EditorAcciones() {
+
+            panel.setOpaque(true);
+
+            panel.add(btnEditar);
+            panel.add(btnEliminar);
+
+            btnEditar.addActionListener(e -> {
+
+                int fila = filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblUsuarios.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    btnEditarUsuarioActionPerformed(null);
+                }
+            });
+
+            btnEliminar.addActionListener(e -> {
+
+                int fila = filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblUsuarios.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    btnEliminarUsuarioActionPerformed(null);
+                }
+            });
+        }
+
+        @Override
+        public java.awt.Component getTableCellEditorComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                int fila,
+                int columna
+        ) {
+
+            filaActual = fila;
+
+            panel.setBackground(
+                    tabla.getSelectionBackground()
+            );
+
+            return panel;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return "";
+        }
+    }
+
+    private javax.swing.JButton crearBotonEditar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEditar(boton);
+
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/editar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(26, 22);
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText("Editar usuario");
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+    }
+
+    private javax.swing.JButton crearBotonEliminar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEliminar(boton);
+
+        boton.setOpaque(true);
+        boton.setContentAreaFilled(true);
+        boton.setBorderPainted(false);
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/eliminar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(30, 22);
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText("Eliminar usuario");
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+}
     public static void main(String args[]) {
       
         java.awt.EventQueue.invokeLater(() -> new VentanaUsuarios().setVisible(true));

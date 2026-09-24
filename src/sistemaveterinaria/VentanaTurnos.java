@@ -8,7 +8,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
     private String rolUsuario;
     private VentanaPrincipal ventanaPrincipal;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaTurnos.class.getName());
-
+    private javax.swing.JTextField campoBusquedaTurnos;
     public VentanaTurnos() {
         initComponents();
 
@@ -64,7 +64,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
                         int row,
                         int column
                 ) {
-                    return false;
+                    return column == 8;
                 }
             };
 
@@ -76,44 +76,73 @@ public class VentanaTurnos extends javax.swing.JFrame {
             modelo.addColumn("Hora");
             modelo.addColumn("Motivo");
             modelo.addColumn("Estado");
+            modelo.addColumn("Acciones");
 
-            for (Object[] fila : TurnoController.listarTurnos()) {
-                modelo.addRow(fila);
+            for (Object[] fila
+                    : TurnoController.listarTurnos()) {
+
+                Object[] filaCompleta =
+                        java.util.Arrays.copyOf(
+                                fila,
+                                9
+                        );
+
+                filaCompleta[8] = "";
+
+                modelo.addRow(filaCompleta);
             }
 
             tblTurnos.setModel(modelo);
+
             aplicarColoresEstado();
+            configurarColumnasTurnos();
         }
     
-    private void buscarTurnos(String filtro) {
+    private void buscarTurnos(
+            String filtro
+    ) {
 
-    javax.swing.table.DefaultTableModel modelo =
-            new javax.swing.table.DefaultTableModel() {
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
 
-        @Override
-        public boolean isCellEditable(
-                int row,
-                int column
-        ) {
-            return false;
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return column == 8;
+            }
+        };
+
+        modelo.addColumn("ID");
+        modelo.addColumn("Dueño");
+        modelo.addColumn("DNI");
+        modelo.addColumn("Animal");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Hora");
+        modelo.addColumn("Motivo");
+        modelo.addColumn("Estado");
+        modelo.addColumn("Acciones");
+
+        for (Object[] fila
+                : TurnoController.buscarTurnos(filtro)) {
+
+            Object[] filaCompleta =
+                    java.util.Arrays.copyOf(
+                            fila,
+                            9
+                    );
+
+            filaCompleta[8] = "";
+
+            modelo.addRow(filaCompleta);
         }
-    };
 
-    modelo.addColumn("ID");
-    modelo.addColumn("Dueño");
-    modelo.addColumn("DNI");
-    modelo.addColumn("Animal");
-    modelo.addColumn("Fecha");
-    modelo.addColumn("Hora");
-    modelo.addColumn("Motivo");
-    modelo.addColumn("Estado");
-    for (Object[] fila : TurnoController.buscarTurnos(filtro)) {
-        modelo.addRow(fila);
+        tblTurnos.setModel(modelo);
+
+        aplicarColoresEstado();
+        configurarColumnasTurnos();
     }
-
-    tblTurnos.setModel(modelo);
-    aplicarColoresEstado();
-}
     
 
    
@@ -509,291 +538,33 @@ public class VentanaTurnos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarTurnoActionPerformed
 
     private void btnBuscarTurnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarTurnoActionPerformed
-        java.awt.Window ventanaPadre =
-            javax.swing.SwingUtilities.getWindowAncestor(this);
+        String texto =
+                campoBusquedaTurnos.getText().trim();
 
-        javax.swing.JDialog dialogo =
-                new javax.swing.JDialog(
-                        ventanaPadre,
-                        "Buscar turno",
-                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
-                );
+        if (texto.isEmpty()
+                || texto.equals(
+                        "Buscar por DNI, dueño o animal"
+                )) {
 
-        dialogo.setUndecorated(true);
+            cargarTabla();
+            return;
+        }
 
-        javax.swing.JPanel panelPrincipal =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout(
-                                0,
-                                20
-                        )
-                );
-
-        panelPrincipal.setBackground(
-                Estilos.BLANCO
-        );
-
-        panelPrincipal.setBorder(
-                javax.swing.BorderFactory.createCompoundBorder(
-                        javax.swing.BorderFactory.createLineBorder(
-                                Estilos.VERDE_OSCURO,
-                                2
-                        ),
-                        javax.swing.BorderFactory.createEmptyBorder(
-                                0,
-                                25,
-                                25,
-                                25
-                        )
-                )
-        );
-
-
-        
-        javax.swing.JLabel lblTitulo =
-                new javax.swing.JLabel(
-                        "BUSCAR TURNO",
-                        javax.swing.SwingConstants.CENTER
-                );
-
-        lblTitulo.setFont(
-                Estilos.fuente(20f)
-        );
-
-        lblTitulo.setForeground(
-                Estilos.BLANCO
-        );
-
-        javax.swing.JPanel panelTitulo =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout()
-                );
-
-        panelTitulo.setBackground(
-                Estilos.VERDE_OSCURO
-        );
-
-        panelTitulo.setBorder(
-                javax.swing.BorderFactory.createEmptyBorder(
-                        12,
-                        20,
-                        12,
-                        20
-                )
-        );
-
-        panelTitulo.add(
-                lblTitulo,
-                java.awt.BorderLayout.CENTER
-        );
-
-
-        
-        javax.swing.JLabel lblBuscar =
-                new javax.swing.JLabel(
-                        "Buscar por DNI, dueño o animal:"
-                );
-
-        lblBuscar.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        lblBuscar.setForeground(
-                Estilos.VERDE_OSCURO
-        );
-
-        lblBuscar.setAlignmentX(
-                java.awt.Component.LEFT_ALIGNMENT
-        );
-
-        javax.swing.JTextField campoBuscar =
-                new javax.swing.JTextField();
-
-        campoBuscar.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        campoBuscar.setMaximumSize(
-                new java.awt.Dimension(
-                        Integer.MAX_VALUE,
-                        38
-                )
-        );
-
-        campoBuscar.setPreferredSize(
-                new java.awt.Dimension(
-                        280,
-                        34
-                )
-        );
-
-        campoBuscar.setAlignmentX(
-                java.awt.Component.LEFT_ALIGNMENT
-        );
-
-        javax.swing.JPanel panelCentro =
-                new javax.swing.JPanel();
-
-        panelCentro.setOpaque(false);
-
-        panelCentro.setLayout(
-                new javax.swing.BoxLayout(
-                        panelCentro,
-                        javax.swing.BoxLayout.Y_AXIS
-                )
-        );
-
-        panelCentro.add(
-                lblBuscar
-        );
-
-        panelCentro.add(
-                javax.swing.Box.createVerticalStrut(10)
-        );
-
-        panelCentro.add(
-                campoBuscar
-        );
-
-
-        
-        javax.swing.JButton btnBuscarDialogo =
-                new javax.swing.JButton(
-                        "Buscar"
-                );
-
-        javax.swing.JButton btnCancelarDialogo =
-                new javax.swing.JButton(
-                        "Cancelar"
-                );
-
-        Estilos.estilizarBoton(
-                btnBuscarDialogo
-        );
-
-        Estilos.estilizarBoton(
-                btnCancelarDialogo
-        );
-
-        btnBuscarDialogo.setPreferredSize(
-                new java.awt.Dimension(
-                        105,
-                        34
-                )
-        );
-
-        btnCancelarDialogo.setPreferredSize(
-                new java.awt.Dimension(
-                        105,
-                        34
-                )
-        );
-
-        javax.swing.JPanel panelBotones =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.RIGHT,
-                                10,
-                                0
-                        )
-                );
-
-        panelBotones.setOpaque(false);
-
-        panelBotones.add(
-                btnCancelarDialogo
-        );
-
-        panelBotones.add(
-                btnBuscarDialogo
-        );
-
-
-        
-        javax.swing.JPanel contenido =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout(
-                                0,
-                                20
-                        )
-                );
-
-        contenido.setOpaque(false);
-
-        contenido.setBorder(
-                javax.swing.BorderFactory.createEmptyBorder(
-                        5,
-                        0,
-                        0,
-                        0
-                )
-        );
-
-        contenido.add(
-                panelCentro,
-                java.awt.BorderLayout.CENTER
-        );
-
-        contenido.add(
-                panelBotones,
-                java.awt.BorderLayout.SOUTH
-        );
-
-        panelPrincipal.add(
-                panelTitulo,
-                java.awt.BorderLayout.NORTH
-        );
-
-        panelPrincipal.add(
-                contenido,
-                java.awt.BorderLayout.CENTER
-        );
-
-
-
-        btnCancelarDialogo.addActionListener(e ->
-                dialogo.dispose()
-        );
-
-        btnBuscarDialogo.addActionListener(e -> {
-
-            String texto =
-                    campoBuscar.getText().trim();
-
-            if (!texto.isEmpty()) {
-
-                buscarTurnos(texto);
-
-                dialogo.dispose();
-            }
-        });
-
-        campoBuscar.addActionListener(e ->
-                btnBuscarDialogo.doClick()
-        );
-
-        dialogo.getRootPane().setDefaultButton(
-                btnBuscarDialogo
-        );
-
-        dialogo.setContentPane(
-                panelPrincipal
-        );
-
-        dialogo.setSize(
-                370,
-                200
-        );
-
-        dialogo.setLocationRelativeTo(
-                ventanaPadre
-        );
-
-        dialogo.setVisible(true);
+        buscarTurnos(texto);
     }//GEN-LAST:event_btnBuscarTurnoActionPerformed
 
     private void btnMostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarTodosActionPerformed
-        cargarTabla();
+            cargarTabla();
+
+       campoBusquedaTurnos.setText(
+               "Buscar por DNI, dueño o animal"
+       );
+
+       campoBusquedaTurnos.setForeground(
+               new java.awt.Color(140, 140, 140)
+       );
+
+       campoBusquedaTurnos.setCaretPosition(0);
     }//GEN-LAST:event_btnMostrarTodosActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -922,6 +693,107 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 return componente;
             }
         });
+    }
+    private void configurarColumnasTurnos() {
+
+        if (tblTurnos.getColumnCount() < 9) {
+            return;
+        }
+
+        javax.swing.table.TableColumn columnaId =
+                tblTurnos.getColumnModel().getColumn(0);
+
+        columnaId.setMinWidth(0);
+        columnaId.setMaxWidth(0);
+        columnaId.setPreferredWidth(0);
+        columnaId.setResizable(false);
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblTurnos.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        tblTurnos.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(centrado);
+
+        tblTurnos.getColumnModel()
+                .getColumn(5)
+                .setCellRenderer(centrado);
+
+        javax.swing.table.TableColumn columnaAcciones =
+                tblTurnos.getColumnModel().getColumn(8);
+
+        columnaAcciones.setMinWidth(95);
+        columnaAcciones.setMaxWidth(95);
+        columnaAcciones.setPreferredWidth(95);
+        columnaAcciones.setResizable(false);
+
+        columnaAcciones.setCellRenderer(
+                new RenderizadorAcciones()
+        );
+
+        columnaAcciones.setCellEditor(
+                new EditorAcciones()
+        );
+        tblTurnos.addMouseMotionListener(
+                new java.awt.event.MouseMotionAdapter() {
+
+            @Override
+            public void mouseMoved(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                int fila =
+                        tblTurnos.rowAtPoint(
+                                e.getPoint()
+                        );
+
+                int columnaVista =
+                        tblTurnos.columnAtPoint(
+                                e.getPoint()
+                        );
+
+                boolean sobreAcciones =
+                        fila >= 0
+                        && columnaVista >= 0
+                        && tblTurnos.convertColumnIndexToModel(
+                                columnaVista
+                        ) == 8;
+
+                tblTurnos.setCursor(
+                        sobreAcciones
+                                ? java.awt.Cursor.getPredefinedCursor(
+                                        java.awt.Cursor.HAND_CURSOR
+                                )
+                                : java.awt.Cursor.getDefaultCursor()
+                );
+
+                tblTurnos.repaint();
+            }
+        });
+
+        tblTurnos.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseExited(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                tblTurnos.setCursor(
+                        java.awt.Cursor.getDefaultCursor()
+                );
+
+                tblTurnos.repaint();
+            }
+        });
+        tblTurnos.setRowHeight(32);
     }
     private void configurarDiseñoTurnos() {
 
@@ -1080,31 +952,6 @@ public class VentanaTurnos extends javax.swing.JFrame {
                         400
                 )
         );
-
-
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblTurnos.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblTurnos.getColumnModel()
-                .getColumn(2)
-                .setCellRenderer(centrado);
-
-        tblTurnos.getColumnModel()
-                .getColumn(4)
-                .setCellRenderer(centrado);
-
-        tblTurnos.getColumnModel()
-                .getColumn(5)
-                .setCellRenderer(centrado);
-
 
         tarjetaTurnos.add(
                 scrollTurnos,
@@ -1414,30 +1261,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
 
         scrollTurnos.setBorder(
                 javax.swing.BorderFactory.createEmptyBorder()
-        );
-
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblTurnos.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblTurnos.getColumnModel()
-                .getColumn(2)
-                .setCellRenderer(centrado);
-
-        tblTurnos.getColumnModel()
-                .getColumn(4)
-                .setCellRenderer(centrado);
-
-        tblTurnos.getColumnModel()
-                .getColumn(5)
-                .setCellRenderer(centrado);
+        );       
 
         tarjetaTurnos.add(
                 scrollTurnos,
@@ -1587,20 +1411,113 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 btnInicio
         );
 
+        campoBusquedaTurnos =
+                new javax.swing.JTextField(
+                        "Buscar por DNI, dueño o animal"
+                );
+
+        campoBusquedaTurnos.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        campoBusquedaTurnos.setForeground(
+                new java.awt.Color(140, 140, 140)
+        );
+
+        campoBusquedaTurnos.setPreferredSize(
+                new java.awt.Dimension(300, 38)
+        );
+
+        campoBusquedaTurnos.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                10,
+                                0,
+                                10
+                        )
+                )
+        );
+
+        campoBusquedaTurnos.setCaretPosition(0);
+
+        campoBusquedaTurnos.addFocusListener(
+                new java.awt.event.FocusAdapter() {
+
+            @Override
+            public void focusGained(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaTurnos.getText().equals(
+                        "Buscar por DNI, dueño o animal"
+                )) {
+
+                    campoBusquedaTurnos.setText("");
+
+                    campoBusquedaTurnos.setForeground(
+                            Estilos.VERDE_OSCURO
+                    );
+                }
+            }
+
+            @Override
+            public void focusLost(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaTurnos.getText()
+                        .trim().isEmpty()) {
+
+                    campoBusquedaTurnos.setText(
+                            "Buscar por DNI, dueño o animal"
+                    );
+
+                    campoBusquedaTurnos.setForeground(
+                            new java.awt.Color(
+                                    140,
+                                    140,
+                                    140
+                            )
+                    );
+
+                    campoBusquedaTurnos.setCaretPosition(0);
+                }
+            }
+        });
+
+        campoBusquedaTurnos.addActionListener(e ->
+                btnBuscarTurno.doClick()
+        );
+
+        btnMostrarTodos.setText(
+                "Actualizar tabla"
+        );
+
+        java.awt.Dimension tamañoActualizar =
+                new java.awt.Dimension(205, 38);
+
+        btnMostrarTodos.setPreferredSize(tamañoActualizar);
+        btnMostrarTodos.setMinimumSize(tamañoActualizar);
+        btnMostrarTodos.setMaximumSize(tamañoActualizar);
+
         javax.swing.JPanel panelBusqueda =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
                                 java.awt.FlowLayout.RIGHT,
-                                0,
+                                8,
                                 0
                         )
                 );
 
         panelBusqueda.setOpaque(false);
 
-        panelBusqueda.add(
-                btnBuscarTurno
-        );
+        panelBusqueda.add(btnMostrarTodos);
+        panelBusqueda.add(campoBusquedaTurnos);
+        panelBusqueda.add(btnBuscarTurno);
 
         javax.swing.JPanel panelAccionesSuperiores =
                 new javax.swing.JPanel(
@@ -1644,14 +1561,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
                         38
                 )
         );
-
-        btnMostrarTodos.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
-        );
-
+       
         btnCambiarEstado.setPreferredSize(
                 new java.awt.Dimension(
                         200,
@@ -1691,18 +1601,6 @@ public class VentanaTurnos extends javax.swing.JFrame {
 
         filaPrincipal.add(
                 btnCrearTurno
-        );
-
-        filaPrincipal.add(
-                btnEditarTurno
-        );
-
-        filaPrincipal.add(
-                btnEliminarTurno
-        );
-
-        filaPrincipal.add(
-                btnMostrarTodos
         );
 
         javax.swing.JPanel filaEstado =
@@ -1793,6 +1691,264 @@ public class VentanaTurnos extends javax.swing.JFrame {
         aplicarColoresEstado();
 
         return panel;
+    }
+    private class RenderizadorAcciones
+            extends javax.swing.JPanel
+            implements javax.swing.table.TableCellRenderer {
+
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        private final java.awt.Color colorEditarNormal =
+                btnEditar.getBackground();
+
+        private final java.awt.Color colorEliminarNormal =
+                btnEliminar.getBackground();
+
+        public RenderizadorAcciones() {
+
+            setLayout(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            4,
+                            4
+                    )
+            );
+
+            setOpaque(true);
+
+            add(btnEditar);
+            add(btnEliminar);
+        }
+
+    @Override
+    public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                boolean tieneFoco,
+                int fila,
+                int columna
+        ) {
+
+            setBackground(
+                    seleccionado
+                            ? tabla.getSelectionBackground()
+                            : tabla.getBackground()
+            );
+
+            boolean sobreEditar = false;
+            boolean sobreEliminar = false;
+
+            java.awt.Point posicionMouse =
+                    tabla.getMousePosition();
+
+            if (posicionMouse != null) {
+
+                int filaMouse =
+                        tabla.rowAtPoint(posicionMouse);
+
+                int columnaMouse =
+                        tabla.columnAtPoint(posicionMouse);
+
+                if (filaMouse == fila
+                        && columnaMouse == columna) {
+
+                    java.awt.Rectangle celda =
+                            tabla.getCellRect(
+                                    fila,
+                                    columna,
+                                    false
+                            );
+
+                    int posicionDentro =
+                            posicionMouse.x - celda.x;
+
+                    if (posicionDentro < celda.width / 2) {
+                        sobreEditar = true;
+                    } else {
+                        sobreEliminar = true;
+                    }
+                }
+            }
+
+            btnEditar.setBackground(
+                    sobreEditar
+                            ? colorEditarNormal.brighter()
+                            : colorEditarNormal
+            );
+
+            btnEliminar.setBackground(
+                    sobreEliminar
+                            ? new java.awt.Color(255, 165, 165)
+                            : colorEliminarNormal
+            );
+
+            return this;
+        }
+    }
+
+    private class EditorAcciones
+            extends javax.swing.AbstractCellEditor
+            implements javax.swing.table.TableCellEditor {
+
+        private final javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                4,
+                                4
+                        )
+                );
+
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        private int filaActual = -1;
+
+    public EditorAcciones() {
+
+        panel.setOpaque(true);
+
+        panel.add(btnEditar);
+        panel.add(btnEliminar);
+
+        btnEditar.addActionListener(e -> {
+
+            int fila = filaActual;
+
+            fireEditingStopped();
+
+            if (fila >= 0) {
+
+                tblTurnos.setRowSelectionInterval(
+                        fila,
+                        fila
+                );
+
+                btnEditarTurnoActionPerformed(null);
+            }
+        });
+
+        btnEliminar.addActionListener(e -> {
+
+            int fila = filaActual;
+
+            fireEditingStopped();
+
+            if (fila >= 0) {
+
+                tblTurnos.setRowSelectionInterval(
+                        fila,
+                        fila
+                );
+
+                btnEliminarTurnoActionPerformed(null);
+            }
+        });
+    }
+
+    @Override
+    public java.awt.Component getTableCellEditorComponent(
+            javax.swing.JTable tabla,
+            Object valor,
+            boolean seleccionado,
+            int fila,
+            int columna
+    ) {
+
+        filaActual = fila;
+
+        panel.setBackground(
+                tabla.getSelectionBackground()
+        );
+
+        return panel;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        return "";
+    }
+}
+
+    private javax.swing.JButton crearBotonEditar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEditar(boton);
+
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/editar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(26, 22);
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText("Editar turno");
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+    }
+
+    private javax.swing.JButton crearBotonEliminar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEliminar(boton);
+
+        boton.setOpaque(true);
+        boton.setContentAreaFilled(true);
+        boton.setBorderPainted(false);
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/eliminar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(30, 22);
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText("Eliminar turno");
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
     }
     public static void main(String args[]) {
 

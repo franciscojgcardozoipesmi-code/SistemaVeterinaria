@@ -6,6 +6,7 @@ public class VentanaProductos extends javax.swing.JFrame {
     private VentanaPrincipal ventanaPrincipal;
     private javax.swing.JButton btnBuscarProducto;
     private javax.swing.JButton btnMostrarTodos;
+    private javax.swing.JTextField campoBusquedaProductos;
     public VentanaProductos() {
         initComponents();
         inicializarBotonesProductos();
@@ -64,7 +65,7 @@ public class VentanaProductos extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return false;
+                return column == 5;
             }
         };
 
@@ -73,17 +74,32 @@ public class VentanaProductos extends javax.swing.JFrame {
         modelo.addColumn("Precio");
         modelo.addColumn("Stock");
         modelo.addColumn("Fecha vencimiento");
+        modelo.addColumn("Acciones");
 
-        for (Object[] fila : ProductoController.listarProductos()) {
-            modelo.addRow(fila);
+        for (Object[] fila
+                : ProductoController.listarProductos()) {
+
+            Object[] filaCompleta =
+                    java.util.Arrays.copyOf(
+                            fila,
+                            6
+                    );
+
+            filaCompleta[5] = "";
+
+            modelo.addRow(filaCompleta);
         }
 
         tblProductos.setModel(modelo);
+
+        configurarColumnasProductos();
+        aplicarColorVencimiento();
     }
     
     private void buscarProductos(
             String filtro
     ) {
+
         javax.swing.table.DefaultTableModel modelo =
                 new javax.swing.table.DefaultTableModel() {
 
@@ -92,41 +108,137 @@ public class VentanaProductos extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return false;
+                return column == 5;
             }
         };
 
-        modelo.addColumn(
-                "ID"
-        );
-
-        modelo.addColumn(
-                "Nombre"
-        );
-
-        modelo.addColumn(
-                "Precio"
-        );
-
-        modelo.addColumn(
-                "Stock"
-        );
-
-        modelo.addColumn(
-                "Fecha vencimiento"
-        );
+        modelo.addColumn("ID");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Precio");
+        modelo.addColumn("Stock");
+        modelo.addColumn("Fecha vencimiento");
+        modelo.addColumn("Acciones");
 
         for (Object[] fila
                 : ProductoController.buscarProductos(filtro)) {
 
-            modelo.addRow(
-                    fila
-            );
+            Object[] filaCompleta =
+                    java.util.Arrays.copyOf(
+                            fila,
+                            6
+                    );
+
+            filaCompleta[5] = "";
+
+            modelo.addRow(filaCompleta);
         }
 
-        tblProductos.setModel(
-                modelo
+        tblProductos.setModel(modelo);
+
+        configurarColumnasProductos();
+        aplicarColorVencimiento();
+    }
+    
+    private void configurarColumnasProductos() {
+
+        if (tblProductos.getColumnCount() < 6) {
+            return;
+        }
+
+        javax.swing.table.TableColumn columnaId =
+                tblProductos.getColumnModel()
+                        .getColumn(0);
+
+        columnaId.setMinWidth(0);
+        columnaId.setMaxWidth(0);
+        columnaId.setPreferredWidth(0);
+        columnaId.setResizable(false);
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
         );
+
+        tblProductos.getColumnModel()
+                .getColumn(2)
+                .setCellRenderer(centrado);
+
+        tblProductos.getColumnModel()
+                .getColumn(3)
+                .setCellRenderer(centrado);
+
+        javax.swing.table.TableColumn columnaAcciones =
+                tblProductos.getColumnModel()
+                        .getColumn(5);
+
+        columnaAcciones.setMinWidth(95);
+        columnaAcciones.setMaxWidth(95);
+        columnaAcciones.setPreferredWidth(95);
+        columnaAcciones.setResizable(false);
+
+        columnaAcciones.setCellRenderer(
+                new RenderizadorAcciones()
+        );
+
+        columnaAcciones.setCellEditor(
+                new EditorAcciones()
+        );
+
+        tblProductos.addMouseMotionListener(
+                new java.awt.event.MouseMotionAdapter() {
+
+            @Override
+            public void mouseMoved(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                int fila =
+                        tblProductos.rowAtPoint(
+                                e.getPoint()
+                        );
+
+                int columnaVista =
+                        tblProductos.columnAtPoint(
+                                e.getPoint()
+                        );
+
+                boolean sobreAcciones =
+                        fila >= 0
+                        && columnaVista >= 0
+                        && tblProductos.convertColumnIndexToModel(
+                                columnaVista
+                        ) == 5;
+
+                tblProductos.setCursor(
+                        sobreAcciones
+                                ? java.awt.Cursor.getPredefinedCursor(
+                                        java.awt.Cursor.HAND_CURSOR
+                                )
+                                : java.awt.Cursor.getDefaultCursor()
+                );
+
+                tblProductos.repaint();
+            }
+        });
+
+        tblProductos.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseExited(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                tblProductos.setCursor(
+                        java.awt.Cursor.getDefaultCursor()
+                );
+
+                tblProductos.repaint();
+            }
+        });
+
+        tblProductos.setRowHeight(32);
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -612,28 +724,7 @@ public class VentanaProductos extends javax.swing.JFrame {
         );
 
 
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblProductos.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblProductos.getColumnModel()
-                .getColumn(2)
-                .setCellRenderer(centrado);
-
-        tblProductos.getColumnModel()
-                .getColumn(3)
-                .setCellRenderer(centrado);
-
-        tblProductos.getColumnModel()
-                .getColumn(4)
-                .setCellRenderer(centrado);
+        
 
 
         tarjetaProductos.add(
@@ -1032,28 +1123,7 @@ public class VentanaProductos extends javax.swing.JFrame {
                 javax.swing.BorderFactory.createEmptyBorder()
         );
 
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblProductos.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblProductos.getColumnModel()
-                .getColumn(2)
-                .setCellRenderer(centrado);
-
-        tblProductos.getColumnModel()
-                .getColumn(3)
-                .setCellRenderer(centrado);
-
-        tblProductos.getColumnModel()
-                .getColumn(4)
-                .setCellRenderer(centrado);
+        
 
         tarjetaProductos.add(
                 scrollProductos,
@@ -1181,20 +1251,112 @@ public class VentanaProductos extends javax.swing.JFrame {
                 btnInicio
         );
 
+        campoBusquedaProductos =
+                new javax.swing.JTextField(
+                        "Buscar por nombre"
+                );
+
+        campoBusquedaProductos.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        campoBusquedaProductos.setForeground(
+                new java.awt.Color(140, 140, 140)
+        );
+
+        campoBusquedaProductos.setPreferredSize(
+                new java.awt.Dimension(280, 38)
+        );
+
+        campoBusquedaProductos.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                10,
+                                0,
+                                10
+                        )
+                )
+        );
+
+        campoBusquedaProductos.setCaretPosition(0);
+
+        campoBusquedaProductos.addFocusListener(
+                new java.awt.event.FocusAdapter() {
+
+            @Override
+            public void focusGained(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaProductos.getText()
+                        .equals("Buscar por nombre")) {
+
+                    campoBusquedaProductos.setText("");
+
+                    campoBusquedaProductos.setForeground(
+                            Estilos.VERDE_OSCURO
+                    );
+                }
+            }
+
+            @Override
+            public void focusLost(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaProductos.getText()
+                        .trim().isEmpty()) {
+
+                    campoBusquedaProductos.setText(
+                            "Buscar por nombre"
+                    );
+
+                    campoBusquedaProductos.setForeground(
+                            new java.awt.Color(
+                                    140,
+                                    140,
+                                    140
+                            )
+                    );
+
+                    campoBusquedaProductos.setCaretPosition(0);
+                }
+            }
+        });
+
+        campoBusquedaProductos.addActionListener(e ->
+                btnBuscarProducto.doClick()
+        );
+
+        btnMostrarTodos.setText(
+                "Actualizar tabla"
+        );
+
+        java.awt.Dimension tamañoActualizar =
+                new java.awt.Dimension(205, 38);
+
+        btnMostrarTodos.setPreferredSize(tamañoActualizar);
+        btnMostrarTodos.setMinimumSize(tamañoActualizar);
+        btnMostrarTodos.setMaximumSize(tamañoActualizar);
+
         javax.swing.JPanel panelBusqueda =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
                                 java.awt.FlowLayout.RIGHT,
-                                0,
+                                8,
                                 0
                         )
                 );
 
         panelBusqueda.setOpaque(false);
 
-        panelBusqueda.add(
-                btnBuscarProducto
-        );
+        panelBusqueda.add(btnMostrarTodos);
+        panelBusqueda.add(campoBusquedaProductos);
+        panelBusqueda.add(btnBuscarProducto);
 
         javax.swing.JPanel panelAccionesSuperiores =
                 new javax.swing.JPanel(
@@ -1238,14 +1400,7 @@ public class VentanaProductos extends javax.swing.JFrame {
                         38
                 )
         );
-
-        btnMostrarTodos.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
-        );
-
+     
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
@@ -1259,19 +1414,7 @@ public class VentanaProductos extends javax.swing.JFrame {
 
         panelBotones.add(
                 btnCrearProducto
-        );
-
-        panelBotones.add(
-                btnEditarProducto
-        );
-
-        panelBotones.add(
-                btnEliminarProducto
-        );
-
-        panelBotones.add(
-                btnMostrarTodos
-        );
+        );       
 
         tarjetaProductos.add(
                 panelBotones,
@@ -1300,24 +1443,57 @@ public class VentanaProductos extends javax.swing.JFrame {
     
     private void inicializarBotonesProductos() {
 
-            btnBuscarProducto =
-                    new javax.swing.JButton(
-                            "Buscar"
-                    );
+        btnBuscarProducto =
+                new javax.swing.JButton("Buscar");
 
-            btnMostrarTodos =
-                    new javax.swing.JButton(
-                            "Mostrar todos"
-                    );
+        btnMostrarTodos =
+                new javax.swing.JButton("Mostrar todos");
 
-            btnBuscarProducto.addActionListener(e ->
-                    mostrarDialogoBuscarProductos()
-            );
+        btnBuscarProducto.addActionListener(e ->
+                buscarDesdeCampo()
+        );
 
-            btnMostrarTodos.addActionListener(e ->
-                    cargarTabla()
-            );
+        btnMostrarTodos.addActionListener(e -> {
+
+            cargarTabla();
+
+            if (campoBusquedaProductos != null) {
+
+                campoBusquedaProductos.setText(
+                        "Buscar por nombre"
+                );
+
+                campoBusquedaProductos.setForeground(
+                        new java.awt.Color(140, 140, 140)
+                );
+
+                campoBusquedaProductos.setCaretPosition(0);
+            }
+        });
+    }
+    
+    private void buscarDesdeCampo() {
+
+        if (campoBusquedaProductos == null) {
+            return;
         }
+
+        String texto =
+                campoBusquedaProductos
+                        .getText()
+                        .trim();
+
+        if (texto.isEmpty()
+                || texto.equals(
+                        "Buscar por nombre"
+                )) {
+
+            cargarTabla();
+            return;
+        }
+
+        buscarProductos(texto);
+    }
         private void mostrarDialogoBuscarProductos() {
 
         java.awt.Window ventanaPadre =
@@ -1608,7 +1784,264 @@ public class VentanaProductos extends javax.swing.JFrame {
                 true
         );
     }
-    
+    private class RenderizadorAcciones
+            extends javax.swing.JPanel
+            implements javax.swing.table.TableCellRenderer {
+
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        private final java.awt.Color colorEditarNormal =
+                btnEditar.getBackground();
+
+        private final java.awt.Color colorEliminarNormal =
+                btnEliminar.getBackground();
+
+        public RenderizadorAcciones() {
+
+            setLayout(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            4,
+                            4
+                    )
+            );
+
+            setOpaque(true);
+
+            add(btnEditar);
+            add(btnEliminar);
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                boolean tieneFoco,
+                int fila,
+                int columna
+        ) {
+
+            setBackground(
+                    seleccionado
+                            ? tabla.getSelectionBackground()
+                            : tabla.getBackground()
+            );
+
+            boolean sobreEditar = false;
+            boolean sobreEliminar = false;
+
+            java.awt.Point posicionMouse =
+                    tabla.getMousePosition();
+
+            if (posicionMouse != null) {
+
+                int filaMouse =
+                        tabla.rowAtPoint(posicionMouse);
+
+                int columnaMouse =
+                        tabla.columnAtPoint(posicionMouse);
+
+                if (filaMouse == fila
+                        && columnaMouse == columna) {
+
+                    java.awt.Rectangle celda =
+                            tabla.getCellRect(
+                                    fila,
+                                    columna,
+                                    false
+                            );
+
+                    int posicionDentro =
+                            posicionMouse.x - celda.x;
+
+                    if (posicionDentro < celda.width / 2) {
+                        sobreEditar = true;
+                    } else {
+                        sobreEliminar = true;
+                    }
+                }
+            }
+
+            btnEditar.setBackground(
+                    sobreEditar
+                            ? colorEditarNormal.brighter()
+                            : colorEditarNormal
+            );
+
+            btnEliminar.setBackground(
+                    sobreEliminar
+                            ? new java.awt.Color(255, 165, 165)
+                            : colorEliminarNormal
+            );
+
+            return this;
+        }
+    }
+
+    private class EditorAcciones
+            extends javax.swing.AbstractCellEditor
+            implements javax.swing.table.TableCellEditor {
+
+        private final javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                4,
+                                4
+                        )
+                );
+
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        private int filaActual = -1;
+
+        public EditorAcciones() {
+
+            panel.setOpaque(true);
+
+            panel.add(btnEditar);
+            panel.add(btnEliminar);
+
+            btnEditar.addActionListener(e -> {
+
+                int fila = filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblProductos.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    btnEditarProductoActionPerformed(null);
+                }
+            });
+
+            btnEliminar.addActionListener(e -> {
+
+                int fila = filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblProductos.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    btnEliminarProductoActionPerformed(null);
+                }
+            });
+        }
+
+        @Override
+        public java.awt.Component getTableCellEditorComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                int fila,
+                int columna
+        ) {
+
+            filaActual = fila;
+
+            panel.setBackground(
+                    tabla.getSelectionBackground()
+            );
+
+            return panel;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return "";
+        }
+    }
+
+    private javax.swing.JButton crearBotonEditar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEditar(boton);
+
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/editar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(26, 22);
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText("Editar producto");
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+    }
+
+    private javax.swing.JButton crearBotonEliminar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEliminar(boton);
+
+        boton.setOpaque(true);
+        boton.setContentAreaFilled(true);
+        boton.setBorderPainted(false);
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/eliminar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(30, 22);
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText("Eliminar producto");
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+    }
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(() -> new VentanaProductos().setVisible(true));

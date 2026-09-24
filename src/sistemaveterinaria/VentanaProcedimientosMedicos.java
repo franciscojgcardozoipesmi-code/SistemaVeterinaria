@@ -5,6 +5,7 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
     private String rolUsuario;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaProcedimientosMedicos.class.getName());
     private VentanaPrincipal ventanaPrincipal;
+    private javax.swing.JTextField campoBusquedaProcedimientos;
     public VentanaProcedimientosMedicos() {
         initComponents();
 
@@ -43,7 +44,9 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
         configurarDiseñoProcedimientos();
     }
     
-    private void buscarProcedimientos(String filtro) {
+    private void buscarProcedimientos(
+            String filtro
+    ) {
 
         javax.swing.table.DefaultTableModel modelo =
                 new javax.swing.table.DefaultTableModel() {
@@ -53,7 +56,7 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return false;
+                return column == 8;
             }
         };
 
@@ -65,25 +68,28 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
         modelo.addColumn("Animal");
         modelo.addColumn("Fecha");
         modelo.addColumn("Descripción");
-        for (Object[] fila :
-                ProcedimientoMedicoController.buscarProcedimientos(filtro)) {
+        modelo.addColumn("Acciones");
 
-            modelo.addRow(fila);
+        for (Object[] fila
+                : ProcedimientoMedicoController
+                        .buscarProcedimientos(filtro)) {
+
+            Object[] filaCompleta =
+                    java.util.Arrays.copyOf(
+                            fila,
+                            9
+                    );
+
+            filaCompleta[8] = "";
+
+            modelo.addRow(filaCompleta);
         }
 
         tblProcedimientos.setModel(modelo);
-                tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setMinWidth(0);
 
-        tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setMaxWidth(0);
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setPreferredWidth(0);
+        ocultarColumnasInternas();
     }
+    
     private void cargarTabla() {
 
         javax.swing.table.DefaultTableModel modelo =
@@ -94,7 +100,7 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return false;
+                return column == 8;
             }
         };
 
@@ -106,25 +112,139 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
         modelo.addColumn("Animal");
         modelo.addColumn("Fecha");
         modelo.addColumn("Descripción");
+        modelo.addColumn("Acciones");
 
-        for (Object[] fila :
-                ProcedimientoMedicoController.listarProcedimientos()) {
+        for (Object[] fila
+                : ProcedimientoMedicoController
+                        .listarProcedimientos()) {
 
-            modelo.addRow(fila);
+            Object[] filaCompleta =
+                    java.util.Arrays.copyOf(
+                            fila,
+                            9
+                    );
+
+            filaCompleta[8] = "";
+
+            modelo.addRow(filaCompleta);
         }
 
         tblProcedimientos.setModel(modelo);
-        tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setMinWidth(0);
+
+        ocultarColumnasInternas();
+    }
+    
+    private void ocultarColumnasInternas() {
+
+        if (tblProcedimientos.getColumnCount() < 9) {
+            return;
+        }
+
+        javax.swing.table.TableColumn columnaId =
+                tblProcedimientos.getColumnModel()
+                        .getColumn(0);
+
+        columnaId.setMinWidth(0);
+        columnaId.setMaxWidth(0);
+        columnaId.setPreferredWidth(0);
+        columnaId.setResizable(false);
+        
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
 
         tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setMaxWidth(0);
+                .getColumn(2)
+                .setCellRenderer(centrado);
 
         tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setWidth(0);
+                .getColumn(3)
+                .setCellRenderer(centrado);
+
+        tblProcedimientos.getColumnModel()
+                .getColumn(6)
+                .setCellRenderer(centrado);
+
+        javax.swing.table.TableColumn columnaIdAnimal =
+                tblProcedimientos.getColumnModel()
+                        .getColumn(4);
+
+        columnaIdAnimal.setMinWidth(0);
+        columnaIdAnimal.setMaxWidth(0);
+        columnaIdAnimal.setPreferredWidth(0);
+        columnaIdAnimal.setResizable(false);
+        javax.swing.table.TableColumn columnaAcciones =
+                tblProcedimientos.getColumnModel()
+                        .getColumn(8);
+
+        columnaAcciones.setMinWidth(95);
+        columnaAcciones.setMaxWidth(95);
+        columnaAcciones.setPreferredWidth(95);
+        columnaAcciones.setResizable(false);
+
+        columnaAcciones.setCellRenderer(
+                new RenderizadorAcciones()
+        );
+
+        columnaAcciones.setCellEditor(
+                new EditorAcciones()
+        );
+        tblProcedimientos.addMouseMotionListener(
+                new java.awt.event.MouseMotionAdapter() {
+
+            @Override
+            public void mouseMoved(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                int fila =
+                        tblProcedimientos.rowAtPoint(
+                                e.getPoint()
+                        );
+
+                int columnaVista =
+                        tblProcedimientos.columnAtPoint(
+                                e.getPoint()
+                        );
+
+                boolean sobreAcciones =
+                        fila >= 0
+                        && columnaVista >= 0
+                        && tblProcedimientos.convertColumnIndexToModel(
+                                columnaVista
+                        ) == 8;
+
+                tblProcedimientos.setCursor(
+                        sobreAcciones
+                                ? java.awt.Cursor.getPredefinedCursor(
+                                        java.awt.Cursor.HAND_CURSOR
+                                )
+                                : java.awt.Cursor.getDefaultCursor()
+                );
+
+                tblProcedimientos.repaint();
+            }
+        });
+
+tblProcedimientos.addMouseListener(
+        new java.awt.event.MouseAdapter() {
+
+    @Override
+    public void mouseExited(
+            java.awt.event.MouseEvent e
+    ) {
+
+        tblProcedimientos.setCursor(
+                java.awt.Cursor.getDefaultCursor()
+        );
+
+        tblProcedimientos.repaint();
+    }
+});
+        tblProcedimientos.setRowHeight(32);
     }
 
     @SuppressWarnings("unchecked")
@@ -479,283 +599,35 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDarDeBajaRegistroActionPerformed
 
     private void btnBuscarProcedimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProcedimientoActionPerformed
-        java.awt.Window ventanaPadre =
-            javax.swing.SwingUtilities.getWindowAncestor(this);
+        String texto =
+                campoBusquedaProcedimientos
+                        .getText()
+                        .trim();
 
-        javax.swing.JDialog dialogo =
-                new javax.swing.JDialog(
-                        ventanaPadre,
-                        "Buscar procedimiento",
-                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
-                );
+        if (texto.isEmpty()
+                || texto.equals(
+                        "Buscar por tipo, animal o fecha"
+                )) {
 
-        dialogo.setUndecorated(true);
+            cargarTabla();
+            return;
+        }
 
-        javax.swing.JPanel panelPrincipal =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout(
-                                0,
-                                20
-                        )
-                );
-
-        panelPrincipal.setBackground(
-                Estilos.BLANCO
-        );
-
-        panelPrincipal.setBorder(
-                javax.swing.BorderFactory.createCompoundBorder(
-                        javax.swing.BorderFactory.createLineBorder(
-                                Estilos.VERDE_OSCURO,
-                                2
-                        ),
-                        javax.swing.BorderFactory.createEmptyBorder(
-                                0,
-                                25,
-                                25,
-                                25
-                        )
-                )
-        );
-
-        javax.swing.JLabel lblTitulo =
-                new javax.swing.JLabel(
-                        "BUSCAR PROCEDIMIENTO",
-                        javax.swing.SwingConstants.CENTER
-                );
-
-        lblTitulo.setFont(
-                Estilos.fuente(20f)
-        );
-
-        lblTitulo.setForeground(
-                Estilos.BLANCO
-        );
-
-        javax.swing.JPanel panelTitulo =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout()
-                );
-
-        panelTitulo.setBackground(
-                Estilos.VERDE_OSCURO
-        );
-
-        panelTitulo.setBorder(
-                javax.swing.BorderFactory.createEmptyBorder(
-                        12,
-                        20,
-                        12,
-                        20
-                )
-        );
-
-        panelTitulo.add(
-                lblTitulo,
-                java.awt.BorderLayout.CENTER
-        );
-
-        javax.swing.JLabel lblBuscar =
-                new javax.swing.JLabel(
-                        "Buscar por tipo, animal o fecha:"
-                );
-
-        lblBuscar.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        lblBuscar.setForeground(
-                Estilos.VERDE_OSCURO
-        );
-
-        lblBuscar.setAlignmentX(
-                java.awt.Component.LEFT_ALIGNMENT
-        );
-
-        javax.swing.JTextField campoBuscar =
-                new javax.swing.JTextField();
-
-        campoBuscar.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        campoBuscar.setMaximumSize(
-                new java.awt.Dimension(
-                        Integer.MAX_VALUE,
-                        38
-                )
-        );
-
-        campoBuscar.setPreferredSize(
-                new java.awt.Dimension(
-                        280,
-                        34
-                )
-        );
-
-        campoBuscar.setAlignmentX(
-                java.awt.Component.LEFT_ALIGNMENT
-        );
-
-        javax.swing.JPanel panelCentro =
-                new javax.swing.JPanel();
-
-        panelCentro.setOpaque(false);
-
-        panelCentro.setLayout(
-                new javax.swing.BoxLayout(
-                        panelCentro,
-                        javax.swing.BoxLayout.Y_AXIS
-                )
-        );
-
-        panelCentro.add(
-                lblBuscar
-        );
-
-        panelCentro.add(
-                javax.swing.Box.createVerticalStrut(10)
-        );
-
-        panelCentro.add(
-                campoBuscar
-        );
-
-        javax.swing.JButton btnBuscarDialogo =
-                new javax.swing.JButton(
-                        "Buscar"
-                );
-
-        javax.swing.JButton btnCancelarDialogo =
-                new javax.swing.JButton(
-                        "Cancelar"
-                );
-
-        Estilos.estilizarBoton(
-                btnBuscarDialogo
-        );
-
-        Estilos.estilizarBoton(
-                btnCancelarDialogo
-        );
-
-        btnBuscarDialogo.setPreferredSize(
-                new java.awt.Dimension(
-                        105,
-                        34
-                )
-        );
-
-        btnCancelarDialogo.setPreferredSize(
-                new java.awt.Dimension(
-                        105,
-                        34
-                )
-        );
-
-        javax.swing.JPanel panelBotones =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.RIGHT,
-                                10,
-                                0
-                        )
-                );
-
-        panelBotones.setOpaque(false);
-
-        panelBotones.add(
-                btnCancelarDialogo
-        );
-
-        panelBotones.add(
-                btnBuscarDialogo
-        );
-
-        javax.swing.JPanel contenido =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout(
-                                0,
-                                20
-                        )
-                );
-
-        contenido.setOpaque(false);
-
-        contenido.setBorder(
-                javax.swing.BorderFactory.createEmptyBorder(
-                        5,
-                        0,
-                        0,
-                        0
-                )
-        );
-
-        contenido.add(
-                panelCentro,
-                java.awt.BorderLayout.CENTER
-        );
-
-        contenido.add(
-                panelBotones,
-                java.awt.BorderLayout.SOUTH
-        );
-
-        panelPrincipal.add(
-                panelTitulo,
-                java.awt.BorderLayout.NORTH
-        );
-
-        panelPrincipal.add(
-                contenido,
-                java.awt.BorderLayout.CENTER
-        );
-
-        btnCancelarDialogo.addActionListener(e ->
-                dialogo.dispose()
-        );
-
-        btnBuscarDialogo.addActionListener(e -> {
-
-            String texto =
-                    campoBuscar.getText().trim();
-
-            if (!texto.isEmpty()) {
-
-                buscarProcedimientos(texto);
-
-                dialogo.dispose();
-            }
-        });
-
-        campoBuscar.addActionListener(e ->
-                btnBuscarDialogo.doClick()
-        );
-
-        dialogo.getRootPane().setDefaultButton(
-                btnBuscarDialogo
-        );
-
-        dialogo.setContentPane(
-                panelPrincipal
-        );
-
-        dialogo.setSize(
-                390,
-                200
-        );
-
-        dialogo.setLocationRelativeTo(
-                ventanaPadre
-        );
-
-        dialogo.setVisible(true);       
+        buscarProcedimientos(texto);
     }//GEN-LAST:event_btnBuscarProcedimientoActionPerformed
 
     private void btnMostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarTodosActionPerformed
-        
         cargarTabla();
-    
+
+        campoBusquedaProcedimientos.setText(
+                "Buscar por tipo, animal o fecha"
+        );
+
+        campoBusquedaProcedimientos.setForeground(
+                new java.awt.Color(140, 140, 140)
+        );
+
+        campoBusquedaProcedimientos.setCaretPosition(0);   
     }//GEN-LAST:event_btnMostrarTodosActionPerformed
     private void configurarDiseñoProcedimientos() {
 
@@ -904,42 +776,7 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
                         400
                 )
         );
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setMinWidth(0);
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setMaxWidth(0);
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setPreferredWidth(0);
-
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(2)
-                .setCellRenderer(centrado);
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(3)
-                .setCellRenderer(centrado);
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(6)
-                .setCellRenderer(centrado);
-
+               
         tarjetaProcedimientos.add(
                 scrollProcedimientos,
                 java.awt.BorderLayout.CENTER
@@ -1212,42 +1049,7 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
         scrollProcedimientos.setBorder(
                 javax.swing.BorderFactory.createEmptyBorder()
         );
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setMinWidth(0);
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setMaxWidth(0);
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(4)
-                .setPreferredWidth(0);
-
-        javax.swing.table.DefaultTableCellRenderer centrado =
-                new javax.swing.table.DefaultTableCellRenderer();
-
-        centrado.setHorizontalAlignment(
-                javax.swing.SwingConstants.CENTER
-        );
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(0)
-                .setCellRenderer(centrado);
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(2)
-                .setCellRenderer(centrado);
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(3)
-                .setCellRenderer(centrado);
-
-        tblProcedimientos.getColumnModel()
-                .getColumn(6)
-                .setCellRenderer(centrado);
-
+       
         tarjetaProcedimientos.add(
                 scrollProcedimientos,
                 java.awt.BorderLayout.CENTER
@@ -1374,20 +1176,117 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
                 btnInicio
         );
 
+        campoBusquedaProcedimientos =
+                new javax.swing.JTextField(
+                        "Buscar por tipo, animal o fecha"
+                );
+
+        campoBusquedaProcedimientos.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        campoBusquedaProcedimientos.setForeground(
+                new java.awt.Color(140, 140, 140)
+        );
+
+        campoBusquedaProcedimientos.setPreferredSize(
+                new java.awt.Dimension(310, 38)
+        );
+
+        campoBusquedaProcedimientos.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                10,
+                                0,
+                                10
+                        )
+                )
+        );
+
+        campoBusquedaProcedimientos.setCaretPosition(0);
+
+        campoBusquedaProcedimientos.addFocusListener(
+                new java.awt.event.FocusAdapter() {
+
+            @Override
+            public void focusGained(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaProcedimientos
+                        .getText()
+                        .equals(
+                                "Buscar por tipo, animal o fecha"
+                        )) {
+
+                    campoBusquedaProcedimientos.setText("");
+
+                    campoBusquedaProcedimientos.setForeground(
+                            Estilos.VERDE_OSCURO
+                    );
+                }
+            }
+
+            @Override
+            public void focusLost(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaProcedimientos
+                        .getText()
+                        .trim()
+                        .isEmpty()) {
+
+                    campoBusquedaProcedimientos.setText(
+                            "Buscar por tipo, animal o fecha"
+                    );
+
+                    campoBusquedaProcedimientos.setForeground(
+                            new java.awt.Color(
+                                    140,
+                                    140,
+                                    140
+                            )
+                    );
+
+                    campoBusquedaProcedimientos.setCaretPosition(0);
+                }
+            }
+        });
+
+        campoBusquedaProcedimientos.addActionListener(e ->
+                btnBuscarProcedimiento.doClick()
+        );
+
+        btnMostrarTodos.setText(
+                "Actualizar tabla"
+        );
+
+        java.awt.Dimension tamañoActualizar =
+                new java.awt.Dimension(205, 38);
+
+        btnMostrarTodos.setPreferredSize(tamañoActualizar);
+        btnMostrarTodos.setMinimumSize(tamañoActualizar);
+        btnMostrarTodos.setMaximumSize(tamañoActualizar);
+
         javax.swing.JPanel panelBusqueda =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
                                 java.awt.FlowLayout.RIGHT,
-                                0,
+                                8,
                                 0
                         )
                 );
 
         panelBusqueda.setOpaque(false);
 
-        panelBusqueda.add(
-                btnBuscarProcedimiento
-        );
+        panelBusqueda.add(btnMostrarTodos);
+        panelBusqueda.add(campoBusquedaProcedimientos);
+        panelBusqueda.add(btnBuscarProcedimiento);
 
         javax.swing.JPanel panelAccionesSuperiores =
                 new javax.swing.JPanel(
@@ -1424,14 +1323,7 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
                         38
                 )
         );
-
-        btnMostrarTodos.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
-        );
-
+      
         java.awt.Dimension tamañoBotonBaja =
                 new java.awt.Dimension(
                         300,
@@ -1476,14 +1368,7 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
         filaPrincipal.add(
                 btnAgregarProcedimiento
         );
-
-        filaPrincipal.add(
-                btnEditarProcedimiento
-        );
-
-        filaPrincipal.add(
-                btnMostrarTodos
-        );
+      
         javax.swing.JButton btnTiposProcedimiento =
                 new javax.swing.JButton(
                         "Tipos de procedimiento"
@@ -1506,36 +1391,14 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
 
                 ventanaPrincipal.mostrarTiposProcedimiento();
             }
-        });
-        javax.swing.JPanel filaBaja =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.LEFT,
-                                10,
-                                0
-                        )
-                );
-
-        filaBaja.setOpaque(false);
-
-        filaBaja.add(
-                btnDarDeBajaRegistro
-        );
-        filaBaja.add(
+        });       
+        
+        filaPrincipal.add(
                 btnTiposProcedimiento
         );
+
         panelBotones.add(
                 filaPrincipal
-        );
-
-        panelBotones.add(
-                javax.swing.Box.createVerticalStrut(
-                        10
-                )
-        );
-
-        panelBotones.add(
-                filaBaja
         );
 
         tarjetaProcedimientos.add(
@@ -1558,7 +1421,273 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
                 java.awt.BorderLayout.CENTER
         );
 
+
+       
         return panel;
+    }
+    private class RenderizadorAcciones
+            extends javax.swing.JPanel
+            implements javax.swing.table.TableCellRenderer {
+
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        private final java.awt.Color colorEditarNormal =
+                btnEditar.getBackground();
+
+        private final java.awt.Color colorEliminarNormal =
+                btnEliminar.getBackground();
+
+        public RenderizadorAcciones() {
+
+            setLayout(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            4,
+                            4
+                    )
+            );
+
+            setOpaque(true);
+
+            add(btnEditar);
+            add(btnEliminar);
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                boolean tieneFoco,
+                int fila,
+                int columna
+        ) {
+
+            setBackground(
+                    seleccionado
+                            ? tabla.getSelectionBackground()
+                            : tabla.getBackground()
+            );
+
+            boolean sobreEditar = false;
+            boolean sobreEliminar = false;
+
+            java.awt.Point posicionMouse =
+                    tabla.getMousePosition();
+
+            if (posicionMouse != null) {
+
+                int filaMouse =
+                        tabla.rowAtPoint(posicionMouse);
+
+                int columnaMouse =
+                        tabla.columnAtPoint(posicionMouse);
+
+                if (filaMouse == fila
+                        && columnaMouse == columna) {
+
+                    java.awt.Rectangle celda =
+                            tabla.getCellRect(
+                                    fila,
+                                    columna,
+                                    false
+                            );
+
+                    int posicionDentro =
+                            posicionMouse.x - celda.x;
+
+                    if (posicionDentro < celda.width / 2) {
+                        sobreEditar = true;
+                    } else {
+                        sobreEliminar = true;
+                    }
+                }
+            }
+
+            btnEditar.setBackground(
+                    sobreEditar
+                            ? colorEditarNormal.brighter()
+                            : colorEditarNormal
+            );
+
+            btnEliminar.setBackground(
+                    sobreEliminar
+                            ? new java.awt.Color(255, 165, 165)
+                            : colorEliminarNormal
+            );
+
+            return this;
+        }
+    }
+
+    private class EditorAcciones
+            extends javax.swing.AbstractCellEditor
+            implements javax.swing.table.TableCellEditor {
+
+        private final javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                4,
+                                4
+                        )
+                );
+
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        private int filaActual = -1;
+
+        public EditorAcciones() {
+
+            panel.setOpaque(true);
+
+            panel.add(btnEditar);
+            panel.add(btnEliminar);
+
+            btnEditar.addActionListener(e -> {
+
+                int fila = filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblProcedimientos.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    btnEditarProcedimientoActionPerformed(null);
+                }
+            });
+
+            btnEliminar.addActionListener(e -> {
+
+                int fila = filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblProcedimientos.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    btnDarDeBajaRegistroActionPerformed(null);
+                }
+            });
+        }
+
+        @Override
+        public java.awt.Component getTableCellEditorComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                int fila,
+                int columna
+        ) {
+
+            filaActual = fila;
+
+            panel.setBackground(
+                    tabla.getSelectionBackground()
+            );
+
+            return panel;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return "";
+        }
+    }
+
+    private javax.swing.JButton crearBotonEditar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEditar(boton);
+
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/editar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(26, 22);
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText(
+                "Editar procedimiento"
+        );
+
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+    }
+
+    private javax.swing.JButton crearBotonEliminar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEliminar(boton);
+
+        boton.setOpaque(true);
+        boton.setContentAreaFilled(true);
+        boton.setBorderPainted(false);
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/eliminar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(30, 22);
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText(
+                "Dar de baja el procedimiento"
+        );
+
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
     }
     public static void main(String args[]) {
 

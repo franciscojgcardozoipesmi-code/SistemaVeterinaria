@@ -4,7 +4,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
     private String rolUsuario;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaAnimales.class.getName());
     private VentanaPrincipal ventanaPrincipal;
-   
+    private javax.swing.JTextField campoBusquedaAnimales;
     public VentanaAnimales() {
 
         initComponents();
@@ -91,6 +91,29 @@ public class VentanaAnimales extends javax.swing.JFrame {
         );
 
         configurarColumnaAcciones();
+        tblAnimales.setModel(
+                modelo
+        );
+
+        configurarColumnaAcciones();
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblAnimales.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(centrado);
+
+        tblAnimales.getColumnModel()
+                .getColumn(5)
+                .setCellRenderer(centrado);
+
+        tblAnimales.revalidate();
+        tblAnimales.repaint();
     }
 
     
@@ -552,275 +575,24 @@ public class VentanaAnimales extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarAnimalActionPerformed
 
     private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
-            java.awt.Window ventanaPadre =
-                javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        javax.swing.JDialog dialogo =
-                new javax.swing.JDialog(
-                        ventanaPadre,
-                        "Buscar animal",
-                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
-                );
-
-        dialogo.setUndecorated(true);
-
-        javax.swing.JPanel panelPrincipal =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout(
-                                0,
-                                20
-                        )
-                );
-
-        panelPrincipal.setBackground(
-                Estilos.BLANCO
-        );
-
-        panelPrincipal.setBorder(
-                javax.swing.BorderFactory.createCompoundBorder(
-                        javax.swing.BorderFactory.createLineBorder(
-                                Estilos.VERDE_OSCURO,
-                                2
-                        ),
-                        javax.swing.BorderFactory.createEmptyBorder(
-                                0,
-                                25,
-                                25,
-                                25
-                        )
-                )
-        );
-
-        javax.swing.JLabel lblTitulo =
-                new javax.swing.JLabel(
-                        "BUSCAR ANIMAL",
-                        javax.swing.SwingConstants.CENTER
-                );
-
-        lblTitulo.setFont(
-                Estilos.fuente(20f)
-        );
-
-        lblTitulo.setForeground(
-                Estilos.BLANCO
-        );
-
-        javax.swing.JPanel panelTitulo =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout()
-                );
-
-        panelTitulo.setBackground(
-                Estilos.VERDE_OSCURO
-        );
-
-        panelTitulo.setBorder(
-                javax.swing.BorderFactory.createEmptyBorder(
-                        12,
-                        20,
-                        12,
-                        20
-                )
-        );
-
-        panelTitulo.add(
-                lblTitulo,
-                java.awt.BorderLayout.CENTER
-        );
-
-        javax.swing.JPanel panelCentro =
-                new javax.swing.JPanel();
-
-        panelCentro.setOpaque(false);
-
-        panelCentro.setLayout(
-                new javax.swing.BoxLayout(
-                        panelCentro,
-                        javax.swing.BoxLayout.Y_AXIS
-                )
-        );
-
-        javax.swing.JLabel lblBuscar =
-                new javax.swing.JLabel(
-                        "Buscar por nombre, especie o raza:"
-                );
-
-        lblBuscar.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        lblBuscar.setForeground(
-                Estilos.VERDE_OSCURO
-        );
-
-        lblBuscar.setAlignmentX(
-                java.awt.Component.LEFT_ALIGNMENT
-        );
-
-        javax.swing.JTextField campoBuscar =
-                new javax.swing.JTextField();
-
-        campoBuscar.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        campoBuscar.setMaximumSize(
-                new java.awt.Dimension(
-                        Integer.MAX_VALUE,
-                        38
-                )
-        );
-
-        campoBuscar.setPreferredSize(
-                new java.awt.Dimension(
-                        280,
-                        34
-                )
-        );
-
-        campoBuscar.setAlignmentX(
-                java.awt.Component.LEFT_ALIGNMENT
-        );
-
-        panelCentro.add(
-                lblBuscar
-        );
-
-        panelCentro.add(
-                javax.swing.Box.createVerticalStrut(10)
-        );
-
-        panelCentro.add(
-                campoBuscar
-        );
-
-        javax.swing.JButton btnBuscarDialogo =
-                new javax.swing.JButton(
-                        "Buscar"
-                );
-
-        javax.swing.JButton btnCancelarDialogo =
-                new javax.swing.JButton(
-                        "Cancelar"
-                );
-
-        Estilos.estilizarBoton(
-                btnBuscarDialogo
-        );
-
-        Estilos.estilizarBoton(
-                btnCancelarDialogo
-        );
-
-        btnBuscarDialogo.setPreferredSize(
-                new java.awt.Dimension(
-                        105,
-                        34
-                )
-        );
-
-        btnCancelarDialogo.setPreferredSize(
-                new java.awt.Dimension(
-                        105,
-                        34
-                )
-        );
-
-        javax.swing.JPanel panelBotones =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.RIGHT,
-                                10,
-                                0
-                        )
-                );
-
-        panelBotones.setOpaque(false);
-
-        panelBotones.add(
-                btnCancelarDialogo
-        );
-
-        panelBotones.add(
-                btnBuscarDialogo
-        );
-
-        javax.swing.JPanel contenido =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout(
-                                0,
-                                20
-                        )
-                );
-
-        contenido.setOpaque(false);
-
-        contenido.setBorder(
-                javax.swing.BorderFactory.createEmptyBorder(
-                        5,
-                        0,
-                        0,
-                        0
-                )
-        );
-
-        contenido.add(
-                panelCentro,
-                java.awt.BorderLayout.CENTER
-        );
-
-        contenido.add(
-                panelBotones,
-                java.awt.BorderLayout.SOUTH
-        );
-
-        panelPrincipal.add(
-                panelTitulo,
-                java.awt.BorderLayout.NORTH
-        );
-
-        panelPrincipal.add(
-                contenido,
-                java.awt.BorderLayout.CENTER
-        );
-
-        btnCancelarDialogo.addActionListener(e ->
-                dialogo.dispose()
-        );
-
-        btnBuscarDialogo.addActionListener(e -> {
-
             String texto =
-                    campoBuscar.getText().trim();
+                campoBusquedaAnimales
+                        .getText()
+                        .trim();
 
-            if (!texto.isEmpty()) {
+        if (texto.isEmpty()
+                || texto.equals(
+                        "Buscar por nombre, especie o raza"
+                )) {
 
-                buscarAnimales(texto);
+            cargarTabla();
 
-                dialogo.dispose();
-            }
-        });
+            return;
+        }
 
-        campoBuscar.addActionListener(e ->
-                btnBuscarDialogo.doClick()
+        buscarAnimales(
+                texto
         );
-
-        dialogo.setContentPane(
-                panelPrincipal
-        );
-
-        dialogo.setSize(
-                370,
-                200
-        );
-
-        dialogo.setLocationRelativeTo(
-                ventanaPadre
-        );
-
-        campoBuscar.requestFocusInWindow();
-
-        dialogo.setVisible(true);
     }//GEN-LAST:event_txtBuscarActionPerformed
 
     private void btnMostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarTodosActionPerformed
@@ -907,6 +679,29 @@ public class VentanaAnimales extends javax.swing.JFrame {
         );
 
         configurarColumnaAcciones();
+        tblAnimales.setModel(
+                modelo
+        );
+
+        configurarColumnaAcciones();
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblAnimales.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(centrado);
+
+        tblAnimales.getColumnModel()
+                .getColumn(5)
+                .setCellRenderer(centrado);
+
+        tblAnimales.revalidate();
+        tblAnimales.repaint();
     }
     private void configurarColumnaAcciones() {
 
@@ -939,10 +734,65 @@ public class VentanaAnimales extends javax.swing.JFrame {
         columnaAcciones.setCellEditor(
                 new EditorAcciones()
         );
+        tblAnimales.addMouseMotionListener(
+                new java.awt.event.MouseMotionAdapter() {
 
+            @Override
+            public void mouseMoved(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                int fila =
+                        tblAnimales.rowAtPoint(
+                                e.getPoint()
+                        );
+
+                int columnaVista =
+                        tblAnimales.columnAtPoint(
+                                e.getPoint()
+                        );
+
+                boolean sobreAcciones =
+                        fila >= 0
+                        && columnaVista >= 0
+                        && tblAnimales.convertColumnIndexToModel(
+                                columnaVista
+                        ) == 6;
+
+                if (sobreAcciones) {
+
+                    tblAnimales.setCursor(
+                            java.awt.Cursor.getPredefinedCursor(
+                                    java.awt.Cursor.HAND_CURSOR
+                            )
+                    );
+
+                } else {
+
+                    tblAnimales.setCursor(
+                            java.awt.Cursor.getDefaultCursor()
+                    );
+                }
+                tblAnimales.repaint();
+            }
+        });
+        tblAnimales.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseExited(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                tblAnimales.setCursor(
+                        java.awt.Cursor.getDefaultCursor()
+                );
+            }
+        });
         tblAnimales.setRowHeight(
-                38
+                32
         );
+        tblAnimales.repaint();
     }
     private void configurarDiseñoAnimales() {
 
@@ -1420,6 +1270,28 @@ public class VentanaAnimales extends javax.swing.JFrame {
         scrollAnimales.setBorder(
                 javax.swing.BorderFactory.createEmptyBorder()
         );
+        
+        java.awt.event.MouseAdapter quitarFocoBusqueda =
+                new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mousePressed(
+                    java.awt.event.MouseEvent e
+            ) {
+
+                tblAnimales.requestFocusInWindow();
+            }
+        };
+
+        tarjetaAnimales.setFocusable(true);
+
+        tarjetaAnimales.addMouseListener(
+                quitarFocoBusqueda
+        );
+
+        scrollAnimales.getViewport().addMouseListener(
+                quitarFocoBusqueda
+        );
 
         javax.swing.table.DefaultTableCellRenderer centrado =
                 new javax.swing.table.DefaultTableCellRenderer();
@@ -1467,6 +1339,14 @@ public class VentanaAnimales extends javax.swing.JFrame {
 
         Estilos.estilizarBoton(
                 btnMostrarTodos
+        );
+        
+        btnMostrarTodos.setText(
+                "Actualizar tabla"
+        );
+
+        btnMostrarTodos.setToolTipText(
+                "Actualizar los datos de la tabla"
         );
 
         Estilos.aplicarIcono(
@@ -1560,11 +1440,22 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 )
         );
 
-        btnMostrarTodos.setPreferredSize(
+        java.awt.Dimension tamañoActualizar =
                 new java.awt.Dimension(
-                        180,
+                        205,
                         38
-                )
+                );
+
+        btnMostrarTodos.setPreferredSize(
+                tamañoActualizar
+        );
+
+        btnMostrarTodos.setMinimumSize(
+                tamañoActualizar
+        );
+
+        btnMostrarTodos.setMaximumSize(
+                tamañoActualizar
         );
 
         java.awt.Dimension tamañoBotonBaja =
@@ -1649,12 +1540,108 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
                                 java.awt.FlowLayout.RIGHT,
-                                0,
+                                8,
                                 0
                         )
                 );
 
         panelBusqueda.setOpaque(false);
+
+        String textoAyuda =
+                "Buscar por nombre, especie o raza";
+
+        campoBusquedaAnimales =
+                new javax.swing.JTextField(
+                        textoAyuda
+                );
+        campoBusquedaAnimales.setCaretPosition(0);
+
+        campoBusquedaAnimales.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        campoBusquedaAnimales.setForeground(
+                new java.awt.Color(
+                        150,
+                        150,
+                        150
+                )
+        );
+
+        campoBusquedaAnimales.setPreferredSize(
+                new java.awt.Dimension(
+                        320,
+                        38
+                )
+        );
+
+        campoBusquedaAnimales.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                10,
+                                0,
+                                10
+                        )
+                )
+        );
+
+        campoBusquedaAnimales.addFocusListener(
+                new java.awt.event.FocusAdapter() {
+
+            @Override
+            public void focusGained(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaAnimales.getText()
+                        .equals(textoAyuda)) {
+
+                    campoBusquedaAnimales.setText("");
+
+                    campoBusquedaAnimales.setForeground(
+                            Estilos.VERDE_OSCURO
+                    );
+                }
+            }
+
+            @Override
+            public void focusLost(
+                    java.awt.event.FocusEvent e
+            ) {
+
+                if (campoBusquedaAnimales.getText()
+                        .trim()
+                        .isEmpty()) {
+
+                    campoBusquedaAnimales.setText(
+                            textoAyuda
+                    );
+
+                    campoBusquedaAnimales.setForeground(
+                            new java.awt.Color(
+                                    150,
+                                    150,
+                                    150
+                            )
+                    );
+                    campoBusquedaAnimales.setCaretPosition(0);
+                }
+            }
+        });
+
+        campoBusquedaAnimales.addActionListener(e ->
+                txtBuscar.doClick()
+        );
+        panelBusqueda.add(
+                btnMostrarTodos
+        );
+        panelBusqueda.add(
+                campoBusquedaAnimales
+        );
 
         panelBusqueda.add(
                 txtBuscar
@@ -1723,10 +1710,6 @@ public class VentanaAnimales extends javax.swing.JFrame {
 
         panelBotones.add(
                 btnHistorialMedico
-        );
-
-        panelBotones.add(
-                btnMostrarTodos
         );
 
         panelBotones.add(
@@ -1985,14 +1968,19 @@ public class VentanaAnimales extends javax.swing.JFrame {
 
     private final javax.swing.JButton btnEliminar =
             crearBotonEliminar();
+    private final java.awt.Color colorEditarNormal =
+            btnEditar.getBackground();
+
+    private final java.awt.Color colorEliminarNormal =
+            btnEliminar.getBackground();
 
     public RenderizadorAcciones() {
 
             setLayout(
                     new java.awt.FlowLayout(
                             java.awt.FlowLayout.CENTER,
-                            5,
-                            5
+                            4,
+                            4
                     )
             );
 
@@ -2029,7 +2017,64 @@ public class VentanaAnimales extends javax.swing.JFrame {
                         table.getBackground()
                 );
             }
+            boolean sobreEditar = false;
+            boolean sobreEliminar = false;
 
+            java.awt.Point posicionMouse =
+                    table.getMousePosition();
+
+            if (posicionMouse != null) {
+
+                int filaMouse =
+                        table.rowAtPoint(
+                                posicionMouse
+                        );
+
+                int columnaMouse =
+                        table.columnAtPoint(
+                                posicionMouse
+                        );
+
+                if (filaMouse == row
+                        && columnaMouse == column) {
+
+                    java.awt.Rectangle celda =
+                            table.getCellRect(
+                                    row,
+                                    column,
+                                    false
+                            );
+
+                    int posicionDentro =
+                            posicionMouse.x - celda.x;
+
+                    if (posicionDentro
+                            < celda.width / 2) {
+
+                        sobreEditar = true;
+
+                    } else {
+
+                        sobreEliminar = true;
+                    }
+                }
+            }
+
+            btnEditar.setBackground(
+                    sobreEditar
+                            ? colorEditarNormal.brighter()
+                            : colorEditarNormal
+            );
+
+            btnEliminar.setBackground(
+                    sobreEliminar
+                            ? new java.awt.Color(
+                                    255,
+                                    165,
+                                    165
+                            )
+                            : colorEliminarNormal
+            );
             return this;
         }
     }
@@ -2042,7 +2087,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
                     new java.awt.FlowLayout(
                             java.awt.FlowLayout.CENTER,
                             4,
-                            3
+                            4
                     )
             );
 
@@ -2145,15 +2190,15 @@ public class VentanaAnimales extends javax.swing.JFrame {
         Estilos.aplicarIcono(
                 boton,
                 "/imagenes/iconos/editar.png",
-                16,
-                16
+                14,
+                14
         );
 
         java.awt.Dimension tamaño =
                 new java.awt.Dimension(
-                        36,
-                        28
-                );  
+                        26,
+                        22
+                );
 
         boton.setPreferredSize(tamaño);
         boton.setMinimumSize(tamaño);
@@ -2164,7 +2209,11 @@ public class VentanaAnimales extends javax.swing.JFrame {
         );
 
         boton.setFocusable(false);
-
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
         return boton;
     }
 
@@ -2176,17 +2225,24 @@ public class VentanaAnimales extends javax.swing.JFrame {
         Estilos.estilizarBotonEliminar(
                 boton
         );
+        
+        boton.setOpaque(true);
+        boton.setContentAreaFilled(true);
+        boton.setBorderPainted(false);
 
         boton.setText("");
 
-        boton.setIcon(
-                new IconoPapelera()
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/eliminar.png",
+                14,
+                14
         );
 
         java.awt.Dimension tamaño =
                 new java.awt.Dimension(
-                        36,
-                        28
+                        30,
+                        22
                 );
 
         boton.setPreferredSize(tamaño);
@@ -2198,88 +2254,14 @@ public class VentanaAnimales extends javax.swing.JFrame {
         );
 
         boton.setFocusable(false);
-
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
         return boton;
     }
-    private static class IconoPapelera
-            implements javax.swing.Icon {
-
-        @Override
-        public int getIconWidth() {
-
-            return 16;
-        }
-
-        @Override
-        public int getIconHeight() {
-
-            return 16;
-        }
-
-        @Override
-        public void paintIcon(
-                java.awt.Component componente,
-                java.awt.Graphics graficos,
-                int x,
-                int y
-        ) {
-
-            java.awt.Graphics2D g2 =
-                    (java.awt.Graphics2D)
-                            graficos.create();
-
-            g2.setColor(
-                    java.awt.Color.WHITE
-            );
-
-            g2.setStroke(
-                    new java.awt.BasicStroke(
-                            1.8f,
-                            java.awt.BasicStroke.CAP_ROUND,
-                            java.awt.BasicStroke.JOIN_ROUND
-                    )
-            );
-
-            g2.drawLine(
-                    x + 2,
-                    y + 4,
-                    x + 14,
-                    y + 4
-            );
-
-            g2.drawLine(
-                    x + 6,
-                    y + 2,
-                    x + 10,
-                    y + 2
-            );
-
-            g2.drawRoundRect(
-                    x + 4,
-                    y + 5,
-                    8,
-                    9,
-                    1,
-                    1
-            );
-
-            g2.drawLine(
-                    x + 7,
-                    y + 7,
-                    x + 7,
-                    y + 12
-            );
-
-            g2.drawLine(
-                    x + 9,
-                    y + 7,
-                    x + 9,
-                    y + 12
-            );
-
-            g2.dispose();
-        }
-    }
+    
     public static void main(String args[]) {
       
         java.awt.EventQueue.invokeLater(() -> new VentanaAnimales().setVisible(true));

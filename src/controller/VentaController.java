@@ -78,8 +78,13 @@ public class VentaController {
         );
     }
 
-    public static void eliminarVenta(int idVenta) {
-        ventaDAO.eliminar(idVenta);
+    public static boolean anularVenta(
+            int idVenta
+    ) {
+
+        return ventaDAO.anularVenta(
+                idVenta
+        );
     }
 
     public static ArrayList<Object[]> listarVentasConDetalle() {

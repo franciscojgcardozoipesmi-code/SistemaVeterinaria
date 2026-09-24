@@ -221,7 +221,8 @@ public class VentaDAO implements CrudDAO<Venta> {
                            d.precio,
                            (d.cantidad * d.precio) AS subtotal,
                            v.total,
-                           v.medio_pago
+                           v.medio_pago,
+                           v.estado
                     FROM ventas v
                     JOIN detalle_venta d
                         ON v.id_venta = d.id_venta
@@ -323,9 +324,39 @@ public class VentaDAO implements CrudDAO<Venta> {
 
         return lista;
     }
+    public VentaDAO() {
+    inicializarEstadoVentas();
+}
 
-    @Override
-    public void eliminar(int idVenta) {
+    private void inicializarEstadoVentas() {
+
+        String sql =
+                "ALTER TABLE ventas "
+                + "ADD COLUMN estado TEXT NOT NULL DEFAULT 'ACTIVA'";
+
+        try (
+                Connection conn =
+                        Conexion.getInstancia().conectar();
+                PreparedStatement pst =
+                        conn.prepareStatement(sql)
+        ) {
+
+            pst.executeUpdate();
+
+        } catch (Exception e) {
+
+            if (!e.getMessage().toLowerCase()
+                    .contains("duplicate column")) {
+
+                throw new RuntimeException(
+                        "Error al inicializar el estado de las ventas: "
+                        + e.getMessage(),
+                        e
+                );
+            }
+        }
+    }
+    public boolean anularVenta(int idVenta) {
 
         Connection conn = null;
 
@@ -334,66 +365,90 @@ public class VentaDAO implements CrudDAO<Venta> {
             conn = Conexion.getInstancia().conectar();
             conn.setAutoCommit(false);
 
-            String sqlBuscarDetalles =
-                    "SELECT id_producto, cantidad "
-                    + "FROM detalle_venta "
+            String sqlEstado =
+                    "SELECT estado "
+                    + "FROM ventas "
                     + "WHERE id_venta = ?";
 
-            PreparedStatement pstBuscarDetalles =
-                    conn.prepareStatement(sqlBuscarDetalles);
+            String estado;
 
-            pstBuscarDetalles.setInt(1, idVenta);
+            try (
+                    PreparedStatement pst =
+                            conn.prepareStatement(sqlEstado)
+            ) {
 
-            ResultSet rsDetalles =
-                    pstBuscarDetalles.executeQuery();
+                pst.setInt(1, idVenta);
 
-            while (rsDetalles.next()) {
+                try (ResultSet rs = pst.executeQuery()) {
 
-                int idProducto =
-                        rsDetalles.getInt("id_producto");
+                    if (!rs.next()) {
+                        throw new RuntimeException(
+                                "No se encontró la venta"
+                        );
+                    }
 
-                int cantidad =
-                        rsDetalles.getInt("cantidad");
-
-                String sqlStock =
-                        "UPDATE productos "
-                        + "SET stock = stock + ? "
-                        + "WHERE id_producto = ?";
-
-                PreparedStatement pstStock =
-                        conn.prepareStatement(sqlStock);
-
-                pstStock.setInt(1, cantidad);
-                pstStock.setInt(2, idProducto);
-
-                pstStock.executeUpdate();
-                pstStock.close();
+                    estado = rs.getString("estado");
+                }
             }
 
-            rsDetalles.close();
-            pstBuscarDetalles.close();
+            if ("ANULADA".equalsIgnoreCase(estado)) {
 
-            String sqlDetalle =
-                    "DELETE FROM detalle_venta WHERE id_venta = ?";
+                conn.rollback();
+                return false;
+            }
 
-            PreparedStatement pstDetalle =
-                    conn.prepareStatement(sqlDetalle);
+            String sqlRestaurarStock =
+                    "UPDATE productos "
+                    + "SET stock = stock + ("
+                    + "SELECT COALESCE(SUM(d.cantidad), 0) "
+                    + "FROM detalle_venta d "
+                    + "WHERE d.id_venta = ? "
+                    + "AND d.id_producto = productos.id_producto"
+                    + ") "
+                    + "WHERE id_producto IN ("
+                    + "SELECT id_producto "
+                    + "FROM detalle_venta "
+                    + "WHERE id_venta = ?"
+                    + ")";
 
-            pstDetalle.setInt(1, idVenta);
-            pstDetalle.executeUpdate();
-            pstDetalle.close();
+            try (
+                    PreparedStatement pst =
+                            conn.prepareStatement(
+                                    sqlRestaurarStock
+                            )
+            ) {
 
-            String sqlVenta =
-                    "DELETE FROM ventas WHERE id_venta = ?";
+                pst.setInt(1, idVenta);
+                pst.setInt(2, idVenta);
+                pst.executeUpdate();
+            }
 
-            PreparedStatement pstVenta =
-                    conn.prepareStatement(sqlVenta);
+            String sqlAnular =
+                    "UPDATE ventas "
+                    + "SET estado = 'ANULADA' "
+                    + "WHERE id_venta = ? "
+                    + "AND estado = 'ACTIVA'";
 
-            pstVenta.setInt(1, idVenta);
-            pstVenta.executeUpdate();
-            pstVenta.close();
+            int filasActualizadas;
+
+            try (
+                    PreparedStatement pst =
+                            conn.prepareStatement(sqlAnular)
+            ) {
+
+                pst.setInt(1, idVenta);
+                filasActualizadas =
+                        pst.executeUpdate();
+            }
+
+            if (filasActualizadas == 0) {
+
+                conn.rollback();
+                return false;
+            }
 
             conn.commit();
+            return true;
 
         } catch (Exception e) {
 
@@ -408,7 +463,7 @@ public class VentaDAO implements CrudDAO<Venta> {
             }
 
             throw new RuntimeException(
-                    "Error al eliminar venta: "
+                    "Error al anular la venta: "
                     + e.getMessage(),
                     e
             );
@@ -428,6 +483,12 @@ public class VentaDAO implements CrudDAO<Venta> {
         }
     }
 
+    @Override
+    public void eliminar(int idVenta) {
+
+        anularVenta(idVenta);
+    }
+
     public ArrayList<Object[]> listarVentasConDetalle() {
 
         ArrayList<Object[]> lista = new ArrayList<>();
@@ -445,7 +506,8 @@ public class VentaDAO implements CrudDAO<Venta> {
                        d.precio,
                        (d.cantidad * d.precio) AS subtotal,
                        v.total,
-                       v.medio_pago
+                       v.medio_pago,
+                       v.estado
                 FROM ventas v
                 JOIN detalle_venta d
                     ON v.id_venta = d.id_venta
@@ -467,7 +529,8 @@ public class VentaDAO implements CrudDAO<Venta> {
                     rs.getDouble("precio"),
                     rs.getDouble("subtotal"),
                     rs.getDouble("total"),
-                    rs.getString("medio_pago")
+                    rs.getString("medio_pago"),
+                    rs.getString("estado")
                 });
             }
 
@@ -508,37 +571,37 @@ public class VentaDAO implements CrudDAO<Venta> {
             conn = Conexion.getInstancia().conectar();
 
             String sql = """
-                SELECT v.id_venta,
-                       v.fecha,
-                       p.nombre AS producto,
-                       d.cantidad,
-                       d.precio,
-                       (d.cantidad * d.precio) AS subtotal,
-                       v.total,
-                       v.medio_pago
-                FROM ventas v
-                JOIN detalle_venta d
-                    ON v.id_venta = d.id_venta
-                JOIN productos p
-                    ON d.id_producto = p.id_producto
-                WHERE date(
-                        substr(v.fecha, 7, 4) || '-' ||
-                        substr(v.fecha, 4, 2) || '-' ||
-                        substr(v.fecha, 1, 2)
-                      )
-                      BETWEEN date(
-                        substr(?, 7, 4) || '-' ||
-                        substr(?, 4, 2) || '-' ||
-                        substr(?, 1, 2)
-                      )
-                      AND date(
-                        substr(?, 7, 4) || '-' ||
-                        substr(?, 4, 2) || '-' ||
-                        substr(?, 1, 2)
-                      )
-                ORDER BY v.id_venta DESC
-            """;
-
+                    SELECT v.id_venta,
+                           v.fecha,
+                           p.nombre AS producto,
+                           d.cantidad,
+                           d.precio,
+                           (d.cantidad * d.precio) AS subtotal,
+                           v.total,
+                           v.medio_pago
+                    FROM ventas v
+                    JOIN detalle_venta d
+                        ON v.id_venta = d.id_venta
+                    JOIN productos p
+                        ON d.id_producto = p.id_producto
+                    WHERE date(
+                            substr(v.fecha, 7, 4) || '-' ||
+                            substr(v.fecha, 4, 2) || '-' ||
+                            substr(v.fecha, 1, 2)
+                          )
+                          BETWEEN date(
+                            substr(?, 7, 4) || '-' ||
+                            substr(?, 4, 2) || '-' ||
+                            substr(?, 1, 2)
+                          )
+                          AND date(
+                            substr(?, 7, 4) || '-' ||
+                            substr(?, 4, 2) || '-' ||
+                            substr(?, 1, 2)
+                          )
+                      AND COALESCE(v.estado, 'ACTIVA') = 'ACTIVA'
+                    ORDER BY v.id_venta DESC
+                    """;
             PreparedStatement pst =
                     conn.prepareStatement(sql);
 
