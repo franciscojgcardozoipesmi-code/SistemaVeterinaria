@@ -13,6 +13,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblBienvenida;
     private javax.swing.JLabel lblRolSesion;
     private javax.swing.JPanel panelBienvenida;
+    private javax.swing.JPanel panelSubmenuAnimales;
+    private javax.swing.JButton btnGestionAnimales;
+    private javax.swing.JButton btnCatalogoAnimales;
+    private javax.swing.JLabel lblFlechaAnimales;
+    private boolean submenuAnimalesVisible = false;
+    private javax.swing.JPanel panelSubmenuTurnos;
+    private javax.swing.JButton btnGestionTurnos;
+    private javax.swing.JButton btnTurnosVencidos;
+    private javax.swing.JLabel lblFlechaTurnos;
+    private boolean submenuTurnosVisible = false;
+    private javax.swing.JPanel panelSubmenuProcedimientos;
+    private javax.swing.JButton btnGestionProcedimientos;
+    private javax.swing.JButton btnTiposProcedimiento;
+    private javax.swing.JLabel lblFlechaProcedimientos;
+    private boolean submenuProcedimientosVisible = false;
+    private javax.swing.JPanel panelSuperior;
+    private javax.swing.JPanel contenedorNotificaciones;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
     private VentanaPrincipal ventanaPrincipal;
     public VentanaPrincipal() {
@@ -195,7 +212,40 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTurnosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTurnosActionPerformed
-        mostrarTurnos();
+        cerrarOtrosSubmenus(
+                panelSubmenuTurnos
+        );
+        submenuTurnosVisible =
+                !submenuTurnosVisible;
+
+        panelSubmenuTurnos.setVisible(
+                submenuTurnosVisible
+        );
+
+        String rutaFlecha =
+                submenuTurnosVisible
+                        ? "/imagenes/iconos/flecha_arriba.png"
+                        : "/imagenes/iconos/flecha_abajo.png";
+
+        javax.swing.ImageIcon iconoFlecha =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                rutaFlecha
+                        )
+                );
+
+        lblFlechaTurnos.setIcon(
+                new javax.swing.ImageIcon(
+                        iconoFlecha.getImage().getScaledInstance(
+                                18,
+                                18,
+                                java.awt.Image.SCALE_SMOOTH
+                        )
+                )
+        );
+
+        panelMenu.revalidate();
+        panelMenu.repaint();
     }//GEN-LAST:event_btnTurnosActionPerformed
 
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
@@ -232,11 +282,77 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUsuariosActionPerformed
 
     private void btnAnimalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnimalesActionPerformed
-        mostrarAnimales();
+        cerrarOtrosSubmenus(
+                panelSubmenuAnimales
+        );
+        submenuAnimalesVisible =
+                !submenuAnimalesVisible;
+
+        panelSubmenuAnimales.setVisible(
+                submenuAnimalesVisible
+        );
+
+        String rutaFlecha =
+                submenuAnimalesVisible
+                        ? "/imagenes/iconos/flecha_arriba.png"
+                        : "/imagenes/iconos/flecha_abajo.png";
+
+        javax.swing.ImageIcon iconoFlecha =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                rutaFlecha
+                        )
+                );
+
+        lblFlechaAnimales.setIcon(
+                new javax.swing.ImageIcon(
+                        iconoFlecha.getImage().getScaledInstance(
+                                18,
+                                18,
+                                java.awt.Image.SCALE_SMOOTH
+                        )
+                )
+        );
+
+        panelMenu.revalidate();
+        panelMenu.repaint();
     }//GEN-LAST:event_btnAnimalesActionPerformed
 
     private void btnProcedimientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcedimientosActionPerformed
-         mostrarProcedimientos();
+        cerrarOtrosSubmenus(
+                panelSubmenuProcedimientos
+        );
+        submenuProcedimientosVisible =
+                !submenuProcedimientosVisible;
+
+        panelSubmenuProcedimientos.setVisible(
+                submenuProcedimientosVisible
+        );
+
+        String rutaFlecha =
+                submenuProcedimientosVisible
+                        ? "/imagenes/iconos/flecha_arriba.png"
+                        : "/imagenes/iconos/flecha_abajo.png";
+
+        javax.swing.ImageIcon iconoFlecha =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                rutaFlecha
+                        )
+                );
+
+        lblFlechaProcedimientos.setIcon(
+                new javax.swing.ImageIcon(
+                        iconoFlecha.getImage().getScaledInstance(
+                                18,
+                                18,
+                                java.awt.Image.SCALE_SMOOTH
+                        )
+                )
+        );
+
+        panelMenu.revalidate();
+        panelMenu.repaint();
     }//GEN-LAST:event_btnProcedimientosActionPerformed
 
     private void btnAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlertasActionPerformed
@@ -336,7 +452,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         );
 
         panelMenu.setPreferredSize(
-                new java.awt.Dimension(230, 0)
+                new java.awt.Dimension(
+                        320,
+                        0
+                )
         );
 
         panelMenu.setLayout(
@@ -406,17 +525,81 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Estilos.estilizarBotonMenu(btnClientes);
         Estilos.estilizarBotonMenu(btnTurnos);
         Estilos.estilizarBotonMenu(btnProcedimientos);
+        btnProcedimientos.setText(
+                "Procedimientos médicos"
+        );
         Estilos.estilizarBotonMenu(btnProductos);
         Estilos.estilizarBotonMenu(btnVentas);
         Estilos.estilizarBotonMenu(btnReportesVentas);
         Estilos.estilizarBotonMenu(btnAlertas);
         Estilos.estilizarBotonMenu(btnUsuarios);
         
+        btnAnimales.setText(
+                "Animales"
+        );
+
         Estilos.aplicarIcono(
                 btnAnimales,
                 "/imagenes/iconos/animales.png",
                 18,
                 18
+        );
+        
+
+        btnAnimales.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        lblFlechaAnimales =
+                new javax.swing.JLabel();
+
+        javax.swing.ImageIcon iconoFlecha =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/flecha_abajo.png"
+                        )
+                );
+
+        lblFlechaAnimales.setIcon(
+                new javax.swing.ImageIcon(
+                        iconoFlecha.getImage().getScaledInstance(
+                                17,
+                                17,
+                                java.awt.Image.SCALE_SMOOTH
+                        )
+                )
+        );
+
+        btnAnimales.setLayout(null);
+
+        lblFlechaAnimales.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        lblFlechaAnimales.setVerticalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        lblFlechaAnimales.setBounds(
+                4,
+                0,
+                20,
+                38
+        );
+        btnAnimales.add(
+                lblFlechaAnimales
+        );
+
+        lblFlechaAnimales.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseClicked(
+                            java.awt.event.MouseEvent evt
+                    ) {
+                        btnAnimales.doClick();
+                    }
+                }
         );
 
         Estilos.aplicarIcono(
@@ -432,12 +615,124 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 18,
                 18
         );
+        btnTurnos.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
 
+        lblFlechaTurnos =
+                new javax.swing.JLabel();
+
+        javax.swing.ImageIcon iconoFlechaTurnos =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/flecha_abajo.png"
+                        )
+                );
+
+        lblFlechaTurnos.setIcon(
+                new javax.swing.ImageIcon(
+                        iconoFlechaTurnos.getImage().getScaledInstance(
+                                18,
+                                18,
+                                java.awt.Image.SCALE_SMOOTH
+                        )
+                )
+        );
+
+        btnTurnos.setLayout(null);
+
+        lblFlechaTurnos.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        lblFlechaTurnos.setVerticalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        lblFlechaTurnos.setBounds(
+                4,
+                0,
+                20,
+                38
+        );
+
+        btnTurnos.add(
+                lblFlechaTurnos
+        );
+
+        lblFlechaTurnos.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseClicked(
+                            java.awt.event.MouseEvent evt
+                    ) {
+                        btnTurnos.doClick();
+                    }
+                }
+        );
         Estilos.aplicarIcono(
                 btnProcedimientos,
                 "/imagenes/iconos/procedimientos.png",
                 18,
                 18
+        );
+        
+        btnProcedimientos.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        lblFlechaProcedimientos =
+                new javax.swing.JLabel();
+
+        javax.swing.ImageIcon iconoFlechaProcedimientos =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/flecha_abajo.png"
+                        )
+                );
+
+        lblFlechaProcedimientos.setIcon(
+                new javax.swing.ImageIcon(
+                        iconoFlechaProcedimientos.getImage().getScaledInstance(
+                                18,
+                                18,
+                                java.awt.Image.SCALE_SMOOTH
+                        )
+                )
+        );
+
+        btnProcedimientos.setLayout(null);
+
+        lblFlechaProcedimientos.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        lblFlechaProcedimientos.setVerticalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        lblFlechaProcedimientos.setBounds(
+                4,
+                0,
+                20,
+                38
+        );
+
+        btnProcedimientos.add(
+                lblFlechaProcedimientos
+        );
+
+        lblFlechaProcedimientos.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseClicked(
+                            java.awt.event.MouseEvent evt
+                    ) {
+                        btnProcedimientos.doClick();
+                    }
+                }
         );
 
         Estilos.aplicarIcono(
@@ -475,8 +770,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 18
         );
         
-        panelMenu.add(btnAnimales);
+       
+        configurarSubmenuAnimales();
+        configurarSubmenuTurnos();
+        configurarSubmenuProcedimientos();
 
+        panelMenu.add(btnAnimales);
+        panelMenu.add(
+                panelSubmenuAnimales
+        );
         panelMenu.add(
                 javax.swing.Box.createVerticalStrut(8)
         );
@@ -490,10 +792,18 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelMenu.add(btnTurnos);
 
         panelMenu.add(
+                panelSubmenuTurnos
+        );
+
+        panelMenu.add(
                 javax.swing.Box.createVerticalStrut(8)
         );
 
         panelMenu.add(btnProcedimientos);
+
+        panelMenu.add(
+                panelSubmenuProcedimientos
+        );
 
         panelMenu.add(
                 javax.swing.Box.createVerticalStrut(8)
@@ -535,7 +845,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         java.awt.Dimension tamañoCerrarSesion =
                 new java.awt.Dimension(
-                        190,
+                        280,
                         38
                 );
 
@@ -584,7 +894,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 new java.awt.BorderLayout()
         );
         
-        javax.swing.JPanel panelSuperior =
+        panelSuperior =
                 new javax.swing.JPanel(
                         new java.awt.BorderLayout()
                 );
@@ -1130,7 +1440,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 tarjetaProductos
         );
 
-        javax.swing.JPanel contenedorNotificaciones =
+        contenedorNotificaciones =
                 new javax.swing.JPanel(
                         new java.awt.BorderLayout()
                 );
@@ -1171,10 +1481,32 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
     public void mostrarInicio() {
 
-        configurarDiseñoPrincipal();
+        cerrarOtrosSubmenus(
+                null
+        );
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                panelSuperior,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelContenido.add(
+                panelBienvenida,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.add(
+                contenedorNotificaciones,
+                java.awt.BorderLayout.EAST
+        );
 
         revisarAlertasProductos();
         revisarAlertasTurnos();
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
     }
     public void mostrarClientes() {
 
@@ -1287,6 +1619,466 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         panelContenido.revalidate();
         panelContenido.repaint();
+    }
+    private void configurarSubmenuAnimales() {
+
+        panelSubmenuAnimales =
+                new javax.swing.JPanel();
+
+        panelSubmenuAnimales.setOpaque(false);
+
+        panelSubmenuAnimales.setLayout(
+                new javax.swing.BoxLayout(
+                        panelSubmenuAnimales,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        btnGestionAnimales =
+                new javax.swing.JButton(
+                        " • Gestión de animales"
+                );
+
+        btnCatalogoAnimales =
+                new javax.swing.JButton(
+                        " • Especies y razas"
+                );
+        btnGestionAnimales.setHorizontalAlignment(
+                javax.swing.SwingConstants.LEFT
+        );
+
+        btnCatalogoAnimales.setHorizontalAlignment(
+                javax.swing.SwingConstants.LEFT
+        );
+
+        Estilos.estilizarBotonSubmenu(
+                btnGestionAnimales
+        );
+
+        Estilos.estilizarBotonSubmenu(
+                btnCatalogoAnimales
+        );
+
+        java.awt.Dimension tamañoSubmenu =
+                new java.awt.Dimension(
+                        270,
+                        32
+                );
+
+        btnGestionAnimales.setPreferredSize(
+                tamañoSubmenu
+        );
+
+        btnGestionAnimales.setMinimumSize(
+                tamañoSubmenu
+        );
+
+        btnGestionAnimales.setMaximumSize(
+                tamañoSubmenu
+        );
+
+        btnCatalogoAnimales.setPreferredSize(
+                tamañoSubmenu
+        );
+
+        btnCatalogoAnimales.setMinimumSize(
+                tamañoSubmenu
+        );
+
+        btnCatalogoAnimales.setMaximumSize(
+                tamañoSubmenu
+        );
+
+        btnGestionAnimales.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        btnCatalogoAnimales.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        btnGestionAnimales.setFont(
+                Estilos.fuente(12f)
+        );
+
+        btnCatalogoAnimales.setFont(
+                Estilos.fuente(12f)
+        );
+        
+        btnGestionAnimales.setMargin(
+                new java.awt.Insets(
+                        0,
+                        12,
+                        0,
+                        2
+                )
+        );
+
+        btnCatalogoAnimales.setMargin(
+                new java.awt.Insets(
+                        0,
+                        12,
+                        0,
+                        2
+                )
+        );
+
+        btnGestionAnimales.addActionListener(e ->
+                mostrarAnimales()
+        );
+
+        btnCatalogoAnimales.addActionListener(e ->
+                mostrarCatalogoAnimales()
+        );
+
+        panelSubmenuAnimales.add(
+                javax.swing.Box.createVerticalStrut(5)
+        );
+
+        panelSubmenuAnimales.add(
+                btnGestionAnimales
+        );
+
+        panelSubmenuAnimales.add(
+                javax.swing.Box.createVerticalStrut(5)
+        );
+
+        panelSubmenuAnimales.add(
+                btnCatalogoAnimales
+        );
+
+        panelSubmenuAnimales.add(
+                javax.swing.Box.createVerticalStrut(3)
+        );
+
+        panelSubmenuAnimales.setVisible(false);
+    }
+    private void configurarSubmenuTurnos() {
+
+        panelSubmenuTurnos =
+                new javax.swing.JPanel();
+
+        panelSubmenuTurnos.setOpaque(false);
+
+        panelSubmenuTurnos.setLayout(
+                new javax.swing.BoxLayout(
+                        panelSubmenuTurnos,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        btnGestionTurnos =
+                new javax.swing.JButton(
+                        " • Gestión de turnos"
+                );
+
+        btnTurnosVencidos =
+                new javax.swing.JButton(
+                        " • Turnos vencidos"
+                );
+
+        btnGestionTurnos.setHorizontalAlignment(
+                javax.swing.SwingConstants.LEFT
+        );
+
+        btnTurnosVencidos.setHorizontalAlignment(
+                javax.swing.SwingConstants.LEFT
+        );
+
+        Estilos.estilizarBotonSubmenu(
+                btnGestionTurnos
+        );
+
+        Estilos.estilizarBotonSubmenu(
+                btnTurnosVencidos
+        );
+
+        java.awt.Dimension tamañoSubmenu =
+                new java.awt.Dimension(
+                        270,
+                        32
+                );
+
+        btnGestionTurnos.setPreferredSize(
+                tamañoSubmenu
+        );
+
+        btnGestionTurnos.setMinimumSize(
+                tamañoSubmenu
+        );
+
+        btnGestionTurnos.setMaximumSize(
+                tamañoSubmenu
+        );
+
+        btnTurnosVencidos.setPreferredSize(
+                tamañoSubmenu
+        );
+
+        btnTurnosVencidos.setMinimumSize(
+                tamañoSubmenu
+        );
+
+        btnTurnosVencidos.setMaximumSize(
+                tamañoSubmenu
+        );
+
+        btnGestionTurnos.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        btnTurnosVencidos.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        btnGestionTurnos.setFont(
+                Estilos.fuente(12f)
+        );
+
+        btnTurnosVencidos.setFont(
+                Estilos.fuente(12f)
+        );
+
+        btnGestionTurnos.setMargin(
+                new java.awt.Insets(
+                        0,
+                        12,
+                        0,
+                        2
+                )
+        );
+
+        btnTurnosVencidos.setMargin(
+                new java.awt.Insets(
+                        0,
+                        12,
+                        0,
+                        2
+                )
+        );
+
+        btnGestionTurnos.addActionListener(e ->
+                mostrarTurnos()
+        );
+
+        btnTurnosVencidos.addActionListener(e ->
+                mostrarTurnosVencidos()
+        );
+
+        panelSubmenuTurnos.add(
+                javax.swing.Box.createVerticalStrut(5)
+        );
+
+        panelSubmenuTurnos.add(
+                btnGestionTurnos
+        );
+
+        panelSubmenuTurnos.add(
+                javax.swing.Box.createVerticalStrut(5)
+        );
+
+        panelSubmenuTurnos.add(
+                btnTurnosVencidos
+        );
+
+        panelSubmenuTurnos.add(
+                javax.swing.Box.createVerticalStrut(3)
+        );
+
+        panelSubmenuTurnos.setVisible(false);
+    }
+    private void configurarSubmenuProcedimientos() {
+
+        panelSubmenuProcedimientos =
+                new javax.swing.JPanel();
+
+        panelSubmenuProcedimientos.setOpaque(false);
+
+        panelSubmenuProcedimientos.setLayout(
+                new javax.swing.BoxLayout(
+                        panelSubmenuProcedimientos,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        btnGestionProcedimientos =
+                new javax.swing.JButton(
+                        " • Gestión de procedimientos"
+                );
+
+        btnTiposProcedimiento =
+                new javax.swing.JButton(
+                        " • Tipos de procedimiento"
+                );
+
+        btnGestionProcedimientos.setHorizontalAlignment(
+                javax.swing.SwingConstants.LEFT
+        );
+
+        btnTiposProcedimiento.setHorizontalAlignment(
+                javax.swing.SwingConstants.LEFT
+        );
+
+        Estilos.estilizarBotonSubmenu(
+                btnGestionProcedimientos
+        );
+
+        Estilos.estilizarBotonSubmenu(
+                btnTiposProcedimiento
+        );
+
+        java.awt.Dimension tamañoSubmenu =
+                new java.awt.Dimension(
+                        270,
+                        32
+                );
+
+        btnGestionProcedimientos.setPreferredSize(
+                tamañoSubmenu
+        );
+
+        btnGestionProcedimientos.setMinimumSize(
+                tamañoSubmenu
+        );
+
+        btnGestionProcedimientos.setMaximumSize(
+                tamañoSubmenu
+        );
+
+        btnTiposProcedimiento.setPreferredSize(
+                tamañoSubmenu
+        );
+
+        btnTiposProcedimiento.setMinimumSize(
+                tamañoSubmenu
+        );
+
+        btnTiposProcedimiento.setMaximumSize(
+                tamañoSubmenu
+        );
+
+        btnGestionProcedimientos.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        btnTiposProcedimiento.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        btnGestionProcedimientos.setFont(
+                Estilos.fuente(12f)
+        );
+
+        btnTiposProcedimiento.setFont(
+                Estilos.fuente(12f)
+        );
+
+        btnGestionProcedimientos.setMargin(
+                new java.awt.Insets(
+                        0,
+                        12,
+                        0,
+                        2
+                )
+        );
+
+        btnTiposProcedimiento.setMargin(
+                new java.awt.Insets(
+                        0,
+                        12,
+                        0,
+                        2
+                )
+        );
+
+        btnGestionProcedimientos.addActionListener(e ->
+                mostrarProcedimientos()
+        );
+
+        btnTiposProcedimiento.addActionListener(e ->
+                mostrarTiposProcedimiento()
+        );
+
+        panelSubmenuProcedimientos.add(
+                javax.swing.Box.createVerticalStrut(5)
+        );
+
+        panelSubmenuProcedimientos.add(
+                btnGestionProcedimientos
+        );
+
+        panelSubmenuProcedimientos.add(
+                javax.swing.Box.createVerticalStrut(5)
+        );
+
+        panelSubmenuProcedimientos.add(
+                btnTiposProcedimiento
+        );
+
+        panelSubmenuProcedimientos.add(
+                javax.swing.Box.createVerticalStrut(3)
+        );
+
+        panelSubmenuProcedimientos.setVisible(false);
+    }
+    private void cerrarOtrosSubmenus(
+            javax.swing.JPanel submenuActivo
+    ) {
+
+        javax.swing.ImageIcon iconoOriginal =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/flecha_abajo.png"
+                        )
+                );
+
+        javax.swing.ImageIcon flechaAbajo =
+                new javax.swing.ImageIcon(
+                        iconoOriginal.getImage().getScaledInstance(
+                                18,
+                                18,
+                                java.awt.Image.SCALE_SMOOTH
+                        )
+                );
+
+        if (submenuActivo != panelSubmenuAnimales) {
+
+            submenuAnimalesVisible = false;
+
+            panelSubmenuAnimales.setVisible(
+                    false
+            );
+
+            lblFlechaAnimales.setIcon(
+                    flechaAbajo
+            );
+        }
+
+        if (submenuActivo != panelSubmenuTurnos) {
+
+            submenuTurnosVisible = false;
+
+            panelSubmenuTurnos.setVisible(
+                    false
+            );
+
+            lblFlechaTurnos.setIcon(
+                    flechaAbajo
+            );
+        }
+
+        if (submenuActivo != panelSubmenuProcedimientos) {
+
+            submenuProcedimientosVisible = false;
+
+            panelSubmenuProcedimientos.setVisible(
+                    false
+            );
+
+            lblFlechaProcedimientos.setIcon(
+                    flechaAbajo
+            );
+        }
     }
     public void mostrarAnimales() {
 

@@ -218,7 +218,7 @@ public class VentanaTurnosVencidos extends javax.swing.JFrame {
         panelPrincipal.setBorder(
                 javax.swing.BorderFactory.createEmptyBorder(
                         45,
-                        60,
+                        20,
                         40,
                         60
                 )
@@ -314,6 +314,53 @@ public class VentanaTurnosVencidos extends javax.swing.JFrame {
         Estilos.estilizarTabla(
                 tblTurnosVencidos
         );
+        
+        javax.swing.JButton btnInicio =
+                new javax.swing.JButton(
+                        "Inicio"
+                );
+
+        Estilos.estilizarBoton(
+                btnInicio
+        );
+
+        Estilos.aplicarIcono(
+                btnInicio,
+                "/imagenes/iconos/inicio.png",
+                18,
+                18
+        );
+
+        btnInicio.setPreferredSize(
+                new java.awt.Dimension(
+                        110,
+                        38
+                )
+        );
+
+        btnInicio.addActionListener(
+                evento -> ventanaPrincipal.mostrarInicio()
+        );
+
+        javax.swing.JPanel panelInicio =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInicio.setOpaque(false);
+
+        panelInicio.add(
+                btnInicio
+        );
+
+        tarjeta.add(
+                panelInicio,
+                java.awt.BorderLayout.NORTH
+        );
 
         jScrollPane1.setBorder(
                 javax.swing.BorderFactory.createEmptyBorder()
@@ -328,9 +375,7 @@ public class VentanaTurnosVencidos extends javax.swing.JFrame {
                 btnReprogramarTurno
         );
 
-        Estilos.estilizarBoton(
-                btnVolver
-        );
+        
 
         btnReprogramarTurno.setPreferredSize(
                 new java.awt.Dimension(
@@ -339,12 +384,7 @@ public class VentanaTurnosVencidos extends javax.swing.JFrame {
                 )
         );
 
-        btnVolver.setPreferredSize(
-                new java.awt.Dimension(
-                        120,
-                        38
-                )
-        );
+        
 
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
@@ -361,9 +401,7 @@ public class VentanaTurnosVencidos extends javax.swing.JFrame {
                 btnReprogramarTurno
         );
 
-        panelBotones.add(
-                btnVolver
-        );
+        
 
         tarjeta.add(
                 panelBotones,

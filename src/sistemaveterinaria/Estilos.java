@@ -103,18 +103,22 @@ public class Estilos {
                 java.awt.Component.CENTER_ALIGNMENT
         );
 
-        boton.setMaximumSize(
+        java.awt.Dimension tamaño =
                 new java.awt.Dimension(
-                        190,
+                        280,
                         38
-                )
-        );
+                );
 
         boton.setPreferredSize(
-                new java.awt.Dimension(
-                        190,
-                        38
-                )
+                tamaño
+        );
+
+        boton.setMinimumSize(
+                tamaño
+        );
+
+        boton.setMaximumSize(
+                tamaño
         );
         boton.addMouseListener(
             new java.awt.event.MouseAdapter() {
@@ -137,6 +141,66 @@ public class Estilos {
                     );
                 }
             }
+        );
+    }
+    public static void estilizarBotonSubmenu(
+            javax.swing.JButton boton
+    ) {
+
+        estilizarBotonMenu(
+                boton
+        );
+
+        boton.setBackground(
+                BLANCO
+        );
+
+        boton.setForeground(
+                VERDE_OSCURO
+        );
+
+        boton.setBorderPainted(
+                true
+        );
+
+        boton.setBorder(
+                javax.swing.BorderFactory.createLineBorder(
+                        VERDE_OSCURO,
+                        2
+                )
+        );
+
+        boton.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(
+                            java.awt.event.MouseEvent evt
+                    ) {
+
+                        boton.setBackground(
+                                VERDE_PRINCIPAL
+                        );
+
+                        boton.setForeground(
+                                BLANCO
+                        );
+                    }
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evt
+                    ) {
+
+                        boton.setBackground(
+                                BLANCO
+                        );
+
+                        boton.setForeground(
+                                VERDE_OSCURO
+                        );
+                    }
+                }
         );
     }
     public static void estilizarBoton(

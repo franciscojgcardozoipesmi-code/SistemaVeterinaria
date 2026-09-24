@@ -52,7 +52,7 @@ public class PanelTiposProcedimiento
         panelPrincipal.setBorder(
                 javax.swing.BorderFactory.createEmptyBorder(
                         45,
-                        60,
+                        20,
                         40,
                         60
                 )
@@ -128,8 +128,8 @@ public class PanelTiposProcedimiento
                                 true
                         ),
                         javax.swing.BorderFactory.createEmptyBorder(
-                                30,
-                                35,
+                                25,
+                                25,
                                 30,
                                 35
                         )
@@ -199,8 +199,82 @@ public class PanelTiposProcedimiento
                 btnAgregar
         );
 
+        javax.swing.JButton btnInicio =
+                new javax.swing.JButton(
+                        "Inicio"
+                );
+
+        Estilos.estilizarBoton(
+                btnInicio
+        );
+
+        Estilos.aplicarIcono(
+                btnInicio,
+                "/imagenes/iconos/inicio.png",
+                18,
+                18
+        );
+
+        btnInicio.setPreferredSize(
+                new java.awt.Dimension(
+                        110,
+                        38
+                )
+        );
+
+        btnInicio.addActionListener(
+                evento -> ventanaPrincipal.mostrarInicio()
+        );
+
+        javax.swing.JPanel panelInicio =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInicio.setOpaque(false);
+
+        panelInicio.add(
+                btnInicio
+        );
+
+        javax.swing.JPanel panelSuperiorTarjeta =
+                new javax.swing.JPanel();
+
+        panelSuperiorTarjeta.setOpaque(false);
+
+        panelSuperiorTarjeta.setLayout(
+                new javax.swing.BoxLayout(
+                        panelSuperiorTarjeta,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        panelInicio.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        panelFormulario.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        panelSuperiorTarjeta.add(
+                panelInicio
+        );
+
+        panelSuperiorTarjeta.add(
+                javax.swing.Box.createVerticalStrut(15)
+        );
+
+        panelSuperiorTarjeta.add(
+                panelFormulario
+        );
+
         tarjeta.add(
-                panelFormulario,
+                panelSuperiorTarjeta,
                 java.awt.BorderLayout.NORTH
         );
 
@@ -311,21 +385,7 @@ public class PanelTiposProcedimiento
                 )
         );
 
-        javax.swing.JButton btnVolver =
-                new javax.swing.JButton(
-                        "Volver a procedimientos"
-                );
-
-        Estilos.estilizarBoton(
-                btnVolver
-        );
-
-        btnVolver.setPreferredSize(
-                new java.awt.Dimension(
-                        230,
-                        38
-                )
-        );
+        
 
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
@@ -345,14 +405,7 @@ public class PanelTiposProcedimiento
         panelBotones.add(
                 btnEliminar
         );
-
-        panelBotones.add(
-                btnVolver
-        );
-
-        panelBotones.add(
-                btnVolver
-        );
+    
 
         tarjeta.add(
                 panelBotones,
@@ -379,10 +432,7 @@ public class PanelTiposProcedimiento
         btnEditar.addActionListener(
                 evento -> editarTipo()
         );
-        btnVolver.addActionListener(
-                evento ->
-                        ventanaPrincipal.mostrarProcedimientos()
-        );
+        
         listaTipos.addListSelectionListener(
                 evento -> {
 

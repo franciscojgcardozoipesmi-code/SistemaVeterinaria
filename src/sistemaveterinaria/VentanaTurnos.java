@@ -1292,9 +1292,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 btnCambiarEstado
         );
 
-        Estilos.estilizarBotonVencidos(
-                btnVencidos
-        );
+       
 
         Estilos.aplicarIcono(
                 btnCrearTurno,
@@ -1324,12 +1322,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 18
         );
 
-        Estilos.aplicarIcono(
-                btnVencidos,
-                "/imagenes/iconos/vencidos.png",
-                18,
-                18
-        );
+        
 
         btnEliminarTurno.setIcon(
                 null
@@ -1569,12 +1562,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 )
         );
 
-        btnVencidos.setPreferredSize(
-                new java.awt.Dimension(
-                        150,
-                        38
-                )
-        );
+        
 
         javax.swing.JPanel panelAcciones =
                 new javax.swing.JPanel();
@@ -1649,10 +1637,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
         filaEstado.add(
                 btnCambiarEstado
         );
-
-        filaEstado.add(
-                btnVencidos
-        );
+   
 
         panelAcciones.add(
                 filaPrincipal

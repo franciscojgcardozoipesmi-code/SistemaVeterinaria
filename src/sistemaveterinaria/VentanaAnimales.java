@@ -1669,29 +1669,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 java.awt.BorderLayout.NORTH
         );
 
-        javax.swing.JButton btnCatalogo =
-                new javax.swing.JButton(
-                        "Especies y razas"
-                );
-
-        Estilos.estilizarBoton(
-                btnCatalogo
-        );
-
-        btnCatalogo.setPreferredSize(
-                new java.awt.Dimension(
-                        220,
-                        38
-                )
-        );
-
-        btnCatalogo.addActionListener(e -> {
-
-            if (ventanaPrincipal != null) {
-
-                ventanaPrincipal.mostrarCatalogoAnimales();
-            }
-        });
+        
 
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
@@ -1712,9 +1690,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 btnHistorialMedico
         );
 
-        panelBotones.add(
-                btnCatalogo
-        );
+        
 
         tarjetaAnimales.add(
                 panelBotones,

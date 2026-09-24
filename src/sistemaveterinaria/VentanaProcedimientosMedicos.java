@@ -1368,34 +1368,7 @@ tblProcedimientos.addMouseListener(
         filaPrincipal.add(
                 btnAgregarProcedimiento
         );
-      
-        javax.swing.JButton btnTiposProcedimiento =
-                new javax.swing.JButton(
-                        "Tipos de procedimiento"
-                );
 
-        Estilos.estilizarBoton(
-                btnTiposProcedimiento
-        );
-
-        btnTiposProcedimiento.setPreferredSize(
-                new java.awt.Dimension(
-                        250,
-                        38
-                )
-        );
-
-        btnTiposProcedimiento.addActionListener(e -> {
-
-            if (ventanaPrincipal != null) {
-
-                ventanaPrincipal.mostrarTiposProcedimiento();
-            }
-        });       
-        
-        filaPrincipal.add(
-                btnTiposProcedimiento
-        );
 
         panelBotones.add(
                 filaPrincipal

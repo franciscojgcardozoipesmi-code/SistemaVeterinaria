@@ -75,7 +75,7 @@ public class PanelCatalogoAnimales
         panelPrincipal.setBorder(
                 javax.swing.BorderFactory.createEmptyBorder(
                         45,
-                        60,
+                        20,
                         40,
                         60
                 )
@@ -151,8 +151,8 @@ public class PanelCatalogoAnimales
                                 true
                         ),
                         javax.swing.BorderFactory.createEmptyBorder(
-                                30,
-                                35,
+                                25,
+                                25,
                                 30,
                                 35
                         )
@@ -333,8 +333,82 @@ public class PanelCatalogoAnimales
                 gbc
         );
 
+        javax.swing.JButton btnInicio =
+                new javax.swing.JButton(
+                        "Inicio"
+                );
+
+        Estilos.estilizarBoton(
+                btnInicio
+        );
+
+        Estilos.aplicarIcono(
+                btnInicio,
+                "/imagenes/iconos/inicio.png",
+                18,
+                18
+        );
+
+        btnInicio.setPreferredSize(
+                new java.awt.Dimension(
+                        110,
+                        38
+                )
+        );
+
+        btnInicio.addActionListener(
+                evento -> ventanaPrincipal.mostrarInicio()
+        );
+
+        javax.swing.JPanel panelInicio =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.LEFT,
+                                0,
+                                0
+                        )
+                );
+
+        panelInicio.setOpaque(false);
+
+        panelInicio.add(
+                btnInicio
+        );
+
+        javax.swing.JPanel panelSuperiorTarjeta =
+                new javax.swing.JPanel();
+
+        panelSuperiorTarjeta.setOpaque(false);
+
+        panelSuperiorTarjeta.setLayout(
+                new javax.swing.BoxLayout(
+                        panelSuperiorTarjeta,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        panelInicio.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        formulario.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        panelSuperiorTarjeta.add(
+                panelInicio
+        );
+
+        panelSuperiorTarjeta.add(
+                javax.swing.Box.createVerticalStrut(15)
+        );
+
+        panelSuperiorTarjeta.add(
+                formulario
+        );
+
         tarjeta.add(
-                formulario,
+                panelSuperiorTarjeta,
                 java.awt.BorderLayout.NORTH
         );
 
@@ -409,10 +483,7 @@ public class PanelCatalogoAnimales
                 java.awt.BorderLayout.CENTER
         );
 
-        javax.swing.JButton btnVolver =
-                new javax.swing.JButton(
-                        "Volver a animales"
-                );
+        
         Estilos.estilizarBotonEditar(
                 btnEditarEspecie
         );
@@ -455,9 +526,7 @@ public class PanelCatalogoAnimales
                 btnEliminarRaza
         );
 
-        Estilos.estilizarBoton(
-                btnVolver
-        );
+        
 
         btnEliminarEspecie.setPreferredSize(
                 new java.awt.Dimension(
@@ -473,12 +542,8 @@ public class PanelCatalogoAnimales
                 )
         );
 
-        btnVolver.setPreferredSize(
-                new java.awt.Dimension(
-                        190,
-                        38
-                )
-        );
+        
+        
 
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
@@ -506,9 +571,8 @@ public class PanelCatalogoAnimales
                 btnEliminarRaza
         );
 
-        panelBotones.add(
-                btnVolver
-        );
+        
+        
 
         tarjeta.add(
                 panelBotones,
@@ -536,9 +600,7 @@ public class PanelCatalogoAnimales
                 evento -> agregarRaza()
         );
 
-        btnVolver.addActionListener(
-                evento -> ventanaPrincipal.mostrarAnimales()
-        );
+        
         
         btnEditarEspecie.addActionListener(
                 evento -> editarEspecie()
