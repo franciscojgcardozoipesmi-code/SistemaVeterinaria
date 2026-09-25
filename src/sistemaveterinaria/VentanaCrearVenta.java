@@ -899,7 +899,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                 new javax.swing.JPanel(
                         new java.awt.BorderLayout(
                                 0,
-                                30
+                                10
                         )
                 );
 
@@ -999,9 +999,9 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                                 true
                         ),
                         javax.swing.BorderFactory.createEmptyBorder(
-                                35,
+                                25,
                                 40,
-                                35,
+                                25,
                                 40
                         )
                 )
@@ -1047,20 +1047,157 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                         38
                 );
 
-        txtFecha.setPreferredSize(tamañoCampo);
-        txtFecha.setMinimumSize(tamañoCampo);
+        txtFecha.setPreferredSize(
+                tamañoCampo
+        );
 
-        txtCantidad.setPreferredSize(tamañoCampo);
-        txtCantidad.setMinimumSize(tamañoCampo);
+        txtFecha.setMinimumSize(
+                tamañoCampo
+        );
 
-        cmbProducto.setPreferredSize(tamañoCampo);
-        cmbProducto.setMinimumSize(tamañoCampo);
+        cmbProducto.setPreferredSize(
+                tamañoCampo
+        );
 
-        cmbMedioPago.setPreferredSize(tamañoCampo);
-        cmbMedioPago.setMinimumSize(tamañoCampo);
+        cmbProducto.setMinimumSize(
+                tamañoCampo
+        );
+
+        txtCantidad.setPreferredSize(
+                tamañoCampo
+        );
+
+        txtCantidad.setMinimumSize(
+                tamañoCampo
+        );
+
+        cmbMedioPago.setPreferredSize(
+                tamañoCampo
+        );
+
+        cmbMedioPago.setMinimumSize(
+                tamañoCampo
+        );
+
+        btnVolver.setText("");
+
+        javax.swing.ImageIcon iconoVolver =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/volver.png"
+                        )
+                );
+
+        java.awt.Image imagenVolver =
+                iconoVolver.getImage().getScaledInstance(
+                        26,
+                        26,
+                        java.awt.Image.SCALE_SMOOTH
+                );
+
+        btnVolver.setIcon(
+                new javax.swing.ImageIcon(
+                        imagenVolver
+                )
+        );
+
+        btnVolver.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        btnVolver.setForeground(
+                Estilos.BLANCO
+        );
+
+        btnVolver.setBorderPainted(false);
+        btnVolver.setContentAreaFilled(true);
+        btnVolver.setOpaque(true);
+        btnVolver.setFocusPainted(false);
+
+        btnVolver.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        btnVolver.setMargin(
+                new java.awt.Insets(
+                        0,
+                        0,
+                        0,
+                        0
+                )
+        );
+
+        java.awt.Dimension tamañoBotonVolver =
+                new java.awt.Dimension(
+                        38,
+                        38
+                );
+
+        btnVolver.setPreferredSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMinimumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMaximumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseEntered(
+                    java.awt.event.MouseEvent evt
+            ) {
+
+                btnVolver.setBackground(
+                        Estilos.VERDE_PRINCIPAL
+                );
+            }
+
+            @Override
+            public void mouseExited(
+                    java.awt.event.MouseEvent evt
+            ) {
+
+                btnVolver.setBackground(
+                        Estilos.VERDE_OSCURO
+                );
+            }
+        });
 
         java.awt.GridBagConstraints gbc =
                 new java.awt.GridBagConstraints();
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.weightx = 0;
+        gbc.fill =
+                java.awt.GridBagConstraints.NONE;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        10,
+                        10
+                );
+
+        tarjetaDatos.add(
+                btnVolver,
+                gbc
+        );
+
+        gbc.gridwidth = 1;
 
         gbc.insets =
                 new java.awt.Insets(
@@ -1070,14 +1207,11 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                         10
                 );
 
-        gbc.anchor =
-                java.awt.GridBagConstraints.WEST;
-
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
         gbc.fill =
                 java.awt.GridBagConstraints.HORIZONTAL;
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
 
         tarjetaDatos.add(
                 lblFecha,
@@ -1093,7 +1227,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.weightx = 0;
 
         tarjetaDatos.add(
@@ -1110,7 +1244,8 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
+        gbc.weightx = 0;
 
         tarjetaDatos.add(
                 lblCantidad,
@@ -1118,6 +1253,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         );
 
         gbc.gridx = 1;
+        gbc.weightx = 1;
 
         tarjetaDatos.add(
                 txtCantidad,
@@ -1125,14 +1261,8 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 1;
+        gbc.gridy = 4;
         gbc.weightx = 0;
-        gbc.fill =
-                java.awt.GridBagConstraints.HORIZONTAL;
-
-        gbc.anchor =
-                java.awt.GridBagConstraints.WEST;
 
         tarjetaDatos.add(
                 jLabel1,
@@ -1151,22 +1281,42 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                 btnAgregar
         );
 
-        btnAgregar.setPreferredSize(
+        java.awt.Dimension tamañoBotonAgregar =
                 new java.awt.Dimension(
                         130,
                         38
-                )
+                );
+
+        btnAgregar.setPreferredSize(
+                tamañoBotonAgregar
+        );
+
+        btnAgregar.setMinimumSize(
+                tamañoBotonAgregar
+        );
+
+        btnAgregar.setMaximumSize(
+                tamañoBotonAgregar
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         gbc.weightx = 0;
+
         gbc.fill =
-                java.awt.GridBagConstraints.HORIZONTAL;
+                java.awt.GridBagConstraints.NONE;
 
         gbc.anchor =
                 java.awt.GridBagConstraints.CENTER;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        20,
+                        10,
+                        0,
+                        10
+                );
 
         tarjetaDatos.add(
                 btnAgregar,
@@ -1230,11 +1380,18 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                 javax.swing.BorderFactory.createEmptyBorder()
         );
 
-        scrollDetalle.setPreferredSize(
+        java.awt.Dimension tamañoDetalle =
                 new java.awt.Dimension(
                         650,
-                        320
-                )
+                        300
+                );
+
+        scrollDetalle.setPreferredSize(
+                tamañoDetalle
+        );
+
+        scrollDetalle.setMinimumSize(
+                tamañoDetalle
         );
 
         lblTotal.setFont(
@@ -1278,6 +1435,10 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         gbcPrincipal.gridx = 0;
         gbcPrincipal.gridy = 0;
         gbcPrincipal.weightx = 0.35;
+        gbcPrincipal.weighty = 0;
+
+        gbcPrincipal.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
 
         panelContenido.add(
                 tarjetaDatos,
@@ -1286,9 +1447,10 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
 
         gbcPrincipal.gridx = 1;
         gbcPrincipal.weightx = 0.65;
+        gbcPrincipal.weighty = 1;
+
         gbcPrincipal.fill =
                 java.awt.GridBagConstraints.BOTH;
-        gbcPrincipal.weighty = 1;
 
         panelContenido.add(
                 tarjetaDetalle,
@@ -1299,22 +1461,22 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                 btnGuardar
         );
 
-        Estilos.estilizarBoton(
-                btnVolver
-        );
-
-        btnGuardar.setPreferredSize(
+        java.awt.Dimension tamañoBotonGuardar =
                 new java.awt.Dimension(
                         140,
                         38
-                )
+                );
+
+        btnGuardar.setPreferredSize(
+                tamañoBotonGuardar
         );
 
-        btnVolver.setPreferredSize(
-                new java.awt.Dimension(
-                        120,
-                        38
-                )
+        btnGuardar.setMinimumSize(
+                tamañoBotonGuardar
+        );
+
+        btnGuardar.setMaximumSize(
+                tamañoBotonGuardar
         );
 
         javax.swing.JPanel panelBotones =
@@ -1330,10 +1492,6 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
 
         panelBotones.add(
                 btnGuardar
-        );
-
-        panelBotones.add(
-                btnVolver
         );
 
         panelPrincipal.add(

@@ -471,7 +471,7 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         );
 
         panelEncabezado.add(
-                javax.swing.Box.createVerticalStrut(30)
+                javax.swing.Box.createVerticalStrut(10)
         );
 
         javax.swing.JPanel contenedorFormulario =
@@ -498,9 +498,9 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
                                 true
                         ),
                         javax.swing.BorderFactory.createEmptyBorder(
-                                40,
+                                25,
                                 50,
-                                40,
+                                25,
                                 50
                         )
                 )
@@ -593,7 +593,7 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
 
         tarjetaFormulario.add(
                 lblAnimal,
@@ -608,14 +608,14 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
 
         tarjetaFormulario.add(
                 lblDueno,
                 gbc
         );
 
-        gbc.gridx = 1;
+        gbc.gridx = 2;
 
         tarjetaFormulario.add(
                 txtDueno,
@@ -623,14 +623,14 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
 
         tarjetaFormulario.add(
                 lblDni,
                 gbc
         );
 
-        gbc.gridx = 1;
+        gbc.gridx = 3;
 
         tarjetaFormulario.add(
                 txtDni,
@@ -638,14 +638,14 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
 
         tarjetaFormulario.add(
                 lblFecha,
                 gbc
         );
 
-        gbc.gridx = 1;
+        gbc.gridx = 4;
 
         tarjetaFormulario.add(
                 txtFecha,
@@ -653,14 +653,14 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
 
         tarjetaFormulario.add(
                 lblHora,
                 gbc
         );
 
-        gbc.gridx = 1;
+        gbc.gridx = 5;
 
         tarjetaFormulario.add(
                 txtHora,
@@ -668,14 +668,14 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
 
         tarjetaFormulario.add(
                 lblMotivo,
                 gbc
         );
 
-        gbc.gridx = 1;
+        gbc.gridx = 6;
 
         tarjetaFormulario.add(
                 txtMotivo,
@@ -686,9 +686,7 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
                 btnGuardar
         );
 
-        Estilos.estilizarBoton(
-                btnVolver
-        );
+      
 
         btnGuardar.setPreferredSize(
                 new java.awt.Dimension(
@@ -696,12 +694,117 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
                         38
                 )
         );
+        btnVolver.setText(
+                ""
+        );
+
+        javax.swing.ImageIcon iconoVolver =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/volver.png"
+                        )
+                );
+
+        java.awt.Image imagenVolver =
+                iconoVolver.getImage().getScaledInstance(
+                        26,
+                        26,
+                        java.awt.Image.SCALE_SMOOTH
+                );
+
+        btnVolver.setIcon(
+                new javax.swing.ImageIcon(
+                        imagenVolver
+                )
+        );
+
+        btnVolver.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        btnVolver.setForeground(
+                Estilos.BLANCO
+        );
+
+        btnVolver.setBorderPainted(false);
+        btnVolver.setContentAreaFilled(true);
+        btnVolver.setOpaque(true);
+        btnVolver.setFocusPainted(false);
+
+        btnVolver.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        btnVolver.setMargin(
+                new java.awt.Insets(
+                        0,
+                        0,
+                        0,
+                        0
+                )
+        );
+
+        java.awt.Dimension tamañoBotonVolver =
+                new java.awt.Dimension(
+                        38,
+                        38
+                );
 
         btnVolver.setPreferredSize(
-                new java.awt.Dimension(
-                        120,
-                        38
-                )
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMinimumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMaximumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(
+                            java.awt.event.MouseEvent evt
+                    ) {
+                        btnVolver.setBackground(
+                                Estilos.VERDE_PRINCIPAL
+                        );
+                    }
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evt
+                    ) {
+                        btnVolver.setBackground(
+                                Estilos.VERDE_OSCURO
+                        );
+                    }
+                }
+        );
+        
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        15,
+                        0
+                );
+
+        tarjetaFormulario.add(
+                btnVolver,
+                gbc
         );
 
         javax.swing.JPanel panelBotones =
@@ -871,7 +974,7 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         );
 
         panelEncabezado.add(
-                javax.swing.Box.createVerticalStrut(30)
+                javax.swing.Box.createVerticalStrut(10)
         );
 
         javax.swing.JPanel contenedorFormulario =
@@ -898,9 +1001,9 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
                                 true
                         ),
                         javax.swing.BorderFactory.createEmptyBorder(
-                                40,
+                                25,
                                 50,
-                                40,
+                                25,
                                 50
                         )
                 )
@@ -948,6 +1051,12 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
             txtMotivo
         };
 
+       java.awt.Dimension tamañoCampo =
+                new java.awt.Dimension(
+                        300,
+                        38
+                );
+
         for (javax.swing.JTextField campo : campos) {
 
             campo.setFont(
@@ -955,10 +1064,11 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
             );
 
             campo.setPreferredSize(
-                    new java.awt.Dimension(
-                            300,
-                            38
-                    )
+                    tamañoCampo
+            );
+
+            campo.setMinimumSize(
+                    tamañoCampo
             );
         }
 
@@ -967,10 +1077,11 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         );
 
         cmbAnimal.setPreferredSize(
-                new java.awt.Dimension(
-                        300,
-                        38
-                )
+                tamañoCampo
+        );
+
+        cmbAnimal.setMinimumSize(
+                tamañoCampo
         );
 
         txtDueno.setEditable(false);
@@ -993,42 +1104,43 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
         tarjetaFormulario.add(lblAnimal, gbc);
 
         gbc.gridx = 1;
         tarjetaFormulario.add(cmbAnimal, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         tarjetaFormulario.add(lblDueno, gbc);
 
         gbc.gridx = 1;
         tarjetaFormulario.add(txtDueno, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         tarjetaFormulario.add(lblDni, gbc);
 
         gbc.gridx = 1;
         tarjetaFormulario.add(txtDni, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         tarjetaFormulario.add(lblFecha, gbc);
 
         gbc.gridx = 1;
         tarjetaFormulario.add(txtFecha, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         tarjetaFormulario.add(lblHora, gbc);
 
         gbc.gridx = 1;
         tarjetaFormulario.add(txtHora, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         tarjetaFormulario.add(lblMotivo, gbc);
 
         gbc.gridx = 1;
@@ -1038,9 +1150,6 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
                 btnGuardar
         );
 
-        Estilos.estilizarBoton(
-                btnVolver
-        );
 
         btnGuardar.setPreferredSize(
                 new java.awt.Dimension(
@@ -1049,13 +1158,119 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
                 )
         );
 
-        btnVolver.setPreferredSize(
-                new java.awt.Dimension(
-                        120,
-                        38
+        
+        btnVolver.setText(
+                ""
+        );
+
+        javax.swing.ImageIcon iconoVolver =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/volver.png"
+                        )
+                );
+
+        java.awt.Image imagenVolver =
+                iconoVolver.getImage().getScaledInstance(
+                        26,
+                        26,
+                        java.awt.Image.SCALE_SMOOTH
+                );
+
+        btnVolver.setIcon(
+                new javax.swing.ImageIcon(
+                        imagenVolver
                 )
         );
 
+        btnVolver.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        btnVolver.setForeground(
+                Estilos.BLANCO
+        );
+
+        btnVolver.setBorderPainted(false);
+        btnVolver.setContentAreaFilled(true);
+        btnVolver.setOpaque(true);
+        btnVolver.setFocusPainted(false);
+
+        btnVolver.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        btnVolver.setMargin(
+                new java.awt.Insets(
+                        0,
+                        0,
+                        0,
+                        0
+                )
+        );
+
+        java.awt.Dimension tamañoBotonVolver =
+                new java.awt.Dimension(
+                        38,
+                        38
+                );
+
+        btnVolver.setPreferredSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMinimumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMaximumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(
+                            java.awt.event.MouseEvent evt
+                    ) {
+                        btnVolver.setBackground(
+                                Estilos.VERDE_PRINCIPAL
+                        );
+                    }
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evt
+                    ) {
+                        btnVolver.setBackground(
+                                Estilos.VERDE_OSCURO
+                        );
+                    }
+                }
+        );
+        
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        15,
+                        0
+                );
+
+        tarjetaFormulario.add(
+                btnVolver,
+                gbc
+        );
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
@@ -1067,11 +1282,12 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
 
         panelBotones.setOpaque(false);
 
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnVolver);
-
+        panelBotones.add(
+                btnGuardar
+        );
+     
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
 
         gbc.anchor =
@@ -1079,7 +1295,7 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
 
         gbc.insets =
                 new java.awt.Insets(
-                        25,
+                        15,
                         10,
                         0,
                         10

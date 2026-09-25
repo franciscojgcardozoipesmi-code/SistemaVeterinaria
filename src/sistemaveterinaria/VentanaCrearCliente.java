@@ -401,7 +401,7 @@ import controller.ClienteController;
             );
 
             panelEncabezado.add(
-                    javax.swing.Box.createVerticalStrut(30)
+                    javax.swing.Box.createVerticalStrut(10)
             );
 
             javax.swing.JPanel contenedorFormulario =
@@ -421,7 +421,7 @@ import controller.ClienteController;
             );
             
             tarjetaFormulario.setPreferredSize(
-                    new java.awt.Dimension(560, 500)
+                    new java.awt.Dimension(560, 550)
             );
 
             tarjetaFormulario.setBorder(
@@ -701,7 +701,7 @@ import controller.ClienteController;
         panelEncabezado.add(contenedorTitulo);
 
         panelEncabezado.add(
-                javax.swing.Box.createVerticalStrut(30)
+                javax.swing.Box.createVerticalStrut(10)
         );
 
         javax.swing.JPanel contenedorFormulario =
@@ -721,7 +721,7 @@ import controller.ClienteController;
         );
         
         tarjetaFormulario.setPreferredSize(
-                new java.awt.Dimension(560, 500)
+                new java.awt.Dimension(560, 550)
         );
 
         tarjetaFormulario.setBorder(
@@ -732,9 +732,9 @@ import controller.ClienteController;
                                 true
                         ),
                         javax.swing.BorderFactory.createEmptyBorder(
-                                40,
+                                25,
                                 50,
-                                40,
+                                25,
                                 50
                         )
                 )
@@ -805,10 +805,21 @@ import controller.ClienteController;
         );
 
         for (int i = 0; i < campos.length; i++) {
+
             gbc.gridx = 0;
-            gbc.gridy = i;
+            gbc.gridy = i + 1;
             gbc.gridwidth = 1;
-            gbc.anchor = java.awt.GridBagConstraints.WEST;
+
+            gbc.anchor =
+                    java.awt.GridBagConstraints.WEST;
+
+            gbc.insets =
+                    new java.awt.Insets(
+                            12,
+                            10,
+                            12,
+                            10
+                    );
 
             tarjetaFormulario.add(
                     etiquetas[i],
@@ -824,7 +835,7 @@ import controller.ClienteController;
         }
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
 
         tarjetaFormulario.add(
                 lblObservaciones,
@@ -841,23 +852,134 @@ import controller.ClienteController;
         Estilos.estilizarBoton(
                 btnGuardar
         );
-
-        Estilos.estilizarBoton(
-                btnVolver
-        );
-
-        btnGuardar.setPreferredSize(
+        java.awt.Dimension tamañoBotonGuardar =
                 new java.awt.Dimension(
                         140,
                         38
+                );
+
+        btnGuardar.setPreferredSize(
+                tamañoBotonGuardar
+        );
+
+        btnGuardar.setMinimumSize(
+                tamañoBotonGuardar
+        );
+
+        btnGuardar.setMaximumSize(
+                tamañoBotonGuardar
+        );
+        btnVolver.setText(
+                ""
+        );
+
+        javax.swing.ImageIcon iconoVolver =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/volver.png"
+                        )
+                );
+
+        java.awt.Image imagenVolver =
+                iconoVolver.getImage().getScaledInstance(
+                        26,
+                        26,
+                        java.awt.Image.SCALE_SMOOTH
+                );
+
+        btnVolver.setIcon(
+                new javax.swing.ImageIcon(
+                        imagenVolver
                 )
         );
 
-        btnVolver.setPreferredSize(
-                new java.awt.Dimension(
-                        120,
-                        38
+        btnVolver.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        btnVolver.setForeground(
+                Estilos.BLANCO
+        );
+
+        btnVolver.setBorderPainted(false);
+        btnVolver.setContentAreaFilled(true);
+        btnVolver.setOpaque(true);
+        btnVolver.setFocusPainted(false);
+
+        btnVolver.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
                 )
+        );
+
+        btnVolver.setMargin(
+                new java.awt.Insets(
+                        0,
+                        0,
+                        0,
+                        0
+                )
+        );
+
+        java.awt.Dimension tamañoBotonVolver =
+                new java.awt.Dimension(
+                        38,
+                        38
+                );
+
+        btnVolver.setPreferredSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMinimumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMaximumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(
+                            java.awt.event.MouseEvent evt
+                    ) {
+                        btnVolver.setBackground(
+                                Estilos.VERDE_PRINCIPAL
+                        );
+                    }
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evt
+                    ) {
+                        btnVolver.setBackground(
+                                Estilos.VERDE_OSCURO
+                        );
+                    }
+                }
+        );
+        
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        15,
+                        0
+                );
+
+        tarjetaFormulario.add(
+                btnVolver,
+                gbc
         );
 
         javax.swing.JPanel panelBotones =
@@ -871,11 +993,12 @@ import controller.ClienteController;
 
         panelBotones.setOpaque(false);
 
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnVolver);
+        panelBotones.add(
+                btnGuardar
+        );
 
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.gridwidth = 2;
 
         gbc.anchor =
@@ -883,7 +1006,7 @@ import controller.ClienteController;
 
         gbc.insets =
                 new java.awt.Insets(
-                        30,
+                        15,
                         10,
                         0,
                         10

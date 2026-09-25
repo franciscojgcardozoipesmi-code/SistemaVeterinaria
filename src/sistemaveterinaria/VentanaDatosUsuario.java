@@ -287,7 +287,7 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
                 new javax.swing.JPanel(
                         new java.awt.BorderLayout(
                                 0,
-                                30
+                                10
                         )
                 );
 
@@ -305,8 +305,11 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
         String titulo;
 
         if (idUsuario == -1) {
+
             titulo = "CREAR USUARIO";
+
         } else {
+
             titulo = "EDITAR USUARIO";
         }
 
@@ -372,55 +375,41 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
                                 true
                         ),
                         javax.swing.BorderFactory.createEmptyBorder(
-                                40,
+                                25,
                                 50,
-                                40,
+                                25,
                                 50
                         )
                 )
         );
 
-        jLabel1.setFont(
-                Estilos.fuenteNormal()
-        );
+        javax.swing.JLabel[] etiquetas = {
+            jLabel1,
+            jLabel2,
+            lblCorreo,
+            jLabel3
+        };
 
-        jLabel2.setFont(
-                Estilos.fuenteNormal()
-        );
+        for (javax.swing.JLabel etiqueta : etiquetas) {
 
-        jLabel3.setFont(
-                Estilos.fuenteNormal()
-        );
+            etiqueta.setFont(
+                    Estilos.fuenteNormal()
+            );
 
-        jLabel1.setForeground(
-                Estilos.VERDE_OSCURO
-        );
-
-        jLabel2.setForeground(
-                Estilos.VERDE_OSCURO
-        );
-
-        jLabel3.setForeground(
-                Estilos.VERDE_OSCURO
-        );
-
-        txtUsuario.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        txtPassword.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        cmbRol.setFont(
-                Estilos.fuenteNormal()
-        );
+            etiqueta.setForeground(
+                    Estilos.VERDE_OSCURO
+            );
+        }
 
         java.awt.Dimension tamañoCampo =
                 new java.awt.Dimension(
                         280,
                         38
                 );
+
+        txtUsuario.setFont(
+                Estilos.fuenteNormal()
+        );
 
         txtUsuario.setPreferredSize(
                 tamañoCampo
@@ -430,27 +419,16 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
                 tamañoCampo
         );
 
+        txtPassword.setFont(
+                Estilos.fuenteNormal()
+        );
+
         txtPassword.setPreferredSize(
                 tamañoCampo
         );
 
         txtPassword.setMinimumSize(
                 tamañoCampo
-        );
-
-        cmbRol.setPreferredSize(
-                tamañoCampo
-        );
-
-        cmbRol.setMinimumSize(
-                tamañoCampo
-        );
-        lblCorreo.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        lblCorreo.setForeground(
-                Estilos.VERDE_OSCURO
         );
 
         txtCorreo.setFont(
@@ -464,8 +442,138 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
         txtCorreo.setMinimumSize(
                 tamañoCampo
         );
+
+        cmbRol.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbRol.setPreferredSize(
+                tamañoCampo
+        );
+
+        cmbRol.setMinimumSize(
+                tamañoCampo
+        );
+
+        btnCancelar.setText("");
+
+        javax.swing.ImageIcon iconoVolver =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/volver.png"
+                        )
+                );
+
+        java.awt.Image imagenVolver =
+                iconoVolver.getImage().getScaledInstance(
+                        26,
+                        26,
+                        java.awt.Image.SCALE_SMOOTH
+                );
+
+        btnCancelar.setIcon(
+                new javax.swing.ImageIcon(
+                        imagenVolver
+                )
+        );
+
+        btnCancelar.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        btnCancelar.setForeground(
+                Estilos.BLANCO
+        );
+
+        btnCancelar.setBorderPainted(false);
+        btnCancelar.setContentAreaFilled(true);
+        btnCancelar.setOpaque(true);
+        btnCancelar.setFocusPainted(false);
+
+        btnCancelar.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        btnCancelar.setMargin(
+                new java.awt.Insets(
+                        0,
+                        0,
+                        0,
+                        0
+                )
+        );
+
+        java.awt.Dimension tamañoBotonVolver =
+                new java.awt.Dimension(
+                        38,
+                        38
+                );
+
+        btnCancelar.setPreferredSize(
+                tamañoBotonVolver
+        );
+
+        btnCancelar.setMinimumSize(
+                tamañoBotonVolver
+        );
+
+        btnCancelar.setMaximumSize(
+                tamañoBotonVolver
+        );
+
+        btnCancelar.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseEntered(
+                    java.awt.event.MouseEvent evt
+            ) {
+
+                btnCancelar.setBackground(
+                        Estilos.VERDE_PRINCIPAL
+                );
+            }
+
+            @Override
+            public void mouseExited(
+                    java.awt.event.MouseEvent evt
+            ) {
+
+                btnCancelar.setBackground(
+                        Estilos.VERDE_OSCURO
+                );
+            }
+        });
+
         java.awt.GridBagConstraints gbc =
                 new java.awt.GridBagConstraints();
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.weightx = 0;
+        gbc.fill =
+                java.awt.GridBagConstraints.NONE;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        0,
+                        12,
+                        10,
+                        12
+                );
+
+        tarjeta.add(
+                btnCancelar,
+                gbc
+        );
+
+        gbc.gridwidth = 1;
 
         gbc.insets =
                 new java.awt.Insets(
@@ -475,15 +583,12 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
                         12
                 );
 
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+
         gbc.fill =
                 java.awt.GridBagConstraints.HORIZONTAL;
-
-        gbc.anchor =
-                java.awt.GridBagConstraints.WEST;
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 0;
 
         tarjeta.add(
                 jLabel1,
@@ -499,7 +604,7 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.weightx = 0;
 
         tarjeta.add(
@@ -516,7 +621,7 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.weightx = 0;
 
         tarjeta.add(
@@ -533,7 +638,7 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.weightx = 0;
 
         tarjeta.add(
@@ -553,28 +658,28 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
                 btnGuardar
         );
 
-        Estilos.estilizarBoton(
-                btnCancelar
-        );
+        java.awt.Dimension tamañoBotonGuardar =
+                new java.awt.Dimension(
+                        140,
+                        38
+                );
 
         btnGuardar.setPreferredSize(
-                new java.awt.Dimension(
-                        140,
-                        38
-                )
+                tamañoBotonGuardar
         );
 
-        btnCancelar.setPreferredSize(
-                new java.awt.Dimension(
-                        140,
-                        38
-                )
+        btnGuardar.setMinimumSize(
+                tamañoBotonGuardar
+        );
+
+        btnGuardar.setMaximumSize(
+                tamañoBotonGuardar
         );
 
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
-                                java.awt.FlowLayout.RIGHT,
+                                java.awt.FlowLayout.CENTER,
                                 10,
                                 0
                         )
@@ -586,8 +691,28 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
                 btnGuardar
         );
 
-        panelBotones.add(
-                btnCancelar
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        gbc.weightx = 0;
+
+        gbc.fill =
+                java.awt.GridBagConstraints.NONE;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.CENTER;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        25,
+                        12,
+                        0,
+                        12
+                );
+
+        tarjeta.add(
+                panelBotones,
+                gbc
         );
 
         javax.swing.JPanel contenedorFormulario =
@@ -619,11 +744,6 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
         panelPrincipal.add(
                 contenedorFormulario,
                 java.awt.BorderLayout.CENTER
-        );
-
-        panelPrincipal.add(
-                panelBotones,
-                java.awt.BorderLayout.SOUTH
         );
 
         panel.add(

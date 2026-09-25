@@ -616,7 +616,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
 
         tarjetaFormulario.add(
                 lblEspecie,
@@ -631,7 +631,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
 
         tarjetaFormulario.add(
                 lblRaza,
@@ -646,7 +646,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
 
         tarjetaFormulario.add(
                 lblEdad,
@@ -661,7 +661,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
 
         tarjetaFormulario.add(
                 lblCliente,
@@ -717,7 +717,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.gridwidth = 2;
 
         gbc.anchor =
@@ -990,7 +990,36 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        15,
+                        0
+                );
+
+        tarjetaFormulario.add(
+                btnVolver,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         gbc.gridwidth = 1;
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        10,
+                        10,
+                        10,
+                        10
+                );
 
         tarjetaFormulario.add(
                 lblNombre,
@@ -1005,7 +1034,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
 
         tarjetaFormulario.add(
                 lblEspecie,
@@ -1020,7 +1049,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
 
         tarjetaFormulario.add(
                 lblRaza,
@@ -1035,7 +1064,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
 
         tarjetaFormulario.add(
                 lblEdad,
@@ -1050,7 +1079,7 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
 
         tarjetaFormulario.add(
                 lblCliente,
@@ -1068,10 +1097,6 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
                 btnGuardar
         );
 
-        Estilos.estilizarBoton(
-                btnVolver
-        );
-
         btnGuardar.setPreferredSize(
                 new java.awt.Dimension(
                         140,
@@ -1079,10 +1104,97 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
                 )
         );
 
-        btnVolver.setPreferredSize(
+        btnVolver.setText(
+                ""
+        );
+
+        javax.swing.ImageIcon iconoVolver =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/volver.png"
+                        )
+                );
+
+        java.awt.Image imagenVolver =
+                iconoVolver.getImage().getScaledInstance(
+                        26,
+                        26,
+                        java.awt.Image.SCALE_SMOOTH
+                );
+
+        btnVolver.setIcon(
+                new javax.swing.ImageIcon(
+                        imagenVolver
+                )
+        );
+
+        
+        btnVolver.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        btnVolver.setForeground(
+                Estilos.BLANCO
+        );
+
+        btnVolver.setBorderPainted(false);
+        btnVolver.setContentAreaFilled(true);
+        btnVolver.setOpaque(true);
+        btnVolver.setFocusPainted(false);
+        btnVolver.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(
+                            java.awt.event.MouseEvent evt
+                    ) {
+
+                        btnVolver.setBackground(
+                                Estilos.VERDE_PRINCIPAL
+                        );
+                    }
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evt
+                    ) {
+
+                        btnVolver.setBackground(
+                                Estilos.VERDE_OSCURO
+                        );
+                    }
+                }
+        );
+        btnVolver.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        java.awt.Dimension tamañoBotonVolver =
                 new java.awt.Dimension(
-                        120,
+                        38,
                         38
+                );
+
+        btnVolver.setPreferredSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMinimumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMaximumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMargin(
+                new java.awt.Insets(
+                        0,
+                        0,
+                        0,
+                        0
                 )
         );
 
@@ -1101,12 +1213,8 @@ public class VentanaAgregarAnimal extends javax.swing.JFrame {
                 btnGuardar
         );
 
-        panelBotones.add(
-                btnVolver
-        );
-
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.gridwidth = 2;
 
         gbc.anchor =

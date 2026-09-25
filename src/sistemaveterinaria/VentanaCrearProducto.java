@@ -686,7 +686,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
         );
 
         panelEncabezado.add(
-                javax.swing.Box.createVerticalStrut(30)
+                javax.swing.Box.createVerticalStrut(10)
         );
 
         javax.swing.JPanel contenedorFormulario =
@@ -713,9 +713,9 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
                                 true
                         ),
                         javax.swing.BorderFactory.createEmptyBorder(
-                                40,
+                                25,
                                 50,
-                                40,
+                                25,
                                 50
                         )
                 )
@@ -723,14 +723,6 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
 
         java.awt.GridBagConstraints gbc =
                 new java.awt.GridBagConstraints();
-
-        gbc.insets =
-                new java.awt.Insets(
-                        10,
-                        10,
-                        10,
-                        10
-                );
 
         gbc.anchor =
                 java.awt.GridBagConstraints.WEST;
@@ -753,6 +745,12 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
             );
         }
 
+        java.awt.Dimension tamañoCampo =
+                new java.awt.Dimension(
+                        300,
+                        38
+                );
+
         javax.swing.JTextField[] campos = {
             txtNombre,
             txtPrecio,
@@ -767,15 +765,138 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
             );
 
             campo.setPreferredSize(
-                    new java.awt.Dimension(
-                            300,
-                            38
-                    )
+                    tamañoCampo
+            );
+
+            campo.setMinimumSize(
+                    tamañoCampo
             );
         }
 
+        btnVolver.setText("");
+
+        javax.swing.ImageIcon iconoVolver =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/volver.png"
+                        )
+                );
+
+        java.awt.Image imagenVolver =
+                iconoVolver.getImage().getScaledInstance(
+                        26,
+                        26,
+                        java.awt.Image.SCALE_SMOOTH
+                );
+
+        btnVolver.setIcon(
+                new javax.swing.ImageIcon(
+                        imagenVolver
+                )
+        );
+
+        btnVolver.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        btnVolver.setForeground(
+                Estilos.BLANCO
+        );
+
+        btnVolver.setBorderPainted(false);
+        btnVolver.setContentAreaFilled(true);
+        btnVolver.setOpaque(true);
+        btnVolver.setFocusPainted(false);
+
+        btnVolver.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        btnVolver.setMargin(
+                new java.awt.Insets(
+                        0,
+                        0,
+                        0,
+                        0
+                )
+        );
+
+        java.awt.Dimension tamañoBotonVolver =
+                new java.awt.Dimension(
+                        38,
+                        38
+                );
+
+        btnVolver.setPreferredSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMinimumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.setMaximumSize(
+                tamañoBotonVolver
+        );
+
+        btnVolver.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseEntered(
+                    java.awt.event.MouseEvent evt
+            ) {
+
+                btnVolver.setBackground(
+                        Estilos.VERDE_PRINCIPAL
+                );
+            }
+
+            @Override
+            public void mouseExited(
+                    java.awt.event.MouseEvent evt
+            ) {
+
+                btnVolver.setBackground(
+                        Estilos.VERDE_OSCURO
+                );
+            }
+        });
+
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.gridwidth = 2;
+
+        gbc.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        15,
+                        10
+                );
+
+        tarjetaFormulario.add(
+                btnVolver,
+                gbc
+        );
+
+        gbc.gridwidth = 1;
+
+        gbc.insets =
+                new java.awt.Insets(
+                        10,
+                        10,
+                        10,
+                        10
+                );
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
 
         tarjetaFormulario.add(
                 lblNombre,
@@ -790,7 +911,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
 
         tarjetaFormulario.add(
                 lblPrecio,
@@ -805,7 +926,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
 
         tarjetaFormulario.add(
                 lblStock,
@@ -820,7 +941,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
 
         tarjetaFormulario.add(
                 jLabel1,
@@ -838,22 +959,22 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
                 btnGuardar
         );
 
-        Estilos.estilizarBoton(
-                btnVolver
-        );
-
-        btnGuardar.setPreferredSize(
+        java.awt.Dimension tamañoBotonGuardar =
                 new java.awt.Dimension(
                         140,
                         38
-                )
+                );
+
+        btnGuardar.setPreferredSize(
+                tamañoBotonGuardar
         );
 
-        btnVolver.setPreferredSize(
-                new java.awt.Dimension(
-                        120,
-                        38
-                )
+        btnGuardar.setMinimumSize(
+                tamañoBotonGuardar
+        );
+
+        btnGuardar.setMaximumSize(
+                tamañoBotonGuardar
         );
 
         javax.swing.JPanel panelBotones =
@@ -867,11 +988,12 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
 
         panelBotones.setOpaque(false);
 
-        panelBotones.add(btnGuardar);
-        panelBotones.add(btnVolver);
+        panelBotones.add(
+                btnGuardar
+        );
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
 
         gbc.anchor =

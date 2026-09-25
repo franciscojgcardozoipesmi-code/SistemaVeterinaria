@@ -64,7 +64,8 @@ public class VentanaTurnos extends javax.swing.JFrame {
                         int row,
                         int column
                 ) {
-                    return column == 8;
+                    return column == 7
+                            || column == 8;
                 }
             };
 
@@ -96,6 +97,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
 
             aplicarColoresEstado();
             configurarColumnasTurnos();
+            configurarEditorEstado();
         }
     
     private void buscarTurnos(
@@ -110,7 +112,8 @@ public class VentanaTurnos extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return column == 8;
+                return column == 7
+                        || column == 8;
             }
         };
 
@@ -142,6 +145,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
 
         aplicarColoresEstado();
         configurarColumnasTurnos();
+        configurarEditorEstado();
     }
     
 
@@ -629,20 +633,20 @@ public class VentanaTurnos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVencidosActionPerformed
     private void aplicarColoresEstado() {
 
-        tblTurnos.getColumnModel()
-                .getColumn(7)
-                .setCellRenderer(new DefaultTableCellRenderer() {
+        javax.swing.table.DefaultTableCellRenderer renderEstado =
+                new javax.swing.table.DefaultTableCellRenderer() {
 
             @Override
-            public Component getTableCellRendererComponent(
-                    JTable table,
+            public java.awt.Component getTableCellRendererComponent(
+                    javax.swing.JTable table,
                     Object value,
                     boolean isSelected,
                     boolean hasFocus,
                     int row,
-                    int column) {
+                    int column
+            ) {
 
-                Component componente =
+                java.awt.Component componente =
                         super.getTableCellRendererComponent(
                                 table,
                                 value,
@@ -652,47 +656,128 @@ public class VentanaTurnos extends javax.swing.JFrame {
                                 column
                         );
 
-                if (isSelected) {
-                    return componente;
+                componente.setBackground(
+                        java.awt.Color.WHITE
+                );
+
+                componente.setForeground(
+                        Estilos.VERDE_OSCURO
+                );
+
+                if (value != null) {
+
+                    String estado =
+                            value.toString()
+                                    .trim()
+                                    .toUpperCase();
+
+                    switch (estado) {
+
+                        case "PENDIENTE":
+                            componente.setBackground(
+                                    new java.awt.Color(
+                                            255,
+                                            243,
+                                            176
+                                    )
+                            );
+
+                            componente.setForeground(
+                                    new java.awt.Color(
+                                            145,
+                                            105,
+                                            0
+                                    )
+                            );
+                            break;
+
+                        case "EN ATENCIÓN":
+                            componente.setBackground(
+                                    new java.awt.Color(
+                                            190,
+                                            225,
+                                            255
+                                    )
+                            );
+
+                            componente.setForeground(
+                                    new java.awt.Color(
+                                            30,
+                                            95,
+                                            160
+                                    )
+                            );
+                            break;
+
+                        case "FINALIZADO":
+                            componente.setBackground(
+                                    new java.awt.Color(
+                                            190,
+                                            245,
+                                            205
+                                    )
+                            );
+
+                            componente.setForeground(
+                                    new java.awt.Color(
+                                            30,
+                                            125,
+                                            70
+                                    )
+                            );
+                            break;
+
+                        case "CANCELADO":
+                            componente.setBackground(
+                                    new java.awt.Color(
+                                            255,
+                                            205,
+                                            205
+                                    )
+                            );
+
+                            componente.setForeground(
+                                    new java.awt.Color(
+                                            180,
+                                            55,
+                                            55
+                                    )
+                            );
+                            break;
+
+                        case "VENCIDO":
+                            componente.setBackground(
+                                    new java.awt.Color(
+                                            255,
+                                            220,
+                                            175
+                                    )
+                            );
+
+                            componente.setForeground(
+                                    new java.awt.Color(
+                                            190,
+                                            90,
+                                            20
+                                    )
+                            );
+                            break;
+                    }
                 }
 
-                String estado =
-                        value != null ? value.toString() : "";
-
-                switch (estado) {
-
-                    case "PENDIENTE":
-                        componente.setBackground(
-                                new Color(255, 204, 102)
-                        );
-                        break;
-
-                    case "EN ATENCIÓN":
-                        componente.setBackground(
-                                new Color(102, 178, 255)
-                        );
-                        break;
-
-                    case "FINALIZADO":
-                        componente.setBackground(
-                                new Color(153, 255, 153)
-                        );
-                        break;
-
-                    case "CANCELADO":
-                        componente.setBackground(
-                                new Color(255, 153, 153)
-                        );
-                        break;
-
-                    default:
-                        componente.setBackground(Color.WHITE);
-                        break;
-                }
+                setHorizontalAlignment(
+                        javax.swing.SwingConstants.CENTER
+                );
 
                 return componente;
             }
-        });
+        };
+
+        tblTurnos.getColumnModel()
+                .getColumn(7)
+                .setCellRenderer(
+                        renderEstado
+                );
     }
     private void configurarColumnasTurnos() {
 
@@ -794,6 +879,98 @@ public class VentanaTurnos extends javax.swing.JFrame {
             }
         });
         tblTurnos.setRowHeight(32);
+    }
+    private void configurarEditorEstado() {
+
+        javax.swing.JComboBox<String> comboEstados =
+                new javax.swing.JComboBox<>(
+                        new String[]{
+                            "PENDIENTE",
+                            "EN ATENCIÓN",
+                            "FINALIZADO",
+                            "CANCELADO",
+                            "VENCIDO"
+                        }
+                );
+
+        comboEstados.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        comboEstados.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        tblTurnos.getColumnModel()
+                .getColumn(7)
+                .setCellEditor(
+                        new javax.swing.DefaultCellEditor(
+                                comboEstados
+                        )
+                );
+        tblTurnos.getModel().addTableModelListener(
+                evento -> {
+
+                    if (evento.getType()
+                            != javax.swing.event.TableModelEvent.UPDATE
+                            || evento.getColumn() != 7) {
+
+                        return;
+                    }
+
+                    int fila =
+                            evento.getFirstRow();
+
+                    if (fila < 0) {
+                        return;
+                    }
+
+                    int idTurno =
+                            Integer.parseInt(
+                                    tblTurnos.getModel()
+                                            .getValueAt(
+                                                    fila,
+                                                    0
+                                            )
+                                            .toString()
+                            );
+
+                    String nuevoEstado =
+                            tblTurnos.getModel()
+                                    .getValueAt(
+                                            fila,
+                                            7
+                                    )
+                                    .toString();
+
+                    try {
+
+                        TurnoController.cambiarEstado(
+                                idTurno,
+                                nuevoEstado
+                        );
+
+                        javax.swing.SwingUtilities.invokeLater(() -> {
+
+                            tblTurnos.clearSelection();
+                            aplicarColoresEstado();
+                            tblTurnos.repaint();
+                        });
+
+                    } catch (Exception e) {
+
+                        Estilos.mostrarAdvertencia(
+                                this,
+                                "Error",
+                                "No se pudo actualizar el estado"
+                        );
+
+                        javax.swing.SwingUtilities.invokeLater(
+                                this::cargarTabla
+                        );
+                    }
+                }
+        );
     }
     private void configurarDiseñoTurnos() {
 
@@ -1288,9 +1465,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 btnMostrarTodos
         );
 
-        Estilos.estilizarBotonHistorial(
-                btnCambiarEstado
-        );
+        
 
        
 
@@ -1315,13 +1490,8 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 18
         );
 
-        Estilos.aplicarIcono(
-                btnCambiarEstado,
-                "/imagenes/iconos/cambiar_estado.png",
-                18,
-                18
-        );
-
+        
+        
         
 
         btnEliminarTurno.setIcon(
@@ -1555,12 +1725,7 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 )
         );
        
-        btnCambiarEstado.setPreferredSize(
-                new java.awt.Dimension(
-                        200,
-                        38
-                )
-        );
+        
 
         
 
@@ -1591,67 +1756,12 @@ public class VentanaTurnos extends javax.swing.JFrame {
                 btnCrearTurno
         );
 
-        javax.swing.JPanel filaEstado =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.LEFT,
-                                10,
-                                0
-                        )
-                );
-
-        filaEstado.setOpaque(false);
-
-        javax.swing.JLabel lblEstado =
-                new javax.swing.JLabel(
-                        "ESTADO:"
-                );
-
-        lblEstado.setFont(
-                Estilos.fuenteBoton()
-        );
-
-        lblEstado.setForeground(
-                Estilos.VERDE_OSCURO
-        );
-
-        cmbEstado.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        cmbEstado.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
-        );
-
-        filaEstado.add(
-                lblEstado
-        );
-
-        filaEstado.add(
-                cmbEstado
-        );
-
-        filaEstado.add(
-                btnCambiarEstado
-        );
-   
+        
 
         panelAcciones.add(
                 filaPrincipal
         );
 
-        panelAcciones.add(
-                javax.swing.Box.createVerticalStrut(
-                        12
-                )
-        );
-
-        panelAcciones.add(
-                filaEstado
-        );
 
         tarjetaTurnos.add(
                 panelAcciones,
