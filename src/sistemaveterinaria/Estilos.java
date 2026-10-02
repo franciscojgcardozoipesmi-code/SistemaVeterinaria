@@ -806,6 +806,588 @@ public class Estilos {
 
         dialogo.setVisible(true);
     }
+    public static boolean mostrarConfirmacion(
+            java.awt.Component padre,
+            String titulo,
+            String mensaje
+    ) {
+
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(
+                        padre
+                );
+
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        titulo,
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(true);
+
+        final boolean[] confirmado = {
+            false
+        };
+
+        java.awt.Color rojo =
+                new java.awt.Color(
+                        210,
+                        45,
+                        45
+                );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                15
+                        )
+                );
+
+        panelPrincipal.setBackground(
+                BLANCO
+        );
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                rojo,
+                                2
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                20,
+                                18,
+                                20
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        titulo.toUpperCase(),
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblTitulo.setFont(
+                fuente(18f)
+        );
+
+        lblTitulo.setForeground(
+                BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(
+                rojo
+        );
+
+        panelTitulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        10,
+                        15,
+                        10,
+                        15
+                )
+        );
+
+        panelTitulo.add(
+                lblTitulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JPanel panelMensaje =
+                new javax.swing.JPanel();
+
+        panelMensaje.setOpaque(false);
+
+        panelMensaje.setLayout(
+                new javax.swing.BoxLayout(
+                        panelMensaje,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        String[] lineas =
+                mensaje.split("\\n");
+
+        for (String linea : lineas) {
+
+            javax.swing.JLabel lblLinea =
+                    new javax.swing.JLabel(
+                            linea,
+                            javax.swing.SwingConstants.CENTER
+                    );
+
+            lblLinea.setFont(
+                    fuenteNormal()
+            );
+
+            lblLinea.setForeground(
+                    VERDE_OSCURO
+            );
+
+            lblLinea.setAlignmentX(
+                    java.awt.Component.CENTER_ALIGNMENT
+            );
+
+            panelMensaje.add(
+                    lblLinea
+            );
+        }
+
+        javax.swing.JButton btnCancelar =
+                new javax.swing.JButton(
+                        "Cancelar"
+                );
+
+        estilizarBoton(
+                btnCancelar
+        );
+
+        javax.swing.JButton btnConfirmar =
+                new javax.swing.JButton(
+                        "Confirmar"
+                );
+
+        estilizarBotonEliminar(
+                btnConfirmar
+        );
+        
+        btnCancelar.setFont(
+                Estilos.fuenteBoton()
+        );
+
+        btnConfirmar.setFont(
+                Estilos.fuenteBoton()
+        );
+
+        java.awt.Dimension tamañoBoton =
+                new java.awt.Dimension(
+                        115,
+                        36
+                );
+
+        btnCancelar.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnConfirmar.setPreferredSize(
+                tamañoBoton
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(
+                btnCancelar
+        );
+
+        panelBotones.add(
+                btnConfirmar
+        );
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                15
+                        )
+                );
+
+        contenido.setOpaque(false);
+
+        contenido.add(
+                panelMensaje,
+                java.awt.BorderLayout.CENTER
+        );
+
+        contenido.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        btnConfirmar.addActionListener(
+                evento -> {
+
+                    confirmado[0] = true;
+
+                    dialogo.dispose();
+                }
+        );
+
+        btnCancelar.addActionListener(
+                evento -> dialogo.dispose()
+        );
+
+        dialogo.setContentPane(
+                panelPrincipal
+        );
+
+        dialogo.setSize(
+                430,
+                180
+        );
+
+        dialogo.setLocationRelativeTo(
+                ventanaPadre
+        );
+
+        dialogo.setVisible(
+                true
+        );
+
+        return confirmado[0];
+    }
+    
+    public static String solicitarTexto(
+            java.awt.Component padre,
+            String titulo,
+            String mensaje,
+            String textoInicial
+    ) {
+
+        java.awt.Window ventanaPadre =
+                javax.swing.SwingUtilities.getWindowAncestor(
+                        padre
+                );
+
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        ventanaPadre,
+                        titulo,
+                        java.awt.Dialog.ModalityType.APPLICATION_MODAL
+                );
+
+        dialogo.setUndecorated(true);
+
+        final String[] resultado = {
+            null
+        };
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                12
+                        )
+                );
+
+        panelPrincipal.setBackground(
+                BLANCO
+        );
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                VERDE_OSCURO,
+                                2
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                0,
+                                18,
+                                15,
+                                18
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblTitulo =
+                new javax.swing.JLabel(
+                        titulo,
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblTitulo.setFont(
+                fuente(18f)
+        );
+
+        lblTitulo.setForeground(
+                BLANCO
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(
+                VERDE_OSCURO
+        );
+
+        panelTitulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        9,
+                        15,
+                        9,
+                        15
+                )
+        );
+
+        panelTitulo.add(
+                lblTitulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JLabel lblMensaje =
+                new javax.swing.JLabel(
+                        mensaje,
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        lblMensaje.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblMensaje.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        lblMensaje.setForeground(
+                VERDE_OSCURO
+        );
+
+        javax.swing.JTextField txtValor =
+                new javax.swing.JTextField(
+                        textoInicial
+                );
+
+        txtValor.setFont(
+                fuenteNormal()
+        );
+
+       java.awt.Dimension tamañoCampo =
+                new java.awt.Dimension(
+                        220,
+                        32
+                );
+
+        txtValor.setPreferredSize(
+                tamañoCampo
+        );
+
+        txtValor.setMinimumSize(
+                tamañoCampo
+        );
+
+        txtValor.setMaximumSize(
+                tamañoCampo
+        );
+
+        javax.swing.JPanel panelCampo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                7
+                        )
+                );
+
+        panelCampo.setOpaque(false);
+
+        panelCampo.add(
+                lblMensaje,
+                java.awt.BorderLayout.NORTH
+        );
+
+        javax.swing.JPanel contenedorCampo =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                0
+                        )
+                );
+
+        contenedorCampo.setOpaque(false);
+
+        contenedorCampo.add(
+                txtValor
+        );
+
+        panelCampo.add(
+                contenedorCampo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JButton btnCancelar =
+                new javax.swing.JButton(
+                        "Cancelar"
+                );
+
+        btnCancelar.setFont(
+                fuenteBoton()
+        );
+
+        btnCancelar.setBackground(
+                BLANCO
+        );
+
+        btnCancelar.setForeground(
+                VERDE_OSCURO
+        );
+
+        btnCancelar.setFocusPainted(false);
+
+        btnCancelar.setBorder(
+                javax.swing.BorderFactory.createLineBorder(
+                        VERDE_OSCURO,
+                        2
+                )
+        );
+
+        btnCancelar.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        javax.swing.JButton btnGuardar =
+                new javax.swing.JButton(
+                        "Guardar"
+                );
+
+        estilizarBoton(
+                btnGuardar
+        );
+
+        java.awt.Dimension tamañoBoton =
+                new java.awt.Dimension(
+                        110,
+                        34
+                );
+
+        btnCancelar.setPreferredSize(
+                tamañoBoton
+        );
+
+        btnGuardar.setPreferredSize(
+                tamañoBoton
+        );
+
+        javax.swing.JPanel panelBotones =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                10,
+                                0
+                        )
+                );
+
+        panelBotones.setOpaque(false);
+
+        panelBotones.add(
+                btnCancelar
+        );
+
+        panelBotones.add(
+                btnGuardar
+        );
+
+        javax.swing.JPanel contenido =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                12
+                        )
+                );
+
+        contenido.setOpaque(false);
+
+        contenido.add(
+                panelCampo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        contenido.add(
+                panelBotones,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                contenido,
+                java.awt.BorderLayout.CENTER
+        );
+
+        btnGuardar.addActionListener(
+                evento -> {
+
+                    resultado[0] =
+                            txtValor.getText();
+
+                    dialogo.dispose();
+                }
+        );
+
+        txtValor.addActionListener(
+                evento -> {
+
+                    resultado[0] =
+                            txtValor.getText();
+
+                    dialogo.dispose();
+                }
+        );
+
+        btnCancelar.addActionListener(
+                evento -> dialogo.dispose()
+        );
+
+        dialogo.setContentPane(
+                panelPrincipal
+        );
+
+        dialogo.setSize(
+                330,
+                185
+        );
+
+        dialogo.setLocationRelativeTo(
+                ventanaPadre
+        );
+
+        javax.swing.SwingUtilities.invokeLater(
+                () -> {
+
+                    txtValor.requestFocusInWindow();
+
+                    txtValor.selectAll();
+                }
+        );
+
+        dialogo.setVisible(
+                true
+        );
+
+        return resultado[0];
+    }
     public static javax.swing.ImageIcon crearIconoColor(
             String ruta,
             int ancho,

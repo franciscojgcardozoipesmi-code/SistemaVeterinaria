@@ -21,6 +21,59 @@ public class PanelCatalogoAnimales
 
     private final javax.swing.JList<String> listaRazas =
             new javax.swing.JList<>(modeloRazas);
+    private final javax.swing.table.DefaultTableModel modeloEspecies =
+            new javax.swing.table.DefaultTableModel(
+                    new Object[]{
+                        "Especie",
+                        "Acciones"
+                    },
+                    0
+            ) {
+
+                @Override
+                public boolean isCellEditable(
+                        int fila,
+                        int columna
+                ) {
+
+                    return columna == 1;
+                }
+            };
+
+    private final javax.swing.JTable tablaEspecies =
+            new javax.swing.JTable(
+                    modeloEspecies
+            );
+
+    private final javax.swing.table.DefaultTableModel modeloTablaRazas =
+            new javax.swing.table.DefaultTableModel(
+                    new Object[]{
+                        "Raza",
+                        "Acciones"
+                    },
+                    0
+            ) {
+
+                @Override
+                public boolean isCellEditable(
+                        int fila,
+                        int columna
+                ) {
+
+                    return columna == 1;
+                }
+            };
+
+    private final javax.swing.JTable tablaRazas =
+            new javax.swing.JTable(
+                    modeloTablaRazas
+            );
+
+    private String especieSeleccionada;
+    private final javax.swing.JLabel lblTituloRazas =
+        new javax.swing.JLabel(
+                "Seleccioná una especie"
+        );
     private final javax.swing.JButton btnEliminarEspecie =
             new javax.swing.JButton(
                     "Eliminar especie"
@@ -49,7 +102,9 @@ public class PanelCatalogoAnimales
         CatalogoAnimalController.inicializarCatalogo();
 
         construirPanel();
+        configurarTablasCatalogo();
         cargarEspecies();
+        cargarTablaEspecies();
     }
 
     private void construirPanel() {
@@ -135,7 +190,7 @@ public class PanelCatalogoAnimales
                 new javax.swing.JPanel(
                         new java.awt.BorderLayout(
                                 0,
-                                20
+                                15
                         )
                 );
 
@@ -153,184 +208,10 @@ public class PanelCatalogoAnimales
                         javax.swing.BorderFactory.createEmptyBorder(
                                 25,
                                 25,
-                                30,
-                                35
+                                25,
+                                25
                         )
                 )
-        );
-
-        javax.swing.JPanel formulario =
-                new javax.swing.JPanel(
-                        new java.awt.GridBagLayout()
-                );
-
-        formulario.setOpaque(false);
-
-        java.awt.GridBagConstraints gbc =
-                new java.awt.GridBagConstraints();
-
-        gbc.insets =
-                new java.awt.Insets(
-                        10,
-                        10,
-                        10,
-                        10
-                );
-
-        gbc.anchor =
-                java.awt.GridBagConstraints.WEST;
-
-        javax.swing.JLabel lblNuevaEspecie =
-                new javax.swing.JLabel(
-                        "Nueva especie"
-                );
-
-        javax.swing.JLabel lblEspecie =
-                new javax.swing.JLabel(
-                        "Especie"
-                );
-
-        javax.swing.JLabel lblNuevaRaza =
-                new javax.swing.JLabel(
-                        "Nueva raza"
-                );
-
-        javax.swing.JLabel[] etiquetas = {
-            lblNuevaEspecie,
-            lblEspecie,
-            lblNuevaRaza
-        };
-
-        for (javax.swing.JLabel etiqueta : etiquetas) {
-
-            etiqueta.setFont(
-                    Estilos.fuenteNormal()
-            );
-
-            etiqueta.setForeground(
-                    Estilos.VERDE_OSCURO
-            );
-        }
-
-        java.awt.Dimension tamañoCampo =
-                new java.awt.Dimension(
-                        300,
-                        38
-                );
-
-        txtNuevaEspecie.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        txtNuevaEspecie.setPreferredSize(
-                tamañoCampo
-        );
-
-        txtNuevaRaza.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        txtNuevaRaza.setPreferredSize(
-                tamañoCampo
-        );
-
-        cmbEspecies.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        cmbEspecies.setPreferredSize(
-                tamañoCampo
-        );
-
-        javax.swing.JButton btnAgregarEspecie =
-                new javax.swing.JButton(
-                        "Agregar especie"
-                );
-
-        javax.swing.JButton btnAgregarRaza =
-                new javax.swing.JButton(
-                        "Agregar raza"
-                );
-
-        Estilos.estilizarBoton(
-                btnAgregarEspecie
-        );
-
-        Estilos.estilizarBoton(
-                btnAgregarRaza
-        );
-
-        btnAgregarEspecie.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
-        );
-
-        btnAgregarRaza.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
-        );
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-
-        formulario.add(
-                lblNuevaEspecie,
-                gbc
-        );
-
-        gbc.gridx = 1;
-
-        formulario.add(
-                txtNuevaEspecie,
-                gbc
-        );
-
-        gbc.gridx = 2;
-
-        formulario.add(
-                btnAgregarEspecie,
-                gbc
-        );
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-
-        formulario.add(
-                lblEspecie,
-                gbc
-        );
-
-        gbc.gridx = 1;
-
-        formulario.add(
-                cmbEspecies,
-                gbc
-        );
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-
-        formulario.add(
-                lblNuevaRaza,
-                gbc
-        );
-
-        gbc.gridx = 1;
-
-        formulario.add(
-                txtNuevaRaza,
-                gbc
-        );
-
-        gbc.gridx = 2;
-
-        formulario.add(
-                btnAgregarRaza,
-                gbc
         );
 
         javax.swing.JButton btnInicio =
@@ -349,11 +230,18 @@ public class PanelCatalogoAnimales
                 18
         );
 
-        btnInicio.setPreferredSize(
+        java.awt.Dimension tamañoInicio =
                 new java.awt.Dimension(
                         110,
                         38
-                )
+                );
+
+        btnInicio.setPreferredSize(
+                tamañoInicio
+        );
+
+        btnInicio.setMinimumSize(
+                tamañoInicio
         );
 
         btnInicio.addActionListener(
@@ -375,89 +263,422 @@ public class PanelCatalogoAnimales
                 btnInicio
         );
 
-        javax.swing.JPanel panelSuperiorTarjeta =
+        tarjeta.add(
+                panelInicio,
+                java.awt.BorderLayout.NORTH
+        );
+
+        javax.swing.JPanel panelCatalogos =
+                new javax.swing.JPanel(
+                        new java.awt.GridLayout(
+                                1,
+                                2,
+                                20,
+                                0
+                        )
+                );
+
+        panelCatalogos.setOpaque(false);
+
+        javax.swing.JPanel panelEspecies =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                12
+                        )
+                );
+
+        panelEspecies.setBackground(
+                Estilos.BLANCO
+        );
+
+        panelEspecies.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                15,
+                                15,
+                                15,
+                                15
+                        )
+                )
+        );
+
+        javax.swing.JLabel lblEspecies =
+                new javax.swing.JLabel(
+                        "Especies"
+                );
+
+        lblEspecies.setFont(
+                Estilos.fuenteSubtitulo()
+        );
+
+        lblEspecies.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        lblEspecies.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+        
+        lblEspecies.setMaximumSize(
+                new java.awt.Dimension(
+                        Integer.MAX_VALUE,
+                        30
+                )
+        );
+
+        javax.swing.JLabel lblNuevaEspecie =
+                new javax.swing.JLabel(
+                        "Nueva especie"
+                );
+
+        lblNuevaEspecie.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblNuevaEspecie.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        txtNuevaEspecie.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        java.awt.Dimension tamañoCampo =
+                new java.awt.Dimension(
+                        230,
+                        38
+                );
+
+        txtNuevaEspecie.setPreferredSize(
+                tamañoCampo
+        );
+
+        txtNuevaEspecie.setMinimumSize(
+                tamañoCampo
+        );
+
+        javax.swing.JButton btnAgregarEspecie =
+                new javax.swing.JButton(
+                        "Agregar"
+                );
+
+        Estilos.estilizarBoton(
+                btnAgregarEspecie
+        );
+
+        java.awt.Dimension tamañoBotonAgregar =
+                new java.awt.Dimension(
+                        120,
+                        38
+                );
+
+        btnAgregarEspecie.setPreferredSize(
+                tamañoBotonAgregar
+        );
+
+        btnAgregarEspecie.setMinimumSize(
+                tamañoBotonAgregar
+        );
+
+        btnAgregarEspecie.addActionListener(
+                evento -> agregarEspecie()
+        );
+
+        javax.swing.JPanel formularioEspecie =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        formularioEspecie.setOpaque(false);
+
+        java.awt.GridBagConstraints gbcEspecie =
+                new java.awt.GridBagConstraints();
+
+        gbcEspecie.insets =
+                new java.awt.Insets(
+                        5,
+                        5,
+                        5,
+                        5
+                );
+
+        gbcEspecie.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbcEspecie.gridx = 0;
+        gbcEspecie.gridy = 0;
+        gbcEspecie.gridwidth = 2;
+
+        formularioEspecie.add(
+                lblNuevaEspecie,
+                gbcEspecie
+        );
+
+        gbcEspecie.gridx = 0;
+        gbcEspecie.gridy = 1;
+        gbcEspecie.gridwidth = 1;
+        gbcEspecie.weightx = 1;
+        gbcEspecie.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        formularioEspecie.add(
+                txtNuevaEspecie,
+                gbcEspecie
+        );
+
+        gbcEspecie.gridx = 1;
+        gbcEspecie.weightx = 0;
+        gbcEspecie.fill =
+                java.awt.GridBagConstraints.NONE;
+
+        formularioEspecie.add(
+                btnAgregarEspecie,
+                gbcEspecie
+        );
+
+        javax.swing.JPanel cabeceraEspecies =
                 new javax.swing.JPanel();
 
-        panelSuperiorTarjeta.setOpaque(false);
+        cabeceraEspecies.setOpaque(false);
 
-        panelSuperiorTarjeta.setLayout(
+        cabeceraEspecies.setLayout(
                 new javax.swing.BoxLayout(
-                        panelSuperiorTarjeta,
+                        cabeceraEspecies,
                         javax.swing.BoxLayout.Y_AXIS
                 )
         );
 
-        panelInicio.setAlignmentX(
+        lblEspecies.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        formularioEspecie.setAlignmentX(
                 java.awt.Component.LEFT_ALIGNMENT
         );
 
-        formulario.setAlignmentX(
-                java.awt.Component.LEFT_ALIGNMENT
+        cabeceraEspecies.add(
+                lblEspecies
         );
 
-        panelSuperiorTarjeta.add(
-                panelInicio
-        );
-
-        panelSuperiorTarjeta.add(
-                javax.swing.Box.createVerticalStrut(15)
-        );
-
-        panelSuperiorTarjeta.add(
-                formulario
-        );
-
-        tarjeta.add(
-                panelSuperiorTarjeta,
-                java.awt.BorderLayout.NORTH
-        );
-
-        javax.swing.JPanel panelListado =
-                new javax.swing.JPanel(
-                        new java.awt.BorderLayout(
-                                0,
-                                10
-                        )
-                );
-
-        panelListado.setOpaque(false);
-
-        javax.swing.JLabel lblRazasRegistradas =
-                new javax.swing.JLabel(
-                        "Razas registradas para la especie seleccionada"
-                );
-
-        lblRazasRegistradas.setFont(
-                Estilos.fuenteSubtitulo()
-        );
-
-        lblRazasRegistradas.setForeground(
-                Estilos.VERDE_OSCURO
-        );
-
-        listaRazas.setFont(
-                Estilos.fuenteNormal()
-        );
-
-        listaRazas.setForeground(
-                Estilos.VERDE_OSCURO
-        );
-
-        listaRazas.setBackground(
-                new java.awt.Color(
-                        235,
-                        250,
-                        244
+        cabeceraEspecies.add(
+                javax.swing.Box.createVerticalStrut(
+                        8
                 )
         );
 
-        listaRazas.setFixedCellHeight(
-                30
+        cabeceraEspecies.add(
+                formularioEspecie
+        );
+
+        javax.swing.JScrollPane scrollEspecies =
+                new javax.swing.JScrollPane(
+                        tablaEspecies
+                );
+
+        scrollEspecies.setBorder(
+                javax.swing.BorderFactory.createLineBorder(
+                        Estilos.VERDE_OSCURO,
+                        1,
+                        true
+                )
+        );
+
+        scrollEspecies.setPreferredSize(
+                new java.awt.Dimension(
+                        400,
+                        300
+                )
+        );
+
+        panelEspecies.add(
+                cabeceraEspecies,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelEspecies.add(
+                scrollEspecies,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JPanel panelRazas =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                0,
+                                12
+                        )
+                );
+
+        panelRazas.setBackground(
+                Estilos.BLANCO
+        );
+
+        panelRazas.setBorder(
+                javax.swing.BorderFactory.createCompoundBorder(
+                        javax.swing.BorderFactory.createLineBorder(
+                                Estilos.VERDE_OSCURO,
+                                1,
+                                true
+                        ),
+                        javax.swing.BorderFactory.createEmptyBorder(
+                                15,
+                                15,
+                                15,
+                                15
+                        )
+                )
+        );
+
+        lblTituloRazas.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+        lblTituloRazas.setMaximumSize(
+                new java.awt.Dimension(
+                        Integer.MAX_VALUE,
+                        30
+                )
+        );
+
+        javax.swing.JLabel lblNuevaRaza =
+                new javax.swing.JLabel(
+                        "Nueva raza"
+                );
+
+        lblNuevaRaza.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblNuevaRaza.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        txtNuevaRaza.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtNuevaRaza.setPreferredSize(
+                tamañoCampo
+        );
+
+        txtNuevaRaza.setMinimumSize(
+                tamañoCampo
+        );
+
+        javax.swing.JButton btnAgregarRaza =
+                new javax.swing.JButton(
+                        "Agregar"
+                );
+
+        Estilos.estilizarBoton(
+                btnAgregarRaza
+        );
+
+        btnAgregarRaza.setPreferredSize(
+                tamañoBotonAgregar
+        );
+
+        btnAgregarRaza.setMinimumSize(
+                tamañoBotonAgregar
+        );
+
+        btnAgregarRaza.addActionListener(
+                evento -> agregarRaza()
+        );
+
+        javax.swing.JPanel formularioRaza =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        formularioRaza.setOpaque(false);
+
+        java.awt.GridBagConstraints gbcRaza =
+                new java.awt.GridBagConstraints();
+
+        gbcRaza.insets =
+                new java.awt.Insets(
+                        5,
+                        5,
+                        5,
+                        5
+                );
+
+        gbcRaza.anchor =
+                java.awt.GridBagConstraints.WEST;
+
+        gbcRaza.gridx = 0;
+        gbcRaza.gridy = 0;
+        gbcRaza.gridwidth = 2;
+
+        formularioRaza.add(
+                lblNuevaRaza,
+                gbcRaza
+        );
+
+        gbcRaza.gridx = 0;
+        gbcRaza.gridy = 1;
+        gbcRaza.gridwidth = 1;
+        gbcRaza.weightx = 1;
+        gbcRaza.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        formularioRaza.add(
+                txtNuevaRaza,
+                gbcRaza
+        );
+
+        gbcRaza.gridx = 1;
+        gbcRaza.weightx = 0;
+        gbcRaza.fill =
+                java.awt.GridBagConstraints.NONE;
+
+        formularioRaza.add(
+                btnAgregarRaza,
+                gbcRaza
+        );
+
+        javax.swing.JPanel cabeceraRazas =
+                new javax.swing.JPanel();
+
+        cabeceraRazas.setOpaque(false);
+
+        cabeceraRazas.setLayout(
+                new javax.swing.BoxLayout(
+                        cabeceraRazas,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        lblTituloRazas.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        formularioRaza.setAlignmentX(
+                java.awt.Component.LEFT_ALIGNMENT
+        );
+
+        cabeceraRazas.add(
+                lblTituloRazas
+        );
+
+        cabeceraRazas.add(
+                javax.swing.Box.createVerticalStrut(
+                        8
+                )
+        );
+
+        cabeceraRazas.add(
+                formularioRaza
         );
 
         javax.swing.JScrollPane scrollRazas =
                 new javax.swing.JScrollPane(
-                        listaRazas
+                        tablaRazas
                 );
 
         scrollRazas.setBorder(
@@ -468,116 +689,36 @@ public class PanelCatalogoAnimales
                 )
         );
 
-        panelListado.add(
-                lblRazasRegistradas,
+        scrollRazas.setPreferredSize(
+                new java.awt.Dimension(
+                        400,
+                        300
+                )
+        );
+
+        panelRazas.add(
+                cabeceraRazas,
                 java.awt.BorderLayout.NORTH
         );
 
-        panelListado.add(
+        panelRazas.add(
                 scrollRazas,
                 java.awt.BorderLayout.CENTER
         );
 
+        panelCatalogos.add(
+                panelEspecies
+        );
+
+        panelCatalogos.add(
+                panelRazas
+        );
+
         tarjeta.add(
-                panelListado,
+                panelCatalogos,
                 java.awt.BorderLayout.CENTER
         );
 
-        
-        Estilos.estilizarBotonEditar(
-                btnEditarEspecie
-        );
-
-        Estilos.estilizarBotonEditar(
-                btnEditarRaza
-        );
-        btnEditarEspecie.setPreferredSize(
-                new java.awt.Dimension(
-                        165,
-                        38
-                )
-        );
-
-        btnEditarRaza.setPreferredSize(
-                new java.awt.Dimension(
-                        165,
-                        38
-                )
-        );
-
-        btnEliminarEspecie.setPreferredSize(
-                new java.awt.Dimension(
-                        165,
-                        38
-                )
-        );
-
-        btnEliminarRaza.setPreferredSize(
-                new java.awt.Dimension(
-                        165,
-                        38
-                )
-        );
-        Estilos.estilizarBotonEliminar(
-                btnEliminarEspecie
-        );
-
-        Estilos.estilizarBotonEliminar(
-                btnEliminarRaza
-        );
-
-        
-
-        btnEliminarEspecie.setPreferredSize(
-                new java.awt.Dimension(
-                        190,
-                        38
-                )
-        );
-
-        btnEliminarRaza.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
-        );
-
-        
-        
-
-        javax.swing.JPanel panelBotones =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.LEFT,
-                                10,
-                                0
-                        )
-                );
-
-        panelBotones.setOpaque(false);
-        panelBotones.add(
-                btnEditarEspecie
-        );
-
-        panelBotones.add(
-                btnEditarRaza
-        );
-
-        panelBotones.add(
-                btnEliminarEspecie
-        );
-
-        panelBotones.add(
-                btnEliminarRaza
-        );
-
-        
-        
-
-        tarjeta.add(
-                panelBotones,
-                java.awt.BorderLayout.SOUTH
-        );
         panelPrincipal.add(
                 tarjeta,
                 java.awt.BorderLayout.CENTER
@@ -587,37 +728,231 @@ public class PanelCatalogoAnimales
                 panelPrincipal,
                 java.awt.BorderLayout.CENTER
         );
+    }
+    private void configurarTablasCatalogo() {
 
-        cmbEspecies.addActionListener(
-                evento -> cargarRazas()
+        Estilos.estilizarTabla(
+                tablaEspecies
         );
 
-        btnAgregarEspecie.addActionListener(
-                evento -> agregarEspecie()
+        Estilos.estilizarTabla(
+                tablaRazas
         );
 
-        btnAgregarRaza.addActionListener(
-                evento -> agregarRaza()
+        tablaEspecies.setRowHeight(
+                34
         );
 
-        
-        
-        btnEditarEspecie.addActionListener(
-                evento -> editarEspecie()
+        tablaRazas.setRowHeight(
+                34
         );
 
-        btnEditarRaza.addActionListener(
-                evento -> editarRaza()
-        );
-        btnEliminarEspecie.addActionListener(
-                evento -> eliminarEspecie()
+        tablaEspecies.setSelectionMode(
+                javax.swing.ListSelectionModel.SINGLE_SELECTION
         );
 
-        btnEliminarRaza.addActionListener(
-                evento -> eliminarRaza()
+        tablaRazas.setSelectionMode(
+                javax.swing.ListSelectionModel.SINGLE_SELECTION
+        );
+
+        tablaEspecies.getTableHeader().setReorderingAllowed(
+                false
+        );
+
+        tablaRazas.getTableHeader().setReorderingAllowed(
+                false
+        );
+
+        tablaEspecies.getColumnModel()
+                .getColumn(1)
+                .setPreferredWidth(95);
+
+        tablaEspecies.getColumnModel()
+                .getColumn(1)
+                .setMinWidth(95);
+
+        tablaEspecies.getColumnModel()
+                .getColumn(1)
+                .setMaxWidth(95);
+
+        tablaRazas.getColumnModel()
+                .getColumn(1)
+                .setPreferredWidth(95);
+
+        tablaRazas.getColumnModel()
+                .getColumn(1)
+                .setMinWidth(95);
+
+        tablaRazas.getColumnModel()
+                .getColumn(1)
+                .setMaxWidth(95);
+
+        lblTituloRazas.setFont(
+                Estilos.fuenteSubtitulo()
+        );
+
+        lblTituloRazas.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        tablaEspecies.getSelectionModel()
+                .addListSelectionListener(
+                        evento -> {
+
+                            if (evento.getValueIsAdjusting()) {
+                                return;
+                            }
+
+                            int fila =
+                                    tablaEspecies.getSelectedRow();
+
+                            if (fila == -1) {
+
+                                especieSeleccionada = null;
+
+                                lblTituloRazas.setText(
+                                        "Seleccioná una especie"
+                                );
+
+                                modeloTablaRazas.setRowCount(
+                                        0
+                                );
+
+                                return;
+                            }
+
+                            especieSeleccionada =
+                                    modeloEspecies.getValueAt(
+                                            fila,
+                                            0
+                                    ).toString();
+
+                            lblTituloRazas.setText(
+                                    "Razas de "
+                                    + especieSeleccionada
+                            );
+
+                            cargarTablaRazas();
+                        }
+                );
+        configurarColumnasAcciones();
+    }
+    private void configurarColumnasAcciones() {
+
+        javax.swing.table.TableColumn accionesEspecies =
+                tablaEspecies.getColumnModel()
+                        .getColumn(1);
+
+        accionesEspecies.setCellRenderer(
+                new RenderizadorAcciones()
+        );
+
+        accionesEspecies.setCellEditor(
+                new EditorAcciones(
+                        true
+                )
+        );
+
+        javax.swing.table.TableColumn accionesRazas =
+                tablaRazas.getColumnModel()
+                        .getColumn(1);
+
+        accionesRazas.setCellRenderer(
+                new RenderizadorAcciones()
+        );
+
+        accionesRazas.setCellEditor(
+                new EditorAcciones(
+                        false
+                )
         );
     }
+    private void cargarTablaEspecies() {
 
+        modeloEspecies.setRowCount(0);
+
+        int filaSeleccionada = -1;
+        int posicion = 0;
+
+        for (String especie
+                : CatalogoAnimalController.listarEspecies()) {
+
+            modeloEspecies.addRow(
+                    new Object[]{
+                        especie,
+                        ""
+                    }
+            );
+
+            if (especieSeleccionada != null
+                    && especie.equalsIgnoreCase(
+                            especieSeleccionada
+                    )) {
+
+                filaSeleccionada = posicion;
+            }
+
+            posicion++;
+        }
+
+        if (filaSeleccionada == -1
+                && modeloEspecies.getRowCount() > 0) {
+
+            filaSeleccionada = 0;
+
+            especieSeleccionada =
+                    modeloEspecies.getValueAt(
+                            0,
+                            0
+                    ).toString();
+        }
+
+        if (filaSeleccionada >= 0) {
+
+            tablaEspecies.setRowSelectionInterval(
+                    filaSeleccionada,
+                    filaSeleccionada
+            );
+
+            lblTituloRazas.setText(
+                    "Razas de "
+                    + especieSeleccionada
+            );
+
+        } else {
+
+            especieSeleccionada = null;
+
+            lblTituloRazas.setText(
+                    "Seleccioná una especie"
+            );
+        }
+
+        cargarTablaRazas();
+    }
+
+    private void cargarTablaRazas() {
+
+        modeloTablaRazas.setRowCount(0);
+
+        if (especieSeleccionada == null) {
+            return;
+        }
+
+        for (String raza
+                : CatalogoAnimalController
+                        .listarRazasPorEspecie(
+                                especieSeleccionada
+                        )) {
+
+            modeloTablaRazas.addRow(
+                    new Object[]{
+                        raza,
+                        ""
+                    }
+            );
+        }
+    }
     private void cargarEspecies() {
 
         String seleccionActual =
@@ -703,11 +1038,11 @@ public class PanelCatalogoAnimales
 
         txtNuevaEspecie.setText("");
 
-        cargarEspecies();
+        especieSeleccionada =
+                nombre;
 
-        cmbEspecies.setSelectedItem(
-                nombre
-        );
+        cargarEspecies();
+        cargarTablaEspecies();
 
         Estilos.mostrarAdvertencia(
                 this,
@@ -717,9 +1052,6 @@ public class PanelCatalogoAnimales
     }
 
     private void agregarRaza() {
-
-        Object especieSeleccionada =
-                cmbEspecies.getSelectedItem();
 
         String nombre =
                 normalizar(
@@ -751,7 +1083,7 @@ public class PanelCatalogoAnimales
         boolean guardado =
                 CatalogoAnimalController.agregarRaza(
                         nombre,
-                        especieSeleccionada.toString()
+                        especieSeleccionada
                 );
 
         if (!guardado) {
@@ -767,7 +1099,7 @@ public class PanelCatalogoAnimales
 
         txtNuevaRaza.setText("");
 
-        cargarRazas();
+        cargarTablaRazas();
 
         Estilos.mostrarAdvertencia(
                 this,
@@ -797,44 +1129,29 @@ public class PanelCatalogoAnimales
                         " "
                 );
     }
-    private void eliminarEspecie() {
+    
+    private void eliminarEspecie(
+            String especie
+    ) {
 
-        Object especieSeleccionada =
-                cmbEspecies.getSelectedItem();
-
-        if (especieSeleccionada == null) {
-
-            Estilos.mostrarAdvertencia(
-                    this,
-                    "Atención",
-                    "Seleccioná una especie"
-            );
-
-            return;
-        }
-
-        String especie =
-                especieSeleccionada.toString();
-
-        int respuesta =
-                javax.swing.JOptionPane.showConfirmDialog(
+        boolean confirmado =
+                Estilos.mostrarConfirmacion(
                         this,
-                        "¿Deseás eliminar la especie "
-                        + especie + "?",
                         "Confirmar eliminación",
-                        javax.swing.JOptionPane.YES_NO_OPTION,
-                        javax.swing.JOptionPane.WARNING_MESSAGE
+                        "¿Deseás eliminar la especie "
+                        + especie
+                        + "?\nTambién se eliminarán sus razas."
                 );
 
-        if (respuesta
-                != javax.swing.JOptionPane.YES_OPTION) {
-
+        if (!confirmado) {
             return;
         }
 
         boolean eliminado =
                 CatalogoAnimalController
-                        .eliminarEspecie(especie);
+                        .eliminarEspecie(
+                                especie
+                        );
 
         if (!eliminado) {
 
@@ -847,7 +1164,15 @@ public class PanelCatalogoAnimales
             return;
         }
 
+        if (especie.equalsIgnoreCase(
+                especieSeleccionada
+        )) {
+
+            especieSeleccionada = null;
+        }
+
         cargarEspecies();
+        cargarTablaEspecies();
 
         Estilos.mostrarAdvertencia(
                 this,
@@ -856,13 +1181,9 @@ public class PanelCatalogoAnimales
         );
     }
 
-    private void eliminarRaza() {
-
-        Object especieSeleccionada =
-                cmbEspecies.getSelectedItem();
-
-        String razaSeleccionada =
-                listaRazas.getSelectedValue();
+    private void eliminarRaza(
+            String razaSeleccionada
+    ) {
 
         if (especieSeleccionada == null) {
 
@@ -875,37 +1196,23 @@ public class PanelCatalogoAnimales
             return;
         }
 
-        if (razaSeleccionada == null) {
-
-            Estilos.mostrarAdvertencia(
-                    this,
-                    "Atención",
-                    "Seleccioná una raza de la lista"
-            );
-
-            return;
-        }
-
-        int respuesta =
-                javax.swing.JOptionPane.showConfirmDialog(
+        boolean confirmado =
+                Estilos.mostrarConfirmacion(
                         this,
-                        "¿Deseás eliminar la raza "
-                        + razaSeleccionada + "?",
                         "Confirmar eliminación",
-                        javax.swing.JOptionPane.YES_NO_OPTION,
-                        javax.swing.JOptionPane.WARNING_MESSAGE
+                        "¿Deseás eliminar la raza "
+                        + razaSeleccionada
+                        + "?"
                 );
 
-        if (respuesta
-                != javax.swing.JOptionPane.YES_OPTION) {
-
+        if (!confirmado) {
             return;
         }
 
         boolean eliminado =
                 CatalogoAnimalController.eliminarRaza(
                         razaSeleccionada,
-                        especieSeleccionada.toString()
+                        especieSeleccionada
                 );
 
         if (!eliminado) {
@@ -919,7 +1226,7 @@ public class PanelCatalogoAnimales
             return;
         }
 
-        cargarRazas();
+        cargarTablaRazas();
 
         Estilos.mostrarAdvertencia(
                 this,
@@ -927,28 +1234,25 @@ public class PanelCatalogoAnimales
                 "Raza eliminada correctamente"
         );
     }
-    private void editarEspecie() {
+    private void editarEspecie(
+            String nombreActual
+    ) {
 
-        Object seleccion =
-                cmbEspecies.getSelectedItem();
+        String nombreNuevo =
+                Estilos.solicitarTexto(
+                        this,
+                        "Editar especie",
+                        "Nuevo nombre de la especie:",
+                        nombreActual
+                );
 
-        if (seleccion == null) {
-
-            Estilos.mostrarAdvertencia(
-                    this,
-                    "Atención",
-                    "Seleccioná una especie"
-            );
-
+        if (nombreNuevo == null) {
             return;
         }
 
-        String nombreActual =
-                seleccion.toString();
-
-        String nombreNuevo =
+        nombreNuevo =
                 normalizar(
-                        txtNuevaEspecie.getText()
+                        nombreNuevo
                 );
 
         if (!nombreValido(nombreNuevo)) {
@@ -956,7 +1260,7 @@ public class PanelCatalogoAnimales
             Estilos.mostrarAdvertencia(
                     this,
                     "Atención",
-                    "Ingresá el nuevo nombre de la especie sin números"
+                    "Ingresá un nombre válido sin números"
             );
 
             return;
@@ -971,25 +1275,6 @@ public class PanelCatalogoAnimales
                     "Atención",
                     "El nuevo nombre debe ser diferente"
             );
-
-            return;
-        }
-
-        int respuesta =
-                javax.swing.JOptionPane.showConfirmDialog(
-                        this,
-                        "¿Deseás cambiar \""
-                        + nombreActual
-                        + "\" por \""
-                        + nombreNuevo
-                        + "\"?",
-                        "Confirmar edición",
-                        javax.swing.JOptionPane.YES_NO_OPTION,
-                        javax.swing.JOptionPane.QUESTION_MESSAGE
-                );
-
-        if (respuesta
-                != javax.swing.JOptionPane.YES_OPTION) {
 
             return;
         }
@@ -1011,13 +1296,16 @@ public class PanelCatalogoAnimales
             return;
         }
 
-        txtNuevaEspecie.setText("");
+        if (nombreActual.equalsIgnoreCase(
+                especieSeleccionada
+        )) {
+
+            especieSeleccionada =
+                    nombreNuevo;
+        }
 
         cargarEspecies();
-
-        cmbEspecies.setSelectedItem(
-                nombreNuevo
-        );
+        cargarTablaEspecies();
 
         Estilos.mostrarAdvertencia(
                 this,
@@ -1025,13 +1313,9 @@ public class PanelCatalogoAnimales
                 "Especie editada correctamente"
         );
     }
-    private void editarRaza() {
-
-        Object especieSeleccionada =
-                cmbEspecies.getSelectedItem();
-
-        String nombreActual =
-                listaRazas.getSelectedValue();
+    private void editarRaza(
+            String nombreActual
+    ) {
 
         if (especieSeleccionada == null) {
 
@@ -1044,20 +1328,21 @@ public class PanelCatalogoAnimales
             return;
         }
 
-        if (nombreActual == null) {
+        String nombreNuevo =
+                Estilos.solicitarTexto(
+                        this,
+                        "Editar raza",
+                        "Nuevo nombre de la raza:",
+                        nombreActual
+                );
 
-            Estilos.mostrarAdvertencia(
-                    this,
-                    "Atención",
-                    "Seleccioná una raza de la lista"
-            );
-
+        if (nombreNuevo == null) {
             return;
         }
 
-        String nombreNuevo =
+        nombreNuevo =
                 normalizar(
-                        txtNuevaRaza.getText()
+                        nombreNuevo
                 );
 
         if (!nombreValido(nombreNuevo)) {
@@ -1065,7 +1350,7 @@ public class PanelCatalogoAnimales
             Estilos.mostrarAdvertencia(
                     this,
                     "Atención",
-                    "Ingresá el nuevo nombre de la raza sin números"
+                    "Ingresá un nombre válido sin números"
             );
 
             return;
@@ -1084,30 +1369,11 @@ public class PanelCatalogoAnimales
             return;
         }
 
-        int respuesta =
-                javax.swing.JOptionPane.showConfirmDialog(
-                        this,
-                        "¿Deseás cambiar \""
-                        + nombreActual
-                        + "\" por \""
-                        + nombreNuevo
-                        + "\"?",
-                        "Confirmar edición",
-                        javax.swing.JOptionPane.YES_NO_OPTION,
-                        javax.swing.JOptionPane.QUESTION_MESSAGE
-                );
-
-        if (respuesta
-                != javax.swing.JOptionPane.YES_OPTION) {
-
-            return;
-        }
-
         boolean editado =
                 CatalogoAnimalController.editarRaza(
                         nombreActual,
                         nombreNuevo,
-                        especieSeleccionada.toString()
+                        especieSeleccionada
                 );
 
         if (!editado) {
@@ -1121,19 +1387,318 @@ public class PanelCatalogoAnimales
             return;
         }
 
-        txtNuevaRaza.setText("");
-
-        cargarRazas();
-
-        listaRazas.setSelectedValue(
-                nombreNuevo,
-                true
-        );
+        cargarTablaRazas();
 
         Estilos.mostrarAdvertencia(
                 this,
                 "Operación exitosa",
                 "Raza editada correctamente"
         );
+    }
+    private class RenderizadorAcciones
+            extends javax.swing.JPanel
+            implements javax.swing.table.TableCellRenderer {
+
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        public RenderizadorAcciones() {
+
+            setLayout(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            4,
+                            4
+                    )
+            );
+
+            setOpaque(true);
+
+            add(
+                    btnEditar
+            );
+
+            add(
+                    btnEliminar
+            );
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionada,
+                boolean tieneFoco,
+                int fila,
+                int columna
+        ) {
+
+            if (seleccionada) {
+
+                setBackground(
+                        tabla.getSelectionBackground()
+                );
+
+            } else {
+
+                setBackground(
+                        tabla.getBackground()
+                );
+            }
+
+            return this;
+        }
+    }
+
+        private class EditorAcciones
+                extends javax.swing.AbstractCellEditor
+                implements javax.swing.table.TableCellEditor {
+
+            private final javax.swing.JPanel panel =
+                    new javax.swing.JPanel(
+                            new java.awt.FlowLayout(
+                                    java.awt.FlowLayout.CENTER,
+                                    4,
+                                    4
+                            )
+                    );
+
+            private final javax.swing.JButton btnEditar =
+                    crearBotonEditar();
+
+            private final javax.swing.JButton btnEliminar =
+                    crearBotonEliminar();
+
+            private final boolean accionesDeEspecies;
+
+            private int filaModelo = -1;
+
+        public EditorAcciones(
+                boolean accionesDeEspecies
+        ) {
+
+            this.accionesDeEspecies =
+                    accionesDeEspecies;
+
+            panel.setOpaque(true);
+
+            panel.add(
+                    btnEditar
+            );
+
+            panel.add(
+                    btnEliminar
+            );
+
+            btnEditar.addActionListener(
+                    evento -> {
+
+                        int fila =
+                                filaModelo;
+
+                        fireEditingStopped();
+
+                        if (fila < 0) {
+                            return;
+                        }
+
+                        if (accionesDeEspecies) {
+
+                            String especie =
+                                    modeloEspecies.getValueAt(
+                                            fila,
+                                            0
+                                    ).toString();
+
+                            editarEspecie(
+                                    especie
+                            );
+
+                        } else {
+
+                            String raza =
+                                    modeloTablaRazas.getValueAt(
+                                            fila,
+                                            0
+                                    ).toString();
+
+                            editarRaza(
+                                    raza
+                            );
+                        }
+                    }
+            );
+
+            btnEliminar.addActionListener(
+                    evento -> {
+
+                        int fila =
+                                filaModelo;
+
+                        fireEditingStopped();
+
+                        if (fila < 0) {
+                            return;
+                        }
+
+                        if (accionesDeEspecies) {
+
+                            String especie =
+                                    modeloEspecies.getValueAt(
+                                            fila,
+                                            0
+                                    ).toString();
+
+                            eliminarEspecie(
+                                    especie
+                            );
+
+                        } else {
+
+                            String raza =
+                                    modeloTablaRazas.getValueAt(
+                                            fila,
+                                            0
+                                    ).toString();
+
+                            eliminarRaza(
+                                    raza
+                            );
+                        }
+                    }
+            );
+        }
+
+    @Override
+    public java.awt.Component getTableCellEditorComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionada,
+                int fila,
+                int columna
+        ) {
+
+            filaModelo =
+                    tabla.convertRowIndexToModel(
+                            fila
+                    );
+
+            panel.setBackground(
+                    tabla.getSelectionBackground()
+            );
+
+            return panel;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+
+            return "";
+        }
+    }
+
+    private javax.swing.JButton crearBotonEditar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEditar(
+                boton
+        );
+
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/editar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(
+                        26,
+                        22
+                );
+
+        boton.setPreferredSize(
+                tamaño
+        );
+
+        boton.setMinimumSize(
+                tamaño
+        );
+
+        boton.setMaximumSize(
+                tamaño
+        );
+
+        boton.setToolTipText(
+                "Editar"
+        );
+
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+    }
+
+    private javax.swing.JButton crearBotonEliminar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEliminar(
+                boton
+        );
+
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/eliminar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(
+                        30,
+                        22
+                );
+
+        boton.setPreferredSize(
+                tamaño
+        );
+
+        boton.setMinimumSize(
+                tamaño
+        );
+
+        boton.setMaximumSize(
+                tamaño
+        );
+
+        boton.setToolTipText(
+                "Eliminar"
+        );
+
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
     }
 }

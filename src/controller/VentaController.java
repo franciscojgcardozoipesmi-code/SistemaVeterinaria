@@ -67,7 +67,24 @@ public class VentaController {
 
         venta.setTotal(total);
 
-        ventaDAO.guardar(venta);
+        ventaDAO.guardar(
+                venta
+        );
+
+        AuditoriaController.registrar(
+                "VENTAS",
+                "CREAR VENTA",
+                "Se registró una venta por $"
+                + String.format(
+                        "%.2f",
+                        total
+                )
+                + " mediante "
+                + medioPago
+                + ", con "
+                + tablaDetalle.getRowCount()
+                + " producto(s)"
+        );
     }
     
     public static ArrayList<Object[]> buscarVentas(

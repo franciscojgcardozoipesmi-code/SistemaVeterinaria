@@ -1,6 +1,6 @@
 package sistemaveterinaria;
 import controller.VentaController;
-
+import controller.AuditoriaController;
 public class VentanaVentas extends javax.swing.JFrame {
     private String rolUsuario;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaVentas.class.getName());
@@ -442,7 +442,13 @@ public class VentanaVentas extends javax.swing.JFrame {
                 dialogo.dispose();
 
                 if (anulada) {
-
+                    AuditoriaController.registrar(
+                            "VENTAS",
+                            "ANULAR VENTA",
+                            "Se anuló la venta N.º "
+                            + idVenta
+                            + " y se restauró su stock"
+                    );
                     Estilos.mostrarAdvertencia(
                             this,
                             "Operación exitosa",

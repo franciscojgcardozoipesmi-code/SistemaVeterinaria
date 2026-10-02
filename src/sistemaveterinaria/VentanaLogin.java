@@ -1,6 +1,7 @@
 package sistemaveterinaria;
 
 import controller.UsuarioController;
+import controller.AuditoriaController;
 public class VentanaLogin extends javax.swing.JFrame {
     private javax.swing.JPanel panelFormulario;
     private final javax.swing.JButton btnSalir =
@@ -135,7 +136,18 @@ public class VentanaLogin extends javax.swing.JFrame {
                     usuario,
                     password
             );
+            SesionUsuario.iniciar(
+                    usuario,
+                    rol
+            );
+            boolean auditoriaRegistrada =
+                    AuditoriaController.registrar(
+                            "SESIÓN",
+                            "INICIO DE SESIÓN",
+                            "El usuario inició sesión correctamente"
+                    );
 
+            
             Estilos.mostrarAdvertencia(
                     this,
                     "Inicio de sesión",

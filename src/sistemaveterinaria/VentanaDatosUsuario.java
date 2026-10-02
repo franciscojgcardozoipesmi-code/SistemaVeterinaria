@@ -122,7 +122,7 @@ public class VentanaDatosUsuario extends javax.swing.JFrame {
 
         jLabel3.setText("Rol");
 
-        cmbRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ADMINISTRADOR", "COLABORADOR" }));
+        cmbRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ADMINISTRADOR", "COLABORADOR", "VETERINARIO" }));
 
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(this::btnGuardarActionPerformed);

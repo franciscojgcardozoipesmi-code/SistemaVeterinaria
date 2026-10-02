@@ -15,7 +15,29 @@ public class PanelTiposProcedimiento
 
     private final javax.swing.JList<String> listaTipos =
             new javax.swing.JList<>(modeloTipos);
+    private final javax.swing.table.DefaultTableModel modeloTablaTipos =
+            new javax.swing.table.DefaultTableModel(
+                    new Object[]{
+                        "Tipo de procedimiento",
+                        "Acciones"
+                    },
+                    0
+            ) {
 
+                @Override
+                public boolean isCellEditable(
+                        int fila,
+                        int columna
+                ) {
+
+                    return columna == 1;
+                }
+            };
+
+    private final javax.swing.JTable tablaTipos =
+            new javax.swing.JTable(
+                    modeloTablaTipos
+            );
     public PanelTiposProcedimiento(
             VentanaPrincipal ventanaPrincipal
     ) {
@@ -26,7 +48,10 @@ public class PanelTiposProcedimiento
         TipoProcedimientoController.inicializarCatalogo();
 
         construirPanel();
+        configurarTablaTipos();
         cargarTipos();
+        cargarTablaTipos();
+        
     }
 
     private void construirPanel() {
@@ -301,34 +326,22 @@ public class PanelTiposProcedimiento
                 Estilos.VERDE_OSCURO
         );
 
-        listaTipos.setFont(
-                Estilos.fuenteNormal()
+       javax.swing.JScrollPane scrollTipos =
+                new javax.swing.JScrollPane(
+                        tablaTipos
+                );
+
+        scrollTipos.setBackground(
+                Estilos.BLANCO
         );
 
-        listaTipos.setForeground(
-                Estilos.VERDE_OSCURO
-        );
-
-        listaTipos.setBackground(
+        scrollTipos.getViewport().setBackground(
                 new java.awt.Color(
                         235,
                         250,
                         244
                 )
         );
-
-        listaTipos.setFixedCellHeight(
-                32
-        );
-
-        listaTipos.setSelectionMode(
-                javax.swing.ListSelectionModel.SINGLE_SELECTION
-        );
-
-        javax.swing.JScrollPane scrollTipos =
-                new javax.swing.JScrollPane(
-                        listaTipos
-                );
 
         scrollTipos.setBorder(
                 javax.swing.BorderFactory.createLineBorder(
@@ -353,64 +366,7 @@ public class PanelTiposProcedimiento
                 java.awt.BorderLayout.CENTER
         );
         
-        javax.swing.JButton btnEditar =
-                new javax.swing.JButton(
-                        "Editar tipo"
-                );
-
-        Estilos.estilizarBotonEditar(
-                btnEditar
-        );
-
-        btnEditar.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
-        );
-
-        javax.swing.JButton btnEliminar =
-                new javax.swing.JButton(
-                        "Eliminar tipo"
-                );
-
-        Estilos.estilizarBotonEliminar(
-                btnEliminar
-        );
-
-        btnEliminar.setPreferredSize(
-                new java.awt.Dimension(
-                        180,
-                        38
-                )
-        );
-
         
-
-        javax.swing.JPanel panelBotones =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.LEFT,
-                                10,
-                                0
-                        )
-                );
-
-        panelBotones.setOpaque(false);
-
-        panelBotones.add(
-                btnEditar
-        );
-
-        panelBotones.add(
-                btnEliminar
-        );
-    
-
-        tarjeta.add(
-                panelBotones,
-                java.awt.BorderLayout.SOUTH
-        );
 
         panelPrincipal.add(
                 tarjeta,
@@ -426,12 +382,7 @@ public class PanelTiposProcedimiento
                 evento -> agregarTipo()
         );
 
-        btnEliminar.addActionListener(
-                evento -> eliminarTipo()
-        );
-        btnEditar.addActionListener(
-                evento -> editarTipo()
-        );
+        
         
         listaTipos.addListSelectionListener(
                 evento -> {
@@ -451,7 +402,224 @@ public class PanelTiposProcedimiento
                 }
         );
     }
+    
+    private void configurarTablaTipos() {
 
+        Estilos.estilizarTabla(
+                tablaTipos
+        );
+
+        tablaTipos.setRowHeight(
+                38
+        );
+
+        tablaTipos.setSelectionMode(
+                javax.swing.ListSelectionModel.SINGLE_SELECTION
+        );
+
+        tablaTipos.getTableHeader().setReorderingAllowed(
+                false
+        );
+
+        tablaTipos.getColumnModel()
+                .getColumn(0)
+                .setPreferredWidth(700);
+
+        tablaTipos.getColumnModel()
+                .getColumn(1)
+                .setPreferredWidth(120);
+
+        tablaTipos.getColumnModel()
+                .getColumn(1)
+                .setMaxWidth(120);
+        tablaTipos.getColumnModel()
+                .getColumn(1)
+                .setCellRenderer(
+                        new RenderizadorAcciones()
+                );
+
+        tablaTipos.getColumnModel()
+                .getColumn(1)
+                .setCellEditor(
+                        new EditorAcciones()
+                );
+        tablaTipos.addMouseMotionListener(
+                new java.awt.event.MouseMotionAdapter() {
+
+                    @Override
+                    public void mouseMoved(
+                            java.awt.event.MouseEvent evento
+                    ) {
+
+                        int columna =
+                                tablaTipos.columnAtPoint(
+                                        evento.getPoint()
+                                );
+
+                        tablaTipos.setCursor(
+                                new java.awt.Cursor(
+                                        columna == 1
+                                                ? java.awt.Cursor.HAND_CURSOR
+                                                : java.awt.Cursor.DEFAULT_CURSOR
+                                )
+                        );
+                    }
+                }
+        );
+
+        tablaTipos.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evento
+                    ) {
+
+                        tablaTipos.setCursor(
+                                new java.awt.Cursor(
+                                        java.awt.Cursor.DEFAULT_CURSOR
+                                )
+                        );
+                    }
+                }
+        );
+    }
+    
+    
+
+    private void cargarTablaTipos() {
+
+        modeloTablaTipos.setRowCount(
+                0
+        );
+
+        for (String tipo
+                : TipoProcedimientoController.listarTipos()) {
+
+            modeloTablaTipos.addRow(
+                    new Object[]{
+                        tipo,
+                        ""
+                    }
+            );
+        }
+    }
+    private void editarTipoTabla(
+            String nombreActual
+    ) {
+
+        String nombreNuevo =
+                Estilos.solicitarTexto(
+                        this,
+                        "Editar tipo",
+                        "Nuevo nombre del tipo:",
+                        nombreActual
+                );
+
+        if (nombreNuevo == null) {
+            return;
+        }
+
+        nombreNuevo =
+                nombreNuevo.trim()
+                        .replaceAll(
+                                "\\s+",
+                                " "
+                        );
+
+        if (nombreNuevo.isEmpty()) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "Ingresá el nuevo nombre del tipo"
+            );
+
+            return;
+        }
+
+        if (nombreActual.equalsIgnoreCase(
+                nombreNuevo
+        )) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "Modificá el nombre antes de guardar"
+            );
+
+            return;
+        }
+
+        boolean editado =
+                TipoProcedimientoController.editarTipo(
+                        nombreActual,
+                        nombreNuevo
+                );
+
+        if (!editado) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "No se pudo editar. Es posible que el nuevo nombre ya exista"
+            );
+
+            return;
+        }
+
+        cargarTipos();
+        cargarTablaTipos();
+
+        Estilos.mostrarAdvertencia(
+                this,
+                "Operación exitosa",
+                "Tipo de procedimiento editado correctamente"
+        );
+    }
+
+    private void eliminarTipoTabla(
+            String tipoSeleccionado
+    ) {
+
+        boolean confirmado =
+                Estilos.mostrarConfirmacion(
+                        this,
+                        "Confirmar eliminación",
+                        "¿Deseás eliminar el tipo "
+                        + tipoSeleccionado
+                        + "?"
+                );
+
+        if (!confirmado) {
+            return;
+        }
+
+        boolean eliminado =
+                TipoProcedimientoController.eliminarTipo(
+                        tipoSeleccionado
+                );
+
+        if (!eliminado) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Error",
+                    "No se pudo eliminar el tipo de procedimiento"
+            );
+
+            return;
+        }
+
+        cargarTipos();
+        cargarTablaTipos();
+
+        Estilos.mostrarAdvertencia(
+                this,
+                "Operación exitosa",
+                "Tipo de procedimiento eliminado correctamente"
+        );
+    }
     private void cargarTipos() {
 
         modeloTipos.clear();
@@ -504,7 +672,7 @@ public class PanelTiposProcedimiento
         txtNuevoTipo.setText("");
 
         cargarTipos();
-
+        cargarTablaTipos();
         Estilos.mostrarAdvertencia(
                 this,
                 "Operación exitosa",
@@ -561,7 +729,7 @@ public class PanelTiposProcedimiento
         }
 
         cargarTipos();
-
+        cargarTablaTipos();
         Estilos.mostrarAdvertencia(
                 this,
                 "Operación exitosa",
@@ -662,6 +830,216 @@ public class PanelTiposProcedimiento
                 this,
                 "Operación exitosa",
                 "Tipo de procedimiento editado correctamente"
+        );
+    }
+    private class RenderizadorAcciones
+            extends javax.swing.JPanel
+            implements javax.swing.table.TableCellRenderer {
+
+        private final javax.swing.JButton btnEditar =
+                new javax.swing.JButton();
+
+        private final javax.swing.JButton btnEliminar =
+                new javax.swing.JButton();
+
+        public RenderizadorAcciones() {
+
+            setLayout(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            5,
+                            4
+                    )
+            );
+
+            setOpaque(true);
+
+            configurarBotonAccion(
+                    btnEditar,
+                    new java.awt.Color(
+                            70,
+                            145,
+                            215
+                    ),
+                    "/imagenes/iconos/editar.png"
+            );
+
+            configurarBotonAccion(
+                    btnEliminar,
+                    new java.awt.Color(
+                            210,
+                            70,
+                            70
+                    ),
+                    "/imagenes/iconos/eliminar.png"
+            );
+
+            add(btnEditar);
+            add(btnEliminar);
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                boolean tieneFoco,
+                int fila,
+                int columna
+        ) {
+
+            setBackground(
+                    seleccionado
+                            ? tabla.getSelectionBackground()
+                            : tabla.getBackground()
+            );
+
+            return this;
+        }
+    }
+
+    private class EditorAcciones
+            extends javax.swing.AbstractCellEditor
+            implements javax.swing.table.TableCellEditor {
+
+        private final javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                5,
+                                4
+                        )
+                );
+
+        private final javax.swing.JButton btnEditar =
+                new javax.swing.JButton();
+
+        private final javax.swing.JButton btnEliminar =
+                new javax.swing.JButton();
+
+        private String tipoSeleccionado;
+
+        public EditorAcciones() {
+
+            panel.setOpaque(true);
+
+            configurarBotonAccion(
+                    btnEditar,
+                    new java.awt.Color(
+                            70,
+                            145,
+                            215
+                    ),
+                    "/imagenes/iconos/editar.png"
+            );
+
+            configurarBotonAccion(
+                    btnEliminar,
+                    new java.awt.Color(
+                            210,
+                            70,
+                            70
+                    ),
+                    "/imagenes/iconos/eliminar.png"
+            );
+
+            panel.add(btnEditar);
+            panel.add(btnEliminar);
+
+            btnEditar.addActionListener(
+                    evento -> {
+
+                        fireEditingStopped();
+
+                        editarTipoTabla(
+                                tipoSeleccionado
+                        );
+                    }
+            );
+
+            btnEliminar.addActionListener(
+                    evento -> {
+
+                        fireEditingStopped();
+
+                        eliminarTipoTabla(
+                                tipoSeleccionado
+                        );
+                    }
+            );
+        }
+
+        @Override
+        public java.awt.Component getTableCellEditorComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                int fila,
+                int columna
+        ) {
+
+            tipoSeleccionado =
+                    tabla.getValueAt(
+                            fila,
+                            0
+                    ).toString();
+
+            panel.setBackground(
+                    tabla.getSelectionBackground()
+            );
+
+            return panel;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+
+            return "";
+        }
+    }
+
+    private void configurarBotonAccion(
+            javax.swing.JButton boton,
+            java.awt.Color color,
+            String rutaIcono
+    ) {
+
+        java.awt.Dimension tamañoBoton =
+                new java.awt.Dimension(
+                        28,
+                        26
+                );
+
+        boton.setPreferredSize(
+                tamañoBoton
+        );
+
+        boton.setMinimumSize(
+                tamañoBoton
+        );
+
+        boton.setMaximumSize(
+                tamañoBoton
+        );
+
+        boton.setBackground(
+                color
+        );
+
+        boton.setFocusPainted(false);
+        boton.setBorderPainted(false);
+
+        boton.setCursor(
+                new java.awt.Cursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        Estilos.aplicarIcono(
+                boton,
+                rutaIcono,
+                14,
+                14
         );
     }
 }

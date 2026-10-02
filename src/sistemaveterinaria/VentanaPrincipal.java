@@ -29,6 +29,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblFlechaProcedimientos;
     private boolean submenuProcedimientosVisible = false;
     private javax.swing.JPanel panelSuperior;
+    private javax.swing.JButton btnAuditoria;
     private javax.swing.JPanel contenedorNotificaciones;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
     private VentanaPrincipal ventanaPrincipal;
@@ -57,7 +58,26 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         revisarAlertasProductos();
         revisarAlertasTurnos();
     }
-    
+    private boolean bloquearAccesoVeterinario(
+            String modulo
+    ) {
+
+        if (!"VETERINARIO".equalsIgnoreCase(
+                rolUsuario
+        )) {
+
+            return false;
+        }
+
+        Estilos.mostrarAdvertencia(
+                this,
+                "Acceso denegado",
+                "El veterinario no tiene permisos para acceder a "
+                + modulo
+        );
+
+        return true;
+    }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -253,11 +273,25 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
+         if (bloquearAccesoVeterinario(
+                "la gestión de productos"
+        )) {
+
+            return;
+        }
+
         mostrarProductos();
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentasActionPerformed
-        mostrarVentas();
+        if (bloquearAccesoVeterinario(
+               "la gestión de ventas"
+       )) {
+
+           return;
+       }
+
+       mostrarVentas();
     }//GEN-LAST:event_btnVentasActionPerformed
 
     private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
@@ -268,6 +302,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         "No tiene permisos para acceder a la gestión de usuarios"
                 );
             }
+
+            btnUsuarios.setBackground(
+                    new java.awt.Color(
+                            70,
+                            145,
+                            215
+                    )
+            );
 
             mostrarUsuarios();
 
@@ -357,10 +399,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void btnAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlertasActionPerformed
         mostrarAlertas();
+        btnAlertas.setBackground(
+                new java.awt.Color(
+                        243,
+                        156,
+                        18
+                )
+        );
     }//GEN-LAST:event_btnAlertasActionPerformed
 
     private void btnReportesVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesVentasActionPerformed
-           mostrarReportes();
+        if (bloquearAccesoVeterinario(
+                "los reportes"
+        )) {
+
+            return;
+        }
+
+        mostrarReportes();
     }//GEN-LAST:event_btnReportesVentasActionPerformed
     
     private void revisarAlertasProductos() {
@@ -988,7 +1044,72 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 );
 
         panelAccesos.setOpaque(false);
+        btnAuditoria =
+                new javax.swing.JButton(
+                        "Auditoría"
+                );
 
+        Estilos.estilizarBoton(
+                btnAuditoria
+        );
+        btnAuditoria.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseEntered(
+                            java.awt.event.MouseEvent evento
+                    ) {
+
+                        btnAuditoria.setBackground(
+                                new java.awt.Color(
+                                        25,
+                                        135,
+                                        95
+                                )
+                        );
+                    }
+
+                    @Override
+                    public void mouseExited(
+                            java.awt.event.MouseEvent evento
+                    ) {
+
+                        btnAuditoria.setBackground(
+                                Estilos.VERDE_OSCURO
+                        );
+                    }
+                }
+        );
+        Estilos.aplicarIcono(
+                btnAuditoria,
+                "/imagenes/iconos/historial.png",
+                18,
+                18
+        );
+
+        btnAuditoria.addActionListener(
+                evento -> {
+
+                    if (!"ADMINISTRADOR".equalsIgnoreCase(
+                            rolUsuario
+                    )) {
+
+                        Estilos.mostrarAdvertencia(
+                                this,
+                                "Acceso denegado",
+                                "Solo los administradores pueden acceder a la auditoría"
+                        );
+
+                        return;
+                    }
+
+                    btnAuditoria.setBackground(
+                            Estilos.VERDE_OSCURO
+                    );
+
+                    mostrarAuditoria();
+                }
+        );
         Estilos.estilizarBotonVencidos(
                 btnAlertas
         );
@@ -1003,9 +1124,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         btnUsuarios.setPreferredSize(
                 new java.awt.Dimension(145, 40)
         );
+        btnAuditoria.setPreferredSize(
+                new java.awt.Dimension(
+                        145,
+                        40
+                )
+        );
+        panelAccesos.add(
+                btnAlertas
+        );
 
-        panelAccesos.add(btnAlertas);
-        panelAccesos.add(btnUsuarios);
+        panelAccesos.add(
+                btnAuditoria
+        );
+
+        panelAccesos.add(
+                btnUsuarios
+        );
 
         panelSuperior.add(
                 panelSesion,
@@ -2709,7 +2844,36 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelContenido.repaint();
     }
     
-    
+    public void mostrarAuditoria() {
+
+        if (!"ADMINISTRADOR".equalsIgnoreCase(
+                rolUsuario
+        )) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Acceso denegado",
+                    "Solo los administradores pueden acceder a la auditoría"
+            );
+
+            return;
+        }
+
+        PanelAuditoria panelAuditoria =
+                new PanelAuditoria(
+                        this
+                );
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                panelAuditoria,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(() -> new VentanaLogin().setVisible(true));
