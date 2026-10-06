@@ -603,4 +603,79 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
 
         return false;
     }
+    public Usuario buscarPorNombreUsuario(
+            String nombreUsuario
+    ) {
+
+        Connection conn = null;
+
+        try {
+
+            conn = Conexion.getInstancia().conectar();
+
+            String sql =
+                    "SELECT id_usuario, usuario, rol, correo "
+                    + "FROM usuarios "
+                    + "WHERE LOWER(usuario) = LOWER(?) "
+                    + "LIMIT 1";
+
+            PreparedStatement pst =
+                    conn.prepareStatement(sql);
+
+            pst.setString(
+                    1,
+                    nombreUsuario.trim()
+            );
+
+            ResultSet rs =
+                    pst.executeQuery();
+
+            if (rs.next()) {
+
+                Usuario usuario =
+                        new Usuario(
+                                rs.getInt("id_usuario"),
+                                rs.getString("usuario"),
+                                ""
+                        );
+
+                usuario.setRol(
+                        rs.getString("rol")
+                );
+
+                usuario.setCorreo(
+                        rs.getString("correo")
+                );
+
+                rs.close();
+                pst.close();
+
+                return usuario;
+            }
+
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al obtener el usuario actual: "
+                    + e.getMessage()
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
 }

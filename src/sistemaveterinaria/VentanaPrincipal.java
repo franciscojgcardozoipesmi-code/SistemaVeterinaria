@@ -30,6 +30,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private boolean submenuProcedimientosVisible = false;
     private javax.swing.JPanel panelSuperior;
     private javax.swing.JButton btnAuditoria;
+    private javax.swing.JButton btnPerfil;
     private javax.swing.JPanel contenedorNotificaciones;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
     private VentanaPrincipal ventanaPrincipal;
@@ -421,35 +422,48 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     
     private void revisarAlertasProductos() {
 
-            int cantidad =
-                    ProductoController.contarProximosAVencer();
+        int cantidad =
+                ProductoController.contarProximosAVencer();
 
-            if (cantidad > 0) {
+        boolean panelNotificacionesVisible =
+                contenedorNotificaciones != null
+                && contenedorNotificaciones.getParent()
+                        == panelContenido;
+
+        if (cantidad > 0) {
+
+            if (panelNotificacionesVisible) {
 
                 lblAlertaProductos.setText(
                         cantidad
                         + " producto(s) por vencer"
                 );
+            }
 
-                if (!alertaProductosMostrada) {
+            if (!alertaProductosMostrada) {
 
-                    Estilos.mostrarAdvertencia(
-                            this,
-                            "Alerta de vencimiento",
-                            "Hay " + cantidad
-                            + " producto(s) que vencen en los próximos 7 días."
-                    );
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Alerta de vencimiento",
+                        "Hay "
+                        + cantidad
+                        + " producto(s) que vencen en los próximos 7 días."
+                );
 
-                    alertaProductosMostrada = true;
-                }
+                alertaProductosMostrada =
+                        true;
+            }
 
-            } else {
+        } else {
+
+            if (panelNotificacionesVisible) {
 
                 lblAlertaProductos.setText(
-                        "Sin productos próximos a vencer"
+                        "Sin productos por vencer"
                 );
             }
         }
+    }
 
         private void revisarAlertasTurnos() {
 
@@ -978,14 +992,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelSesion.setBackground(
                 Estilos.BLANCO
         );
-
-        panelSesion.setPreferredSize(
-                new java.awt.Dimension(
-                        245,
-                        42
-                )
-        );
-
+       
         panelSesion.setBorder(
                 javax.swing.BorderFactory.createCompoundBorder(
                         javax.swing.BorderFactory.createMatteBorder(
@@ -1015,14 +1022,35 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 )
         );
 
-        String rolMostrado =
-                rolUsuario == null
-                ? ""
-                : rolUsuario.toLowerCase();
+        String nombreCuenta =
+                SesionUsuario.getNombreUsuario();
 
-        lblRolSesion = new javax.swing.JLabel(
-                "Sesión actual: " + rolMostrado
-        );
+        String rolMostrado =
+                SesionUsuario.getRol();
+
+        if (nombreCuenta == null
+                || nombreCuenta.isBlank()) {
+
+            nombreCuenta =
+                    "Sin usuario";
+        }
+
+        if (rolMostrado == null
+                || rolMostrado.isBlank()) {
+
+            rolMostrado =
+                    rolUsuario == null
+                            ? "Sin rol"
+                            : rolUsuario;
+        }
+
+        lblRolSesion =
+                new javax.swing.JLabel(
+                        "Sesión actual: "
+                        + nombreCuenta
+                        + "  |  Rol: "
+                        + rolMostrado.toLowerCase()
+                );
 
         lblRolSesion.setFont(
                 Estilos.fuente(13f)
@@ -1033,6 +1061,58 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         );
 
         panelSesion.add(lblRolSesion);
+                btnPerfil =
+                new javax.swing.JButton();
+
+        btnPerfil.setToolTipText(
+                "Ver información de mi cuenta"
+        );
+
+        Estilos.estilizarBoton(
+                btnPerfil
+        );
+
+        Estilos.aplicarIcono(
+                btnPerfil,
+                "/imagenes/iconos/usuarios.png",
+                18,
+                18
+        );
+
+        java.awt.Dimension tamañoPerfil =
+                new java.awt.Dimension(
+                        38,
+                        32
+                );
+
+        btnPerfil.setPreferredSize(
+                tamañoPerfil
+        );
+
+        btnPerfil.setMinimumSize(
+                tamañoPerfil
+        );
+
+        btnPerfil.setMaximumSize(
+                tamañoPerfil
+        );
+
+        btnPerfil.setMargin(
+                new java.awt.Insets(
+                        0,
+                        0,
+                        0,
+                        0
+                )
+        );
+
+        btnPerfil.addActionListener(
+                evento -> mostrarInformacionUsuario()
+        );
+
+        panelSesion.add(
+                btnPerfil
+        );
 
         javax.swing.JPanel panelAccesos =
                 new javax.swing.JPanel(
@@ -1417,8 +1497,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         javax.swing.JPanel panelMensajeTurnos =
                 new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.LEFT,
+                        new java.awt.BorderLayout(
                                 8,
                                 0
                         )
@@ -1442,8 +1521,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         lblCampanaTurnos.setOpaque(false);
         lblCampanaTurnos.setBorder(null);
 
-        panelMensajeTurnos.add(lblCampanaTurnos);
-        panelMensajeTurnos.add(lblAlertaTurnos);
+        panelMensajeTurnos.add(
+                lblCampanaTurnos,
+                java.awt.BorderLayout.WEST
+        );
+
+        panelMensajeTurnos.add(
+                lblAlertaTurnos,
+                java.awt.BorderLayout.CENTER
+        );
 
         tarjetaTurnos.add(
                 panelMensajeTurnos,
@@ -1546,8 +1632,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         javax.swing.JPanel panelMensajeProductos =
                 new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.LEFT,
+                        new java.awt.BorderLayout(
                                 8,
                                 0
                         )
@@ -1563,8 +1648,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         lblCampanaProductos.setOpaque(false);
         lblCampanaProductos.setBorder(null);
 
-        panelMensajeProductos.add(lblCampanaProductos);
-        panelMensajeProductos.add(lblAlertaProductos);
+        panelMensajeProductos.add(
+                lblCampanaProductos,
+                java.awt.BorderLayout.WEST
+        );
+
+        panelMensajeProductos.add(
+                lblAlertaProductos,
+                java.awt.BorderLayout.CENTER
+        );
 
         tarjetaProductos.add(
                 panelMensajeProductos,
@@ -2873,6 +2965,344 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         panelContenido.revalidate();
         panelContenido.repaint();
+    }
+    
+    private void mostrarInformacionUsuario() {
+
+        modelo.Usuario usuarioActual =
+                controller.UsuarioController
+                        .obtenerUsuarioPorNombre(
+                                SesionUsuario.getNombreUsuario()
+                        );
+
+        if (usuarioActual == null) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Mi perfil",
+                    "No se pudo obtener la información de la cuenta"
+            );
+
+            return;
+        }
+
+        String correo =
+                usuarioActual.getCorreo();
+
+        if (correo == null
+                || correo.isBlank()) {
+
+            correo =
+                    "No registrado";
+        }
+
+        String rol =
+                usuarioActual.getRol();
+
+        if (rol == null
+                || rol.isBlank()) {
+
+            rol =
+                    "Sin rol";
+        }
+
+        javax.swing.JDialog dialogo =
+                new javax.swing.JDialog(
+                        this,
+                        true
+                );
+
+        dialogo.setUndecorated(
+                true
+        );
+
+        javax.swing.JPanel panelPrincipal =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelPrincipal.setBackground(
+                Estilos.BLANCO
+        );
+
+        panelPrincipal.setBorder(
+                javax.swing.BorderFactory.createLineBorder(
+                        Estilos.VERDE_OSCURO,
+                        1
+                )
+        );
+
+        javax.swing.JLabel titulo =
+                new javax.swing.JLabel(
+                        "Mi perfil",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        titulo.setFont(
+                Estilos.fuente(17f)
+        );
+
+        titulo.setForeground(
+                Estilos.BLANCO
+        );
+
+        titulo.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        12,
+                        20,
+                        12,
+                        20
+                )
+        );
+
+        javax.swing.JPanel panelTitulo =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout()
+                );
+
+        panelTitulo.setBackground(
+                Estilos.VERDE_OSCURO
+        );
+
+        panelTitulo.add(
+                titulo,
+                java.awt.BorderLayout.CENTER
+        );
+
+        javax.swing.JPanel panelInformacion =
+                new javax.swing.JPanel(
+                        new java.awt.GridBagLayout()
+                );
+
+        panelInformacion.setBackground(
+                Estilos.BLANCO
+        );
+
+        panelInformacion.setBorder(
+                javax.swing.BorderFactory.createEmptyBorder(
+                        15,
+                        30,
+                        15,
+                        30
+                )
+        );
+
+        javax.swing.JLabel lblNombreTitulo =
+                new javax.swing.JLabel(
+                        "Nombre de usuario:",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        javax.swing.JLabel lblNombreValor =
+                new javax.swing.JLabel(
+                        usuarioActual.getUsuario(),
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        javax.swing.JLabel lblCorreoTitulo =
+                new javax.swing.JLabel(
+                        "Correo electrónico:",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        javax.swing.JLabel lblCorreoValor =
+                new javax.swing.JLabel(
+                        correo,
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        javax.swing.JLabel lblRolTitulo =
+                new javax.swing.JLabel(
+                        "Rol en el sistema:",
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        javax.swing.JLabel lblRolValor =
+                new javax.swing.JLabel(
+                        rol,
+                        javax.swing.SwingConstants.CENTER
+                );
+
+        javax.swing.JLabel[] textos = {
+            lblNombreTitulo,
+            lblNombreValor,
+            lblCorreoTitulo,
+            lblCorreoValor,
+            lblRolTitulo,
+            lblRolValor
+        };
+
+        for (javax.swing.JLabel texto : textos) {
+
+            texto.setFont(
+                    Estilos.fuente(13f)
+            );
+
+            texto.setForeground(
+                    Estilos.VERDE_OSCURO
+            );
+        }
+
+        java.awt.GridBagConstraints datosGbc =
+                new java.awt.GridBagConstraints();
+
+        datosGbc.gridx = 0;
+        datosGbc.weightx = 1;
+        datosGbc.fill =
+                java.awt.GridBagConstraints.HORIZONTAL;
+
+        datosGbc.gridy = 0;
+        datosGbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        5,
+                        10
+                );
+
+        panelInformacion.add(
+                lblNombreTitulo,
+                datosGbc
+        );
+
+        datosGbc.gridy = 1;
+        datosGbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        18,
+                        10
+                );
+
+        panelInformacion.add(
+                lblNombreValor,
+                datosGbc
+        );
+
+        datosGbc.gridy = 2;
+        datosGbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        5,
+                        10
+                );
+
+        panelInformacion.add(
+                lblCorreoTitulo,
+                datosGbc
+        );
+
+        datosGbc.gridy = 3;
+        datosGbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        18,
+                        10
+                );
+
+        panelInformacion.add(
+                lblCorreoValor,
+                datosGbc
+        );
+
+        datosGbc.gridy = 4;
+        datosGbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        5,
+                        10
+                );
+
+        panelInformacion.add(
+                lblRolTitulo,
+                datosGbc
+        );
+
+        datosGbc.gridy = 5;
+        datosGbc.insets =
+                new java.awt.Insets(
+                        0,
+                        10,
+                        0,
+                        10
+                );
+
+        panelInformacion.add(
+                lblRolValor,
+                datosGbc
+        );
+
+        javax.swing.JButton btnAceptar =
+                new javax.swing.JButton(
+                        "Aceptar"
+                );
+
+        Estilos.estilizarBoton(
+                btnAceptar
+        );
+
+        btnAceptar.setPreferredSize(
+                new java.awt.Dimension(
+                        110,
+                        38
+                )
+        );
+
+        btnAceptar.addActionListener(
+                evento -> dialogo.dispose()
+        );
+
+        javax.swing.JPanel panelBoton =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                10
+                        )
+                );
+
+        panelBoton.setBackground(
+                Estilos.BLANCO
+        );
+
+        panelBoton.add(
+                btnAceptar
+        );
+
+        panelPrincipal.add(
+                panelTitulo,
+                java.awt.BorderLayout.NORTH
+        );
+
+        panelPrincipal.add(
+                panelInformacion,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelPrincipal.add(
+                panelBoton,
+                java.awt.BorderLayout.SOUTH
+        );
+
+        dialogo.setContentPane(
+                panelPrincipal
+        );
+
+        dialogo.setSize(
+                400,
+                315
+        );
+
+        dialogo.setLocationRelativeTo(
+                this
+        );
+
+        dialogo.setVisible(
+                true
+        );
     }
     public static void main(String args[]) {
 

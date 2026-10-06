@@ -321,4 +321,18 @@ public class UsuarioController {
             return false;
         }
     }
+    public static Usuario obtenerUsuarioPorNombre(
+            String nombreUsuario
+    ) {
+
+        if (nombreUsuario == null
+                || nombreUsuario.trim().isEmpty()) {
+
+            return null;
+        }
+
+        return usuarioDAO.buscarPorNombreUsuario(
+                nombreUsuario
+        );
+    }
 }
