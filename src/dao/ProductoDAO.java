@@ -11,30 +11,81 @@ import java.util.HashMap;
 import sistemaveterinaria.Conexion;
 
 public class ProductoDAO implements CrudDAO<Producto> {
+    public ProductoDAO() {
 
+        new MarcaDAO();
+    }
     @Override
-    public void guardar(Producto producto) {
+    public void guardar(
+            Producto producto
+    ) {
 
         Connection conn = null;
 
         try {
 
-            conn = Conexion.getInstancia().conectar();
+            conn =
+                    Conexion.getInstancia()
+                            .conectar();
 
-            boolean editando = (producto.getIdProducto() != -1);
+            int idMarca =
+                    producto.getIdMarca();
+
+            if (idMarca <= 0) {
+
+                idMarca =
+                        obtenerIdSinMarca(
+                                conn
+                        );
+            }
+
+            boolean editando =
+                    producto.getIdProducto()
+                    != -1;
 
             if (editando) {
 
                 String sql =
-                        "UPDATE productos SET nombre=?, precio=?, stock=?, fecha_vencimiento=? WHERE id_producto=?";
+                        "UPDATE productos "
+                        + "SET nombre = ?, "
+                        + "precio = ?, "
+                        + "stock = ?, "
+                        + "fecha_vencimiento = ?, "
+                        + "id_marca = ? "
+                        + "WHERE id_producto = ?";
 
-                PreparedStatement pst = conn.prepareStatement(sql);
+                PreparedStatement pst =
+                        conn.prepareStatement(sql);
 
-                pst.setString(1, producto.getNombre());
-                pst.setDouble(2, producto.getPrecio());
-                pst.setInt(3, producto.getStock());
-                pst.setString(4, producto.getFechaVencimiento());
-                pst.setInt(5, producto.getIdProducto());
+                pst.setString(
+                        1,
+                        producto.getNombre()
+                );
+
+                pst.setDouble(
+                        2,
+                        producto.getPrecio()
+                );
+
+                pst.setInt(
+                        3,
+                        producto.getStock()
+                );
+
+                pst.setString(
+                        4,
+                        producto.getFechaVencimiento()
+                );
+
+                pst.setInt(
+                        5,
+                        idMarca
+                );
+
+                pst.setInt(
+                        6,
+                        producto.getIdProducto()
+                );
 
                 pst.executeUpdate();
                 pst.close();
@@ -42,14 +93,38 @@ public class ProductoDAO implements CrudDAO<Producto> {
             } else {
 
                 String sql =
-                        "INSERT INTO productos (nombre, precio, stock, fecha_vencimiento) VALUES (?, ?, ?, ?)";
+                        "INSERT INTO productos "
+                        + "(nombre, precio, stock, "
+                        + "fecha_vencimiento, id_marca) "
+                        + "VALUES (?, ?, ?, ?, ?)";
 
-                PreparedStatement pst = conn.prepareStatement(sql);
+                PreparedStatement pst =
+                        conn.prepareStatement(sql);
 
-                pst.setString(1, producto.getNombre());
-                pst.setDouble(2, producto.getPrecio());
-                pst.setInt(3, producto.getStock());
-                pst.setString(4, producto.getFechaVencimiento());
+                pst.setString(
+                        1,
+                        producto.getNombre()
+                );
+
+                pst.setDouble(
+                        2,
+                        producto.getPrecio()
+                );
+
+                pst.setInt(
+                        3,
+                        producto.getStock()
+                );
+
+                pst.setString(
+                        4,
+                        producto.getFechaVencimiento()
+                );
+
+                pst.setInt(
+                        5,
+                        idMarca
+                );
 
                 pst.executeUpdate();
                 pst.close();
@@ -57,7 +132,10 @@ public class ProductoDAO implements CrudDAO<Producto> {
 
         } catch (Exception e) {
 
-            System.out.println("Error: " + e);
+            System.out.println(
+                    "Error al guardar producto: "
+                    + e.getMessage()
+            );
 
         } finally {
 
@@ -72,7 +150,37 @@ public class ProductoDAO implements CrudDAO<Producto> {
             }
         }
     }
+    private int obtenerIdSinMarca(
+            Connection conn
+    ) throws Exception {
 
+        String sql =
+                "SELECT id_marca "
+                + "FROM marcas "
+                + "WHERE LOWER(nombre) = "
+                + "LOWER('Sin marca')";
+
+        PreparedStatement pst =
+                conn.prepareStatement(sql);
+
+        ResultSet rs =
+                pst.executeQuery();
+
+        int idMarca = -1;
+
+        if (rs.next()) {
+
+            idMarca =
+                    rs.getInt(
+                            "id_marca"
+                    );
+        }
+
+        rs.close();
+        pst.close();
+
+        return idMarca;
+    }
     @Override
     public ArrayList<Producto> listar() {
 
@@ -83,7 +191,13 @@ public class ProductoDAO implements CrudDAO<Producto> {
 
             conn = Conexion.getInstancia().conectar();
 
-            String sql = "SELECT * FROM productos";
+            String sql =
+                    "SELECT p.*, "
+                    + "m.nombre AS nombre_marca "
+                    + "FROM productos p "
+                    + "LEFT JOIN marcas m "
+                    + "ON p.id_marca = m.id_marca "
+                    + "ORDER BY p.nombre";
 
             java.sql.Statement st = conn.createStatement();
             java.sql.ResultSet rs = st.executeQuery(sql);
@@ -101,7 +215,17 @@ public class ProductoDAO implements CrudDAO<Producto> {
                 producto.setFechaVencimiento(
                         rs.getString("fecha_vencimiento")
                 );
+                producto.setIdMarca(
+                        rs.getInt(
+                                "id_marca"
+                        )
+                );
 
+                producto.setNombreMarca(
+                        rs.getString(
+                                "nombre_marca"
+                        )
+                );
                 lista.add(producto);
             }
 
@@ -142,10 +266,15 @@ public class ProductoDAO implements CrudDAO<Producto> {
                     Conexion.getInstancia().conectar();
 
             String sql =
-                    "SELECT * FROM productos "
-                    + "WHERE CAST(id_producto AS TEXT) LIKE ? "
-                    + "OR LOWER(nombre) LIKE LOWER(?) "
-                    + "ORDER BY nombre";
+                    "SELECT p.*, "
+                    + "m.nombre AS nombre_marca "
+                    + "FROM productos p "
+                    + "LEFT JOIN marcas m "
+                    + "ON p.id_marca = m.id_marca "
+                    + "WHERE CAST(p.id_producto AS TEXT) LIKE ? "
+                    + "OR LOWER(p.nombre) LIKE LOWER(?) "
+                    + "OR LOWER(COALESCE(m.nombre, '')) LIKE LOWER(?) "
+                    + "ORDER BY p.nombre";
 
             PreparedStatement pst =
                     conn.prepareStatement(sql);
@@ -162,7 +291,10 @@ public class ProductoDAO implements CrudDAO<Producto> {
                     2,
                     busqueda
             );
-
+            pst.setString(
+                    3,
+                    busqueda
+            );
             ResultSet rs =
                     pst.executeQuery();
 
@@ -189,7 +321,17 @@ public class ProductoDAO implements CrudDAO<Producto> {
                                 "fecha_vencimiento"
                         )
                 );
+                producto.setIdMarca(
+                        rs.getInt(
+                                "id_marca"
+                        )
+                );
 
+                producto.setNombreMarca(
+                        rs.getString(
+                                "nombre_marca"
+                        )
+                );
                 lista.add(
                         producto
                 );

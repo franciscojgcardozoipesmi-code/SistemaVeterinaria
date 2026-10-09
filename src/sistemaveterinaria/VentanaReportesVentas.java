@@ -4,7 +4,8 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
     private String rolUsuario;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaReportesVentas.class.getName());
     private VentanaPrincipal ventanaPrincipal;
-  
+    private final PanelGraficoVentas panelGraficoVentas =
+        new PanelGraficoVentas();
     public VentanaReportesVentas() {
         initComponents();
 
@@ -382,9 +383,11 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
                     "Cantidad de ventas: "
                     + ventasContadas.size()
             );
-
+            panelGraficoVentas.actualizarDatos(
+                    cantidadesPorProducto
+            );
         } catch (Exception e) {
-
+            
             Estilos.mostrarAdvertencia(
                     this,
                     "Error",
@@ -1021,10 +1024,10 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
 
         panelResumen.setLayout(
                 new java.awt.GridLayout(
-                        3,
-                        2,
-                        20,
-                        12
+                        5,
+                        1,
+                        0,
+                        6
                 )
         );
 
@@ -1067,8 +1070,35 @@ public class VentanaReportesVentas extends javax.swing.JFrame {
                 lblMedioPagoMasUtilizado
         );
 
-        tarjetaReporte.add(
+        panelResumen.setPreferredSize(
+                new java.awt.Dimension(
+                        380,
+                        175
+                )
+        );
+
+        javax.swing.JPanel panelZonaInferior =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                30,
+                                0
+                        )
+                );
+
+        panelZonaInferior.setOpaque(false);
+
+        panelZonaInferior.add(
                 panelResumen,
+                java.awt.BorderLayout.WEST
+        );
+
+        panelZonaInferior.add(
+                panelGraficoVentas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        tarjetaReporte.add(
+                panelZonaInferior,
                 java.awt.BorderLayout.SOUTH
         );
 

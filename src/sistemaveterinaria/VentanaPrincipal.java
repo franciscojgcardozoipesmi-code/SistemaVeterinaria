@@ -28,6 +28,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnTiposProcedimiento;
     private javax.swing.JLabel lblFlechaProcedimientos;
     private boolean submenuProcedimientosVisible = false;
+    private javax.swing.JPanel panelSubmenuProductos;
+    private javax.swing.JButton btnGestionProductos;
+    private javax.swing.JButton btnMarcas;
+    private javax.swing.JLabel lblFlechaProductos;
+    private boolean submenuProductosVisible = false;
     private javax.swing.JPanel panelSuperior;
     private javax.swing.JButton btnAuditoria;
     private javax.swing.JButton btnPerfil;
@@ -274,14 +279,42 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
-         if (bloquearAccesoVeterinario(
-                "la gestión de productos"
-        )) {
+            cerrarOtrosSubmenus(
+               panelSubmenuProductos
+       );
 
-            return;
-        }
+       submenuProductosVisible =
+               !submenuProductosVisible;
 
-        mostrarProductos();
+       panelSubmenuProductos.setVisible(
+               submenuProductosVisible
+       );
+
+       String rutaFlecha =
+               submenuProductosVisible
+                       ? "/imagenes/iconos/flecha_arriba.png"
+                       : "/imagenes/iconos/flecha_abajo.png";
+
+       javax.swing.ImageIcon iconoFlecha =
+               new javax.swing.ImageIcon(
+                       getClass().getResource(
+                               rutaFlecha
+                       )
+               );
+
+       lblFlechaProductos.setIcon(
+               new javax.swing.ImageIcon(
+                       iconoFlecha.getImage()
+                               .getScaledInstance(
+                                       18,
+                                       18,
+                                       java.awt.Image.SCALE_SMOOTH
+                               )
+               )
+       );
+
+       panelMenu.revalidate();
+       panelMenu.repaint();
     }//GEN-LAST:event_btnProductosActionPerformed
 
     private void btnVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentasActionPerformed
@@ -844,6 +877,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         configurarSubmenuAnimales();
         configurarSubmenuTurnos();
         configurarSubmenuProcedimientos();
+        configurarSubmenuProductos();
 
         panelMenu.add(btnAnimales);
         panelMenu.add(
@@ -879,7 +913,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 javax.swing.Box.createVerticalStrut(8)
         );
 
-        panelMenu.add(btnProductos);
+        panelMenu.add(
+                btnProductos
+        );
+
+        panelMenu.add(
+                panelSubmenuProductos
+        );
 
         panelMenu.add(
                 javax.swing.Box.createVerticalStrut(8)
@@ -912,7 +952,67 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 18,
                 18
         );
+        btnProductos.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
 
+        lblFlechaProductos =
+                new javax.swing.JLabel();
+
+        javax.swing.ImageIcon iconoFlechaProductos =
+                new javax.swing.ImageIcon(
+                        getClass().getResource(
+                                "/imagenes/iconos/flecha_abajo.png"
+                        )
+                );
+
+        lblFlechaProductos.setIcon(
+                new javax.swing.ImageIcon(
+                        iconoFlechaProductos
+                                .getImage()
+                                .getScaledInstance(
+                                        18,
+                                        18,
+                                        java.awt.Image.SCALE_SMOOTH
+                                )
+                )
+        );
+
+        btnProductos.setLayout(
+                null
+        );
+
+        lblFlechaProductos.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        lblFlechaProductos.setVerticalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        lblFlechaProductos.setBounds(
+                4,
+                0,
+                20,
+                38
+        );
+
+        btnProductos.add(
+                lblFlechaProductos
+        );
+
+        lblFlechaProductos.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+
+                    @Override
+                    public void mouseClicked(
+                            java.awt.event.MouseEvent evt
+                    ) {
+
+                        btnProductos.doClick();
+                    }
+                }
+        );
         java.awt.Dimension tamañoCerrarSesion =
                 new java.awt.Dimension(
                         280,
@@ -2306,6 +2406,167 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     flechaAbajo
             );
         }
+        if (submenuActivo != panelSubmenuProductos) {
+
+            submenuProductosVisible =
+                    false;
+
+            panelSubmenuProductos.setVisible(
+                    false
+            );
+
+            lblFlechaProductos.setIcon(
+                    flechaAbajo
+            );
+        }
+    }
+    private void configurarSubmenuProductos() {
+
+        panelSubmenuProductos =
+                new javax.swing.JPanel();
+
+        panelSubmenuProductos.setOpaque(
+                false
+        );
+
+        panelSubmenuProductos.setLayout(
+                new javax.swing.BoxLayout(
+                        panelSubmenuProductos,
+                        javax.swing.BoxLayout.Y_AXIS
+                )
+        );
+
+        btnGestionProductos =
+                new javax.swing.JButton(
+                        " • Gestión de productos"
+                );
+
+        btnMarcas =
+                new javax.swing.JButton(
+                        " • Marcas"
+                );
+
+        btnGestionProductos.setHorizontalAlignment(
+                javax.swing.SwingConstants.LEFT
+        );
+
+        btnMarcas.setHorizontalAlignment(
+                javax.swing.SwingConstants.LEFT
+        );
+
+        Estilos.estilizarBotonSubmenu(
+                btnGestionProductos
+        );
+
+        Estilos.estilizarBotonSubmenu(
+                btnMarcas
+        );
+
+        java.awt.Dimension tamañoSubmenu =
+                new java.awt.Dimension(
+                        270,
+                        32
+                );
+
+        btnGestionProductos.setPreferredSize(
+                tamañoSubmenu
+        );
+
+        btnGestionProductos.setMinimumSize(
+                tamañoSubmenu
+        );
+
+        btnGestionProductos.setMaximumSize(
+                tamañoSubmenu
+        );
+
+        btnMarcas.setPreferredSize(
+                tamañoSubmenu
+        );
+
+        btnMarcas.setMinimumSize(
+                tamañoSubmenu
+        );
+
+        btnMarcas.setMaximumSize(
+                tamañoSubmenu
+        );
+
+        btnGestionProductos.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        btnMarcas.setAlignmentX(
+                java.awt.Component.CENTER_ALIGNMENT
+        );
+
+        btnGestionProductos.setFont(
+                Estilos.fuente(12f)
+        );
+
+        btnMarcas.setFont(
+                Estilos.fuente(12f)
+        );
+
+        btnGestionProductos.setMargin(
+                new java.awt.Insets(
+                        0,
+                        12,
+                        0,
+                        2
+                )
+        );
+
+        btnMarcas.setMargin(
+                new java.awt.Insets(
+                        0,
+                        12,
+                        0,
+                        2
+                )
+        );
+
+        btnGestionProductos.addActionListener(
+                evento -> {
+
+                    if (bloquearAccesoVeterinario(
+                            "la gestión de productos"
+                    )) {
+
+                        return;
+                    }
+
+                    mostrarProductos();
+                }
+        );
+
+        btnMarcas.addActionListener(
+                evento -> mostrarMarcas()
+        );
+
+        panelSubmenuProductos.add(
+                javax.swing.Box.createVerticalStrut(5)
+        );
+
+        panelSubmenuProductos.add(
+                btnGestionProductos
+        );
+
+        panelSubmenuProductos.add(
+                javax.swing.Box.createVerticalStrut(5)
+        );
+
+        panelSubmenuProductos.add(
+                btnMarcas
+        );
+
+        panelSubmenuProductos.add(
+                javax.swing.Box.createVerticalStrut(3)
+        );
+
+        panelSubmenuProductos.setVisible(
+                false
+        );
     }
     public void mostrarAnimales() {
 
@@ -2723,6 +2984,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelContenido.revalidate();
         panelContenido.repaint();
     }
+    public void mostrarMarcas() {
+
+        javax.swing.JPanel marcas =
+                new PanelMarcas(
+                        this
+                );
+
+        panelContenido.removeAll();
+
+        panelContenido.add(
+                marcas,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }
     public void mostrarCrearProducto() {
 
         VentanaCrearProducto ventana =
@@ -2749,7 +3027,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             String nombre,
             double precio,
             int stock,
-            String fechaVencimiento
+            String fechaVencimiento,
+            String nombreMarca
     ) {
 
         VentanaCrearProducto ventana =
@@ -2763,7 +3042,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 nombre,
                 precio,
                 stock,
-                fechaVencimiento
+                fechaVencimiento,
+                nombreMarca
         );
 
         javax.swing.JPanel formulario =

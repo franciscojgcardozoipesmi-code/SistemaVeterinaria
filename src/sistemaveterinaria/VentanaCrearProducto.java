@@ -3,12 +3,21 @@ import controller.ProductoController;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import controller.MarcaController;
+import modelo.Marca;
 public class VentanaCrearProducto extends javax.swing.JFrame {
     
     private int idProducto = -1;
     private String rolUsuario;
     private javax.swing.JLabel lblTituloFormulario;
     private VentanaPrincipal ventanaPrincipal;
+    private final javax.swing.JLabel lblMarca =
+            new javax.swing.JLabel(
+                    "Marca"
+            );
+
+    private final javax.swing.JComboBox<Marca> cmbMarca =
+            new javax.swing.JComboBox<>();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaCrearProducto.class.getName());
 
     public VentanaCrearProducto() {
@@ -19,6 +28,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
         );
 
         aplicarDiseñoCrearEditarProductos();
+        cargarMarcas();
     }
 
     public VentanaCrearProducto(String rolUsuario) {
@@ -31,6 +41,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
         );
 
         aplicarDiseñoCrearEditarProductos();
+        cargarMarcas();
     }
     
     public VentanaCrearProducto(
@@ -44,6 +55,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
         this.ventanaPrincipal = ventanaPrincipal;
 
         aplicarDiseñoCrearEditarProductos();
+        cargarMarcas();
     }
 
  
@@ -162,11 +174,14 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
             String precioTexto = txtPrecio.getText();
             String stockTexto = txtStock.getText();
             String fechaTexto = txtFechaVencimiento.getText().trim();
+            Marca marcaSeleccionada =
+                    (Marca) cmbMarca.getSelectedItem();
 
             if (nombre.isEmpty()
                     || precioTexto.isEmpty()
                     || stockTexto.isEmpty()
-                    || fechaTexto.isEmpty()) {
+                    || fechaTexto.isEmpty()
+                    || marcaSeleccionada == null) {
 
                 Estilos.mostrarAdvertencia(
                         this,
@@ -185,9 +200,27 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
 
             String fechaVencimiento =
                     fecha.toString();
-            double precio = Double.parseDouble(precioTexto);
-            int stock = Integer.parseInt(stockTexto);
-            ProductoController.guardarProducto(nombre, precio, stock, fechaVencimiento, idProducto);
+            double precio =
+                    Double.parseDouble(
+                            precioTexto
+                    );
+
+            int stock =
+                    Integer.parseInt(
+                            stockTexto
+                    );
+
+            int idMarca =
+                    marcaSeleccionada.getIdMarca();
+
+            ProductoController.guardarProducto(
+                    nombre,
+                    precio,
+                    stock,
+                    fechaVencimiento,
+                    idProducto,
+                    idMarca
+            );
 
             Estilos.mostrarAdvertencia(
                     this,
@@ -260,6 +293,101 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
         setTitle(
                 "Henry System Vet - Editar producto"
         );
+    }
+    public void cargarDatos(
+            int idProducto,
+            String nombre,
+            double precio,
+            int stock,
+            String fechaVencimiento,
+            String nombreMarca
+    ) {
+
+        cargarDatos(
+                idProducto,
+                nombre,
+                precio,
+                stock,
+                fechaVencimiento
+        );
+
+        seleccionarMarcaPorNombre(
+                nombreMarca
+        );
+    }
+    private void cargarMarcas() {
+
+        Marca seleccionActual =
+                (Marca) cmbMarca.getSelectedItem();
+
+        int idSeleccionado =
+                seleccionActual == null
+                        ? -1
+                        : seleccionActual.getIdMarca();
+
+        cmbMarca.removeAllItems();
+
+        for (Marca marca
+                : MarcaController.listarMarcas()) {
+
+            cmbMarca.addItem(
+                    marca
+            );
+        }
+
+        if (idSeleccionado != -1) {
+
+            seleccionarMarca(
+                    idSeleccionado
+            );
+        }
+    }
+
+    private void seleccionarMarca(
+            int idMarca
+    ) {
+
+        for (int i = 0;
+                i < cmbMarca.getItemCount();
+                i++) {
+
+            Marca marca =
+                    cmbMarca.getItemAt(i);
+
+            if (marca.getIdMarca() == idMarca) {
+
+                cmbMarca.setSelectedIndex(i);
+
+                return;
+            }
+        }
+    }
+    private void seleccionarMarcaPorNombre(
+            String nombreMarca
+    ) {
+
+        if (nombreMarca == null) {
+            return;
+        }
+
+        for (int i = 0;
+                i < cmbMarca.getItemCount();
+                i++) {
+
+            Marca marca =
+                    cmbMarca.getItemAt(i);
+
+            if (marca.getNombre().equalsIgnoreCase(
+                    nombreMarca
+            )) {
+
+                cmbMarca.setSelectedIndex(
+                        i
+                );
+
+                return;
+            }
+        }
     }
     private void aplicarDiseñoCrearEditarProductos() {
 
@@ -414,6 +542,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
 
         javax.swing.JLabel[] etiquetas = {
             lblNombre,
+            lblMarca,
             lblPrecio,
             lblStock,
             jLabel1
@@ -729,6 +858,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
 
         javax.swing.JLabel[] etiquetas = {
             lblNombre,
+            lblMarca,
             lblPrecio,
             lblStock,
             jLabel1
@@ -772,6 +902,18 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
                     tamañoCampo
             );
         }
+
+        cmbMarca.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        cmbMarca.setPreferredSize(
+                tamañoCampo
+        );
+
+        cmbMarca.setMinimumSize(
+                tamañoCampo
+        );
 
         btnVolver.setText("");
 
@@ -909,9 +1051,24 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
                 txtNombre,
                 gbc
         );
-
+        
         gbc.gridx = 0;
         gbc.gridy = 2;
+
+        tarjetaFormulario.add(
+                lblMarca,
+                gbc
+        );
+
+        gbc.gridx = 1;
+
+        tarjetaFormulario.add(
+                cmbMarca,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
 
         tarjetaFormulario.add(
                 lblPrecio,
@@ -926,7 +1083,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
 
         tarjetaFormulario.add(
                 lblStock,
@@ -941,7 +1098,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
 
         tarjetaFormulario.add(
                 jLabel1,
@@ -993,7 +1150,7 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.gridwidth = 2;
 
         gbc.anchor =

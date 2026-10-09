@@ -27,13 +27,16 @@ public class ProductoController {
 
                 fechaMostrar = fecha.format(formato);
             }
-            lista.add(new Object[]{
-                producto.getIdProducto(),
-                producto.getNombre(),
-                producto.getPrecio(),
-                producto.getStock(),
-                fechaMostrar
-            });
+            lista.add(
+                    new Object[]{
+                        producto.getIdProducto(),
+                        producto.getNombre(),
+                        producto.getNombreMarca(),
+                        producto.getPrecio(),
+                        producto.getStock(),
+                        fechaMostrar
+                    }
+            );
         }
 
         return lista;
@@ -75,6 +78,7 @@ public class ProductoController {
                     new Object[]{
                         producto.getIdProducto(),
                         producto.getNombre(),
+                        producto.getNombreMarca(),
                         producto.getPrecio(),
                         producto.getStock(),
                         fechaMostrar
@@ -85,21 +89,49 @@ public class ProductoController {
         return lista;
     }
 
-    public static void guardarProducto(String nombre,
-                                       double precio,
-                                       int stock,
-                                       String fechaVencimiento,
-                                       int idProducto) {
+    public static void guardarProducto(
+            String nombre,
+            double precio,
+            int stock,
+            String fechaVencimiento,
+            int idProducto
+    ) {
 
-        Producto producto = ModeloFactory.crearProducto(
-                idProducto,
+        guardarProducto(
                 nombre,
                 precio,
                 stock,
-                fechaVencimiento
+                fechaVencimiento,
+                idProducto,
+                -1
+        );
+    }
+
+    public static void guardarProducto(
+            String nombre,
+            double precio,
+            int stock,
+            String fechaVencimiento,
+            int idProducto,
+            int idMarca
+    ) {
+
+        Producto producto =
+                ModeloFactory.crearProducto(
+                        idProducto,
+                        nombre,
+                        precio,
+                        stock,
+                        fechaVencimiento
+                );
+
+        producto.setIdMarca(
+                idMarca
         );
 
-        productoDAO.guardar(producto);
+        productoDAO.guardar(
+                producto
+        );
     }
 
     public static void eliminarProducto(int idProducto) {

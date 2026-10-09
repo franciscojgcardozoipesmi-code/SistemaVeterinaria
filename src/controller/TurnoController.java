@@ -54,8 +54,45 @@ public class TurnoController {
         return lista;
     }
 
-    public static void eliminarTurno(int idTurno) {
-        turnoDAO.eliminar(idTurno);
+    public static void eliminarTurno(
+            int idTurno
+    ) {
+
+        Turno turno =
+                turnoDAO.buscarPorId(
+                        idTurno
+                );
+
+        if (turno == null) {
+
+            throw new RuntimeException(
+                    "No se encontró el turno"
+            );
+        }
+
+        String detalle =
+                "Turno N.º "
+                + idTurno
+                + " | Animal: "
+                + turno.getAnimal()
+                + " | Dueño: "
+                + turno.getDueno()
+                + " | Fecha: "
+                + turno.getFecha()
+                + " | Hora: "
+                + turno.getHora()
+                + " | Estado: "
+                + turno.getEstado().getNombre();
+
+        turnoDAO.eliminar(
+                idTurno
+        );
+
+        AuditoriaController.registrar(
+                "TURNOS",
+                "ELIMINAR TURNO",
+                detalle
+        );
     }
 
     public static void guardarTurno(String dueno,

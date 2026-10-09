@@ -65,12 +65,13 @@ public class VentanaProductos extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return column == 5;
+                return column == 6;
             }
         };
 
         modelo.addColumn("ID");
         modelo.addColumn("Nombre");
+        modelo.addColumn("Marca");
         modelo.addColumn("Precio");
         modelo.addColumn("Stock");
         modelo.addColumn("Fecha vencimiento");
@@ -82,10 +83,10 @@ public class VentanaProductos extends javax.swing.JFrame {
             Object[] filaCompleta =
                     java.util.Arrays.copyOf(
                             fila,
-                            6
+                            7
                     );
 
-            filaCompleta[5] = "";
+            filaCompleta[6] = "";
 
             modelo.addRow(filaCompleta);
         }
@@ -108,12 +109,13 @@ public class VentanaProductos extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return column == 5;
+                return column == 6;
             }
         };
 
         modelo.addColumn("ID");
         modelo.addColumn("Nombre");
+        modelo.addColumn("Marca");
         modelo.addColumn("Precio");
         modelo.addColumn("Stock");
         modelo.addColumn("Fecha vencimiento");
@@ -125,10 +127,10 @@ public class VentanaProductos extends javax.swing.JFrame {
             Object[] filaCompleta =
                     java.util.Arrays.copyOf(
                             fila,
-                            6
+                            7
                     );
 
-            filaCompleta[5] = "";
+            filaCompleta[6] = "";
 
             modelo.addRow(filaCompleta);
         }
@@ -141,7 +143,7 @@ public class VentanaProductos extends javax.swing.JFrame {
     
     private void configurarColumnasProductos() {
 
-        if (tblProductos.getColumnCount() < 6) {
+        if (tblProductos.getColumnCount() < 7) {
             return;
         }
 
@@ -167,10 +169,12 @@ public class VentanaProductos extends javax.swing.JFrame {
         tblProductos.getColumnModel()
                 .getColumn(3)
                 .setCellRenderer(centrado);
-
+        tblProductos.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(centrado);
         javax.swing.table.TableColumn columnaAcciones =
                 tblProductos.getColumnModel()
-                        .getColumn(5);
+                        .getColumn(6);
 
         columnaAcciones.setMinWidth(95);
         columnaAcciones.setMaxWidth(95);
@@ -208,7 +212,7 @@ public class VentanaProductos extends javax.swing.JFrame {
                         && columnaVista >= 0
                         && tblProductos.convertColumnIndexToModel(
                                 columnaVista
-                        ) == 5;
+                        ) == 6;
 
                 tblProductos.setCursor(
                         sobreAcciones
@@ -530,17 +534,32 @@ public class VentanaProductos extends javax.swing.JFrame {
 
         String nombre =
                 tblProductos.getValueAt(fila, 1).toString();
+        String nombreMarca =
+                tblProductos.getValueAt(
+                        fila,
+                        2
+                ).toString();
+        double precio =
+                Double.parseDouble(
+                        tblProductos.getValueAt(
+                                fila,
+                                3
+                        ).toString()
+                );
 
-        double precio = Double.parseDouble(
-                tblProductos.getValueAt(fila, 2).toString()
-        );
-
-        int stock = Integer.parseInt(
-                tblProductos.getValueAt(fila, 3).toString()
-        );
+        int stock =
+                Integer.parseInt(
+                        tblProductos.getValueAt(
+                                fila,
+                                4
+                        ).toString()
+                );
 
         Object valorFecha =
-                tblProductos.getValueAt(fila, 4);
+                tblProductos.getValueAt(
+                        fila,
+                        5
+                );
 
         String fechaVencimiento = "";
 
@@ -554,7 +573,8 @@ public class VentanaProductos extends javax.swing.JFrame {
                 nombre,
                 precio,
                 stock,
-                fechaVencimiento
+                fechaVencimiento,
+                nombreMarca
         );
     }//GEN-LAST:event_btnEditarProductoActionPerformed
 
@@ -851,7 +871,7 @@ public class VentanaProductos extends javax.swing.JFrame {
     private void aplicarColorVencimiento() {
 
         tblProductos.getColumnModel()
-                .getColumn(4)
+                .getColumn(5)
                 .setCellRenderer(
                         new javax.swing.table.DefaultTableCellRenderer() {
 

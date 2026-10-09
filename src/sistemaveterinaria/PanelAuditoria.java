@@ -17,8 +17,7 @@ public class PanelAuditoria
                         "Rol",
                         "Módulo",
                         "Acción",
-                        "Observaciones",
-                        "Acciones"
+                        "Observaciones"
                     },
                     0
             ) {
@@ -29,8 +28,7 @@ public class PanelAuditoria
                         int columna
                 ) {
 
-                    return columna == 6
-                            || columna == 7;
+                    return columna == 6;
                 }
             };
 
@@ -56,7 +54,7 @@ public class PanelAuditoria
 
         construirPanel();
         configurarColumnaObservaciones();
-        configurarColumnaAcciones();
+        configurarCursorObservaciones();
         cargarRegistros();
     }
 
@@ -219,14 +217,25 @@ public class PanelAuditoria
                 Estilos.fuenteNormal()
         );
 
-        txtBuscar.setPreferredSize(
+        java.awt.Dimension tamañoBusqueda =
                 new java.awt.Dimension(
-                        330,
+                        420,
                         38
-                )
+                );
+
+        txtBuscar.setPreferredSize(
+                tamañoBusqueda
+        );
+
+        txtBuscar.setMinimumSize(
+                tamañoBusqueda
         );
         txtBuscar.setText(
                 TEXTO_BUSQUEDA
+        );
+        
+        txtBuscar.setCaretPosition(
+                0
         );
 
         txtBuscar.setForeground(
@@ -264,6 +273,10 @@ public class PanelAuditoria
 
                             txtBuscar.setText(
                                     TEXTO_BUSQUEDA
+                            );
+                            
+                            txtBuscar.setCaretPosition(
+                                    0
                             );
 
                             txtBuscar.setForeground(
@@ -420,19 +433,7 @@ public class PanelAuditoria
                         new EditorObservaciones()
                 );
     }
-    private void configurarColumnaAcciones() {
-
-        tabla.getColumnModel()
-                .getColumn(7)
-                .setCellRenderer(
-                        new RenderizadorEliminar()
-                );
-
-        tabla.getColumnModel()
-                .getColumn(7)
-                .setCellEditor(
-                        new EditorEliminar()
-                );
+    private void configurarCursorObservaciones() {
 
         tabla.addMouseMotionListener(
                 new java.awt.event.MouseMotionAdapter() {
@@ -449,7 +450,7 @@ public class PanelAuditoria
 
                         tabla.setCursor(
                                 new java.awt.Cursor(
-                                        columna == 6 || columna == 7
+                                        columna == 6
                                                 ? java.awt.Cursor.HAND_CURSOR
                                                 : java.awt.Cursor.DEFAULT_CURSOR
                                 )
@@ -516,13 +517,12 @@ public class PanelAuditoria
                         registro[3],
                         registro[4],
                         registro[5],
-                        registro[6],
-                        ""
+                        registro[6]
                     }
             );
         }
 
-        if (tabla.getColumnCount() == 8) {
+        if (tabla.getColumnCount() == 7) {
 
             javax.swing.table.TableColumn columnaId =
                 tabla.getColumnModel()
@@ -555,62 +555,10 @@ public class PanelAuditoria
 
         tabla.getColumnModel()
                 .getColumn(6)
-                .setPreferredWidth(165);
-
-        tabla.getColumnModel()
-                .getColumn(7)
-                .setPreferredWidth(90);
-
-        tabla.getColumnModel()
-                .getColumn(7)
-                .setMinWidth(90);
-
-        tabla.getColumnModel()
-                .getColumn(7)
-                .setMaxWidth(90);
+                .setPreferredWidth(190);    
         }
     }
-    private void eliminarRegistro(
-            int idAuditoria
-    ) {
-
-        boolean confirmado =
-                Estilos.mostrarConfirmacion(
-                        this,
-                        "Confirmar eliminación",
-                        "¿Deseás eliminar el registro de auditoría N.º "
-                        + idAuditoria
-                        + "?"
-                );
-
-        if (!confirmado) {
-            return;
-        }
-
-        boolean eliminado =
-                AuditoriaController.eliminarRegistro(
-                        idAuditoria
-                );
-
-        if (!eliminado) {
-
-            Estilos.mostrarAdvertencia(
-                    this,
-                    "Error",
-                    "No se pudo eliminar el registro de auditoría"
-            );
-
-            return;
-        }
-
-        cargarRegistros();
-
-        Estilos.mostrarAdvertencia(
-                this,
-                "Operación exitosa",
-                "Registro de auditoría eliminado correctamente"
-        );
-    }
+    
     private class RenderizadorObservaciones
         extends javax.swing.JPanel
         implements javax.swing.table.TableCellRenderer {
@@ -721,118 +669,9 @@ public class PanelAuditoria
             return observaciones;
         }
     }
-    private class RenderizadorEliminar
-            extends javax.swing.JPanel
-            implements javax.swing.table.TableCellRenderer {
+    
 
-        private final javax.swing.JButton btnEliminar =
-                crearBotonEliminar();
-
-        public RenderizadorEliminar() {
-
-            setLayout(
-                    new java.awt.FlowLayout(
-                            java.awt.FlowLayout.CENTER,
-                            0,
-                            4
-                    )
-            );
-
-            setOpaque(true);
-
-            add(
-                    btnEliminar
-            );
-        }
-
-        @Override
-        public java.awt.Component getTableCellRendererComponent(
-                javax.swing.JTable tabla,
-                Object valor,
-                boolean seleccionado,
-                boolean tieneFoco,
-                int fila,
-                int columna
-        ) {
-
-            setBackground(
-                    seleccionado
-                            ? tabla.getSelectionBackground()
-                            : tabla.getBackground()
-            );
-
-            return this;
-        }
-    }
-
-    private class EditorEliminar
-            extends javax.swing.AbstractCellEditor
-            implements javax.swing.table.TableCellEditor {
-
-        private final javax.swing.JPanel panel =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.CENTER,
-                                0,
-                                4
-                        )
-                );
-
-        private final javax.swing.JButton btnEliminar =
-                crearBotonEliminar();
-
-        private int idAuditoria;
-
-        public EditorEliminar() {
-
-            panel.setOpaque(true);
-
-            panel.add(
-                    btnEliminar
-            );
-
-            btnEliminar.addActionListener(
-                    evento -> {
-
-                        fireEditingStopped();
-
-                        eliminarRegistro(
-                                idAuditoria
-                        );
-                    }
-            );
-        }
-
-        @Override
-        public java.awt.Component getTableCellEditorComponent(
-                javax.swing.JTable tabla,
-                Object valor,
-                boolean seleccionado,
-                int fila,
-                int columna
-        ) {
-
-            idAuditoria =
-                    Integer.parseInt(
-                            tabla.getValueAt(
-                                    fila,
-                                    0
-                            ).toString()
-                    );
-
-            panel.setBackground(
-                    tabla.getSelectionBackground()
-            );
-
-            return panel;
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-
-            return "";
-        }
-    }
+    
     private javax.swing.JButton crearBotonObservaciones() {
 
         javax.swing.JButton boton =
@@ -884,54 +723,5 @@ public class PanelAuditoria
         );
 
         return boton;
-    }
-    private javax.swing.JButton crearBotonEliminar() {
-
-        javax.swing.JButton boton =
-                new javax.swing.JButton();
-
-        java.awt.Dimension tamaño =
-                new java.awt.Dimension(
-                        28,
-                        26
-                );
-
-        boton.setPreferredSize(
-                tamaño
-        );
-
-        boton.setMinimumSize(
-                tamaño
-        );
-
-        boton.setMaximumSize(
-                tamaño
-        );
-
-        boton.setBackground(
-                new java.awt.Color(
-                        210,
-                        70,
-                        70
-                )
-        );
-
-        boton.setFocusPainted(false);
-        boton.setBorderPainted(false);
-
-        boton.setCursor(
-                new java.awt.Cursor(
-                        java.awt.Cursor.HAND_CURSOR
-                )
-        );
-
-        Estilos.aplicarIcono(
-                boton,
-                "/imagenes/iconos/eliminar.png",
-                14,
-                14
-        );
-
-        return boton;
-    }
+    }   
 }

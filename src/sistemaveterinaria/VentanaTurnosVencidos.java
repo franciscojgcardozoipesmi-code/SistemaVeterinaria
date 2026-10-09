@@ -30,24 +30,80 @@ public class VentanaTurnosVencidos extends javax.swing.JFrame {
     private void cargarTabla() {
 
         javax.swing.table.DefaultTableModel modelo =
-                new javax.swing.table.DefaultTableModel();
+                new javax.swing.table.DefaultTableModel(
+                        new Object[]{
+                            "ID",
+                            "Dueño",
+                            "DNI",
+                            "Animal",
+                            "Fecha",
+                            "Hora",
+                            "Motivo",
+                            "Estado",
+                            "Acciones"
+                        },
+                        0
+                ) {
 
-        modelo.addColumn("ID");
-        modelo.addColumn("Dueño");
-        modelo.addColumn("DNI");
-        modelo.addColumn("Animal");
-        modelo.addColumn("Fecha");
-        modelo.addColumn("Hora");
-        modelo.addColumn("Motivo");
-        modelo.addColumn("Estado");
+                    @Override
+                    public boolean isCellEditable(
+                            int fila,
+                            int columna
+                    ) {
 
-        for (Object[] fila :
-                TurnoController.listarTurnosVencidos()) {
+                        return columna == 8;
+                    }
+                };
 
-            modelo.addRow(fila);
+        for (Object[] fila
+                : TurnoController.listarTurnosVencidos()) {
+
+            modelo.addRow(
+                    new Object[]{
+                        fila[0],
+                        fila[1],
+                        fila[2],
+                        fila[3],
+                        fila[4],
+                        fila[5],
+                        fila[6],
+                        fila[7],
+                        ""
+                    }
+            );
         }
 
-        tblTurnosVencidos.setModel(modelo);
+        tblTurnosVencidos.setModel(
+                modelo
+        );
+
+        javax.swing.table.TableColumn columnaId =
+                tblTurnosVencidos
+                        .getColumnModel()
+                        .getColumn(0);
+
+        columnaId.setMinWidth(0);
+        columnaId.setPreferredWidth(0);
+        columnaId.setMaxWidth(0);
+        columnaId.setResizable(false);
+
+        javax.swing.table.TableColumn columnaAcciones =
+                tblTurnosVencidos
+                        .getColumnModel()
+                        .getColumn(8);
+
+        columnaAcciones.setPreferredWidth(
+                85
+        );
+
+        columnaAcciones.setMinWidth(
+                85
+        );
+
+        columnaAcciones.setMaxWidth(
+                85
+        );
+        configurarColumnaAcciones();
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -197,6 +253,240 @@ public class VentanaTurnosVencidos extends javax.swing.JFrame {
                 dni
         );   
     }//GEN-LAST:event_btnReprogramarTurnoActionPerformed
+    private void configurarColumnaAcciones() {
+
+        javax.swing.table.TableColumn columnaAcciones =
+                tblTurnosVencidos
+                        .getColumnModel()
+                        .getColumn(8);
+
+        columnaAcciones.setCellRenderer(
+                new RenderizadorEliminar()
+        );
+
+        columnaAcciones.setCellEditor(
+                new EditorEliminar()
+        );
+    }
+
+    private void eliminarTurnoVencido(
+            int idTurno
+    ) {
+
+        boolean confirmado =
+                Estilos.mostrarConfirmacion(
+                        this,
+                        "Confirmar eliminación",
+                        "¿Deseás eliminar definitivamente este turno vencido?"
+                );
+
+        if (!confirmado) {
+            return;
+        }
+
+        try {
+
+            TurnoController.eliminarTurno(
+                    idTurno
+            );
+
+            cargarTabla();
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Operación exitosa",
+                    "Turno vencido eliminado correctamente"
+            );
+
+        } catch (Exception e) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Error",
+                    "No se pudo eliminar el turno vencido"
+            );
+        }
+    }
+
+    private class RenderizadorEliminar
+            extends javax.swing.JPanel
+            implements javax.swing.table.TableCellRenderer {
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        public RenderizadorEliminar() {
+
+            setLayout(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            0,
+                            6
+                    )
+            );
+
+            setOpaque(
+                    true
+            );
+
+            add(
+                    btnEliminar
+            );
+        }
+
+        @Override
+        public java.awt.Component getTableCellRendererComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                boolean tieneFoco,
+                int fila,
+                int columna
+        ) {
+
+            setBackground(
+                    seleccionado
+                            ? tabla.getSelectionBackground()
+                            : tabla.getBackground()
+            );
+
+            return this;
+        }
+    }
+
+    private class EditorEliminar
+            extends javax.swing.AbstractCellEditor
+            implements javax.swing.table.TableCellEditor {
+
+        private final javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                0,
+                                6
+                        )
+                );
+
+        private final javax.swing.JButton btnEliminar =
+                crearBotonEliminar();
+
+        private int idTurno;
+
+        public EditorEliminar() {
+
+            panel.setOpaque(
+                    true
+            );
+
+            panel.add(
+                    btnEliminar
+            );
+
+            btnEliminar.addActionListener(
+                    evento -> {
+
+                        int idSeleccionado =
+                                idTurno;
+
+                        fireEditingStopped();
+
+                        eliminarTurnoVencido(
+                                idSeleccionado
+                        );
+                    }
+            );
+        }
+
+        @Override
+        public java.awt.Component getTableCellEditorComponent(
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                int fila,
+                int columna
+        ) {
+
+            int filaModelo =
+                    tabla.convertRowIndexToModel(
+                            fila
+                    );
+
+            idTurno =
+                    Integer.parseInt(
+                            tabla.getModel()
+                                    .getValueAt(
+                                            filaModelo,
+                                            0
+                                    )
+                                    .toString()
+                    );
+
+            panel.setBackground(
+                    tabla.getSelectionBackground()
+            );
+
+            return panel;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+
+            return "";
+        }
+    }
+
+    private javax.swing.JButton crearBotonEliminar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBotonEliminar(
+                boton
+        );
+
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/eliminar.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(
+                        30,
+                        26
+                );
+
+        boton.setPreferredSize(
+                tamaño
+        );
+
+        boton.setMinimumSize(
+                tamaño
+        );
+
+        boton.setMaximumSize(
+                tamaño
+        );
+
+        boton.setToolTipText(
+                "Eliminar turno vencido"
+        );
+
+        boton.setFocusable(
+                false
+        );
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+    }
     public javax.swing.JPanel obtenerPanelTurnosVencidos() {
 
         javax.swing.JPanel panel =
