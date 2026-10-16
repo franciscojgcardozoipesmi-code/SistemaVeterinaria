@@ -9,6 +9,7 @@ public class Cliente extends Persona {
     private String direccion;
     private String correo;
     private String observaciones;
+    private boolean activo = true;
 
     public Cliente() {
         super(-1);
@@ -100,5 +101,12 @@ public class Cliente extends Persona {
     @Override
     public String getIdentificacion() {
         return dni;
+    }
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }

@@ -5,6 +5,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaAnimales.class.getName());
     private VentanaPrincipal ventanaPrincipal;
     private javax.swing.JTextField campoBusquedaAnimales;
+    private boolean mostrandoAnimalesInactivos = false;
     public VentanaAnimales() {
 
         initComponents();
@@ -48,7 +49,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
     }
     
     private void cargarTabla() {
-
+        mostrandoAnimalesInactivos = false;
         javax.swing.table.DefaultTableModel modelo =
                 new javax.swing.table.DefaultTableModel() {
 
@@ -115,7 +116,75 @@ public class VentanaAnimales extends javax.swing.JFrame {
         tblAnimales.revalidate();
         tblAnimales.repaint();
     }
+    private void cargarTablaInactivos() {
 
+        mostrandoAnimalesInactivos = true;
+
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+
+                return column == 6;
+            }
+        };
+
+        modelo.addColumn("ID");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Especie");
+        modelo.addColumn("Raza");
+        modelo.addColumn("Edad");
+        modelo.addColumn("Cliente");
+        modelo.addColumn("Acciones");
+
+        for (Object[] fila
+                : AnimalController.listarAnimalesInactivos()) {
+
+            Object[] filaCompleta =
+                    java.util.Arrays.copyOf(
+                            fila,
+                            7
+                    );
+
+            filaCompleta[6] = "";
+
+            modelo.addRow(
+                    filaCompleta
+            );
+        }
+
+        tblAnimales.setModel(
+                modelo
+        );
+
+        configurarColumnaAcciones();
+
+        javax.swing.table.DefaultTableCellRenderer centrado =
+                new javax.swing.table.DefaultTableCellRenderer();
+
+        centrado.setHorizontalAlignment(
+                javax.swing.SwingConstants.CENTER
+        );
+
+        tblAnimales.getColumnModel()
+                .getColumn(4)
+                .setCellRenderer(
+                        centrado
+                );
+
+        tblAnimales.getColumnModel()
+                .getColumn(5)
+                .setCellRenderer(
+                        centrado
+                );
+
+        tblAnimales.revalidate();
+        tblAnimales.repaint();
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -517,7 +586,60 @@ public class VentanaAnimales extends javax.swing.JFrame {
 
         dialogo.setVisible(true);
     }//GEN-LAST:event_btnDarDeBajaRegistroActionPerformed
+    private void reactivarAnimalSeleccionado() {
 
+        int filaVista =
+                tblAnimales.getSelectedRow();
+
+        if (filaVista == -1) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "Seleccioná un animal inactivo"
+            );
+
+            return;
+        }
+
+        int filaModelo =
+                tblAnimales.convertRowIndexToModel(
+                        filaVista
+                );
+
+        int idAnimal =
+                Integer.parseInt(
+                        tblAnimales.getModel()
+                                .getValueAt(
+                                        filaModelo,
+                                        0
+                                ).toString()
+                );
+
+        boolean reactivado =
+                AnimalController.reactivarAnimal(
+                        idAnimal
+                );
+
+        if (reactivado) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Operación exitosa",
+                    "Animal reactivado correctamente"
+            );
+
+            cargarTablaInactivos();
+
+        } else {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Error",
+                    "No se pudo reactivar el animal"
+            );
+        }
+    }
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
 
         VentanaPrincipal vp =
@@ -636,7 +758,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
     private void buscarAnimales(
             String filtro
     ) {
-
+        mostrandoAnimalesInactivos = false;
         javax.swing.table.DefaultTableModel modelo =
                 new javax.swing.table.DefaultTableModel() {
 
@@ -1670,7 +1792,55 @@ public class VentanaAnimales extends javax.swing.JFrame {
         );
 
         
+        javax.swing.JButton btnVerInactivos =
+                new javax.swing.JButton(
+                        "Ver inactivos"
+                );
 
+        Estilos.estilizarBoton(
+                btnVerInactivos
+        );
+
+        btnVerInactivos.setPreferredSize(
+                new java.awt.Dimension(
+                        175,
+                        38
+                )
+        );
+
+        btnVerInactivos.addActionListener(e -> {
+
+            if (mostrandoAnimalesInactivos) {
+
+                cargarTabla();
+
+                btnVerInactivos.setText(
+                        "Ver inactivos"
+                );
+
+            } else {
+
+                cargarTablaInactivos();
+
+                btnVerInactivos.setText(
+                        "Ver activos"
+                );
+            }
+
+            campoBusquedaAnimales.setText(
+                    textoAyuda
+            );
+
+            campoBusquedaAnimales.setForeground(
+                    new java.awt.Color(
+                            150,
+                            150,
+                            150
+                    )
+            );
+
+            campoBusquedaAnimales.setCaretPosition(0);
+        });
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
@@ -1690,7 +1860,9 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 btnHistorialMedico
         );
 
-        
+        panelBotones.add(
+                btnVerInactivos
+        );    
 
         tarjetaAnimales.add(
                 panelBotones,
@@ -1936,21 +2108,19 @@ public class VentanaAnimales extends javax.swing.JFrame {
         }
     }
     private class RenderizadorAcciones
-        extends javax.swing.JPanel
-        implements javax.swing.table.TableCellRenderer {
+            extends javax.swing.JPanel
+            implements javax.swing.table.TableCellRenderer {
 
-    private final javax.swing.JButton btnEditar =
-            crearBotonEditar();
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
 
-    private final javax.swing.JButton btnEliminar =
-            crearBotonEliminar();
-    private final java.awt.Color colorEditarNormal =
-            btnEditar.getBackground();
+        private final javax.swing.JButton btnBaja =
+                crearBotonEliminar();
 
-    private final java.awt.Color colorEliminarNormal =
-            btnEliminar.getBackground();
+        private final javax.swing.JButton btnReactivar =
+                crearBotonReactivar();
 
-    public RenderizadorAcciones() {
+        public RenderizadorAcciones() {
 
             setLayout(
                     new java.awt.FlowLayout(
@@ -1961,136 +2131,77 @@ public class VentanaAnimales extends javax.swing.JFrame {
             );
 
             setOpaque(true);
-
-            add(
-                    btnEditar
-            );
-
-            add(
-                    btnEliminar
-            );
         }
 
         @Override
         public java.awt.Component getTableCellRendererComponent(
-                javax.swing.JTable table,
-                Object value,
-                boolean isSelected,
-                boolean hasFocus,
-                int row,
-                int column
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                boolean tieneFoco,
+                int fila,
+                int columna
         ) {
 
-            if (isSelected) {
+            setBackground(
+                    seleccionado
+                            ? tabla.getSelectionBackground()
+                            : tabla.getBackground()
+            );
 
-                setBackground(
-                        table.getSelectionBackground()
+            removeAll();
+
+            if (mostrandoAnimalesInactivos) {
+
+                add(
+                        btnReactivar
                 );
 
             } else {
 
-                setBackground(
-                        table.getBackground()
+                add(
+                        btnEditar
+                );
+
+                add(
+                        btnBaja
                 );
             }
-            boolean sobreEditar = false;
-            boolean sobreEliminar = false;
 
-            java.awt.Point posicionMouse =
-                    table.getMousePosition();
-
-            if (posicionMouse != null) {
-
-                int filaMouse =
-                        table.rowAtPoint(
-                                posicionMouse
-                        );
-
-                int columnaMouse =
-                        table.columnAtPoint(
-                                posicionMouse
-                        );
-
-                if (filaMouse == row
-                        && columnaMouse == column) {
-
-                    java.awt.Rectangle celda =
-                            table.getCellRect(
-                                    row,
-                                    column,
-                                    false
-                            );
-
-                    int posicionDentro =
-                            posicionMouse.x - celda.x;
-
-                    if (posicionDentro
-                            < celda.width / 2) {
-
-                        sobreEditar = true;
-
-                    } else {
-
-                        sobreEliminar = true;
-                    }
-                }
-            }
-
-            btnEditar.setBackground(
-                    sobreEditar
-                            ? colorEditarNormal.brighter()
-                            : colorEditarNormal
-            );
-
-            btnEliminar.setBackground(
-                    sobreEliminar
-                            ? new java.awt.Color(
-                                    255,
-                                    165,
-                                    165
-                            )
-                            : colorEliminarNormal
-            );
             return this;
         }
     }
     private class EditorAcciones
-        extends javax.swing.AbstractCellEditor
-        implements javax.swing.table.TableCellEditor {
+            extends javax.swing.AbstractCellEditor
+            implements javax.swing.table.TableCellEditor {
 
-    private final javax.swing.JPanel panel =
-            new javax.swing.JPanel(
-                    new java.awt.FlowLayout(
-                            java.awt.FlowLayout.CENTER,
-                            4,
-                            4
-                    )
-            );
+        private final javax.swing.JPanel panel =
+                new javax.swing.JPanel(
+                        new java.awt.FlowLayout(
+                                java.awt.FlowLayout.CENTER,
+                                4,
+                                4
+                        )
+                );
 
-    private final javax.swing.JButton btnEditar =
-            crearBotonEditar();
+        private final javax.swing.JButton btnEditar =
+                crearBotonEditar();
 
-    private final javax.swing.JButton btnEliminar =
-            crearBotonEliminar();
+        private final javax.swing.JButton btnBaja =
+                crearBotonEliminar();
 
-    private int filaActual = -1;
+        private final javax.swing.JButton btnReactivar =
+                crearBotonReactivar();
 
-    public EditorAcciones() {
+        private int filaActual = -1;
+
+        public EditorAcciones() {
 
             panel.setOpaque(true);
 
-            panel.add(
-                    btnEditar
-            );
-
-            panel.add(
-                    btnEliminar
-            );
-
             btnEditar.addActionListener(e -> {
 
-                int fila =
-                        filaActual;
+                int fila = filaActual;
 
                 fireEditingStopped();
 
@@ -2107,10 +2218,9 @@ public class VentanaAnimales extends javax.swing.JFrame {
                 }
             });
 
-            btnEliminar.addActionListener(e -> {
+            btnBaja.addActionListener(e -> {
 
-                int fila =
-                        filaActual;
+                int fila = filaActual;
 
                 fireEditingStopped();
 
@@ -2126,21 +2236,57 @@ public class VentanaAnimales extends javax.swing.JFrame {
                     );
                 }
             });
+
+            btnReactivar.addActionListener(e -> {
+
+                int fila = filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblAnimales.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    reactivarAnimalSeleccionado();
+                }
+            });
         }
 
         @Override
         public java.awt.Component getTableCellEditorComponent(
-                javax.swing.JTable table,
-                Object value,
-                boolean isSelected,
-                int row,
-                int column
+                javax.swing.JTable tabla,
+                Object valor,
+                boolean seleccionado,
+                int fila,
+                int columna
         ) {
 
-            filaActual = row;
+            filaActual = fila;
+
+            panel.removeAll();
+
+            if (mostrandoAnimalesInactivos) {
+
+                panel.add(
+                        btnReactivar
+                );
+
+            } else {
+
+                panel.add(
+                        btnEditar
+                );
+
+                panel.add(
+                        btnBaja
+                );
+            }
 
             panel.setBackground(
-                    table.getSelectionBackground()
+                    tabla.getSelectionBackground()
             );
 
             return panel;
@@ -2148,9 +2294,51 @@ public class VentanaAnimales extends javax.swing.JFrame {
 
         @Override
         public Object getCellEditorValue() {
-
             return "";
         }
+    }
+    private javax.swing.JButton crearBotonReactivar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton(
+                        "Reactivar"
+                );
+
+        Estilos.estilizarBoton(
+                boton
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(
+                        88,
+                        22
+                );
+
+        boton.setPreferredSize(
+                tamaño
+        );
+
+        boton.setMinimumSize(
+                tamaño
+        );
+
+        boton.setMaximumSize(
+                tamaño
+        );
+
+        boton.setToolTipText(
+                "Reactivar animal"
+        );
+
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
     }
     private javax.swing.JButton crearBotonEditar() {
 
@@ -2210,7 +2398,7 @@ public class VentanaAnimales extends javax.swing.JFrame {
 
         Estilos.aplicarIcono(
                 boton,
-                "/imagenes/iconos/eliminar.png",
+                "/imagenes/iconos/flecha_abajo.png",
                 14,
                 14
         );

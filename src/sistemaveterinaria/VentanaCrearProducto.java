@@ -280,6 +280,25 @@ public class VentanaCrearProducto extends javax.swing.JFrame {
 
         txtFechaVencimiento.setText(fechaVencimiento);
         this.idProducto = idProducto;
+        txtFechaVencimiento.setEditable(
+                false
+        );
+
+        txtFechaVencimiento.setFocusable(
+                false
+        );
+
+        txtFechaVencimiento.setBackground(
+                new java.awt.Color(
+                        235,
+                        235,
+                        235
+                )
+        );
+
+        txtFechaVencimiento.setToolTipText(
+                "La fecha de vencimiento no puede modificarse"
+        );
 
         txtNombre.setText(nombre);
         txtPrecio.setText(String.valueOf(precio));

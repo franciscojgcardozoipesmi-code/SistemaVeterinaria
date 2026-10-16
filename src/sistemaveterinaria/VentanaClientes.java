@@ -8,6 +8,7 @@ public class VentanaClientes extends javax.swing.JFrame {
     private javax.swing.JPanel panelAnimalesCliente;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaClientes.class.getName());
     private javax.swing.JTextField campoBusquedaClientes;
+    private boolean mostrandoClientesInactivos = false;
     public VentanaClientes() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
@@ -38,7 +39,7 @@ public class VentanaClientes extends javax.swing.JFrame {
     }
 
     private void cargarTabla() {
-
+        mostrandoClientesInactivos = false;
         javax.swing.table.DefaultTableModel modelo =
             new javax.swing.table.DefaultTableModel() {
 
@@ -76,9 +77,55 @@ public class VentanaClientes extends javax.swing.JFrame {
         tblClientes.setModel(modelo);
         configurarColumnasTabla();
     }
-    
-    private void buscarClientes(String filtro) {
+    private void cargarTablaInactivos() {
+        
+        mostrandoClientesInactivos = true;
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
 
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return column == 6 || column == 7;
+            }
+        };
+
+        modelo.addColumn("ID");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("DNI");
+        modelo.addColumn("Teléfono");
+        modelo.addColumn("Dirección");
+        modelo.addColumn("Correo");
+        modelo.addColumn("Observaciones");
+        modelo.addColumn("Acciones");
+
+        for (Object[] fila
+                : ClienteController.listarClientesInactivos()) {
+
+            modelo.addRow(
+                    new Object[]{
+                        fila[0],
+                        fila[1],
+                        fila[2],
+                        fila[3],
+                        fila[4],
+                        fila[5],
+                        fila[6],
+                        ""
+                    }
+            );
+        }
+
+        tblClientes.setModel(
+                modelo
+        );
+
+        configurarColumnasTabla();
+    }
+    private void buscarClientes(String filtro) {
+        mostrandoClientesInactivos = false;
         javax.swing.table.DefaultTableModel modelo =
                 new javax.swing.table.DefaultTableModel() {
 
@@ -285,7 +332,7 @@ public class VentanaClientes extends javax.swing.JFrame {
         javax.swing.JDialog dialogo =
                 new javax.swing.JDialog(
                         ventanaPadre,
-                        "Confirmar eliminación",
+                        "Confirmar baja",
                         java.awt.Dialog.ModalityType.APPLICATION_MODAL
                 );
 
@@ -318,7 +365,7 @@ public class VentanaClientes extends javax.swing.JFrame {
 
         javax.swing.JLabel lblTitulo =
                 new javax.swing.JLabel(
-                        "CONFIRMAR ELIMINACIÓN",
+                        "CONFIRMAR BAJA",
                         javax.swing.SwingConstants.CENTER
                 );
 
@@ -348,7 +395,7 @@ public class VentanaClientes extends javax.swing.JFrame {
 
         javax.swing.JLabel lblMensaje =
                 new javax.swing.JLabel(
-                        "¿Seguro que querés eliminar al cliente "
+                        "¿Seguro que querés dar de baja al cliente "
                         + nombreCliente + "?",
                         javax.swing.SwingConstants.CENTER
                 );
@@ -426,7 +473,7 @@ public class VentanaClientes extends javax.swing.JFrame {
                 Estilos.mostrarAdvertencia(
                         this,
                         "Operación exitosa",
-                        "Cliente eliminado correctamente"
+                        "Cliente dado de baja correctamente"
                 );
 
                 cargarTabla();
@@ -437,7 +484,7 @@ public class VentanaClientes extends javax.swing.JFrame {
                 Estilos.mostrarAdvertencia(
                         this,
                         "Error",
-                        "No se pudo eliminar el cliente"
+                        "No se pudo dar de baja al cliente"
                 );
             }
         });
@@ -447,7 +494,60 @@ public class VentanaClientes extends javax.swing.JFrame {
         dialogo.setLocationRelativeTo(ventanaPadre);
         dialogo.setVisible(true);
     }//GEN-LAST:event_btnEliminarClienteActionPerformed
+    private void reactivarClienteSeleccionado() {
 
+        int filaVista =
+                tblClientes.getSelectedRow();
+
+        if (filaVista == -1) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "Seleccioná un cliente inactivo"
+            );
+
+            return;
+        }
+
+        int filaModelo =
+                tblClientes.convertRowIndexToModel(
+                        filaVista
+                );
+
+        int idCliente =
+                Integer.parseInt(
+                        tblClientes.getModel()
+                                .getValueAt(
+                                        filaModelo,
+                                        0
+                                ).toString()
+                );
+
+        boolean reactivado =
+                ClienteController.reactivarCliente(
+                        idCliente
+                );
+
+        if (reactivado) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Operación exitosa",
+                    "Cliente reactivado correctamente"
+            );
+
+            cargarTablaInactivos();
+
+        } else {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Error",
+                    "No se pudo reactivar el cliente"
+            );
+        }
+    }
     private void btnEditarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClienteActionPerformed
         int fila = tblClientes.getSelectedRow();
 
@@ -1542,7 +1642,63 @@ public class VentanaClientes extends javax.swing.JFrame {
                         38
                 )
         );
+        javax.swing.JButton btnVerInactivos =
+                new javax.swing.JButton(
+                        "Ver inactivos"
+                );
 
+        Estilos.estilizarBoton(
+                btnVerInactivos
+        );
+
+        btnVerInactivos.setPreferredSize(
+                new java.awt.Dimension(
+                        175,
+                        38
+                )
+        );
+
+        btnVerInactivos.addActionListener(e -> {
+
+            if (mostrandoClientesInactivos) {
+
+                cargarTabla();
+
+                btnVerInactivos.setText(
+                        "Ver inactivos"
+                );
+
+            } else {
+
+                cargarTablaInactivos();
+
+                btnVerInactivos.setText(
+                        "Ver activos"
+                );
+            }
+
+            if (panelAnimalesCliente != null) {
+
+                panelAnimalesCliente.removeAll();
+                panelAnimalesCliente.setVisible(false);
+                panelAnimalesCliente.revalidate();
+                panelAnimalesCliente.repaint();
+            }
+
+            campoBusquedaClientes.setText(
+                    "Buscar por nombre o DNI"
+            );
+
+            campoBusquedaClientes.setForeground(
+                    new java.awt.Color(
+                            140,
+                            140,
+                            140
+                    )
+            );
+
+            campoBusquedaClientes.setCaretPosition(0);
+        });
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
@@ -1556,6 +1712,10 @@ public class VentanaClientes extends javax.swing.JFrame {
 
         panelBotones.add(
                 btnCrearCliente
+        );
+        
+        panelBotones.add(
+                btnVerInactivos
         );
 
         javax.swing.JPanel zonaInferior =
@@ -1685,11 +1845,8 @@ public class VentanaClientes extends javax.swing.JFrame {
         private final javax.swing.JButton btnEliminar =
                 crearBotonEliminar();
 
-        private final java.awt.Color colorEditarNormal =
-                btnEditar.getBackground();
-
-        private final java.awt.Color colorEliminarNormal =
-                btnEliminar.getBackground();
+        private final javax.swing.JButton btnReactivar =
+                crearBotonReactivar();
 
         public RenderizadorAcciones() {
 
@@ -1702,9 +1859,6 @@ public class VentanaClientes extends javax.swing.JFrame {
             );
 
             setOpaque(true);
-
-            add(btnEditar);
-            add(btnEliminar);
         }
 
         @Override
@@ -1723,56 +1877,24 @@ public class VentanaClientes extends javax.swing.JFrame {
                             : tabla.getBackground()
             );
 
-            boolean sobreEditar = false;
-            boolean sobreEliminar = false;
+            removeAll();
 
-            java.awt.Point posicionMouse =
-                    tabla.getMousePosition();
+            if (mostrandoClientesInactivos) {
 
-            if (posicionMouse != null) {
+                add(
+                        btnReactivar
+                );
 
-                int filaMouse =
-                        tabla.rowAtPoint(posicionMouse);
+            } else {
 
-                int columnaMouse =
-                        tabla.columnAtPoint(posicionMouse);
+                add(
+                        btnEditar
+                );
 
-                if (filaMouse == fila
-                        && columnaMouse == columna) {
-
-                    java.awt.Rectangle celda =
-                            tabla.getCellRect(
-                                    fila,
-                                    columna,
-                                    false
-                            );
-
-                    int posicionDentro =
-                            posicionMouse.x - celda.x;
-
-                    if (posicionDentro < celda.width / 2) {
-                        sobreEditar = true;
-                    } else {
-                        sobreEliminar = true;
-                    }
-                }
+                add(
+                        btnEliminar
+                );
             }
-
-            btnEditar.setBackground(
-                    sobreEditar
-                            ? colorEditarNormal.brighter()
-                            : colorEditarNormal
-            );
-
-            btnEliminar.setBackground(
-                    sobreEliminar
-                            ? new java.awt.Color(
-                                    255,
-                                    165,
-                                    165
-                            )
-                            : colorEliminarNormal
-            );
 
             return this;
         }
@@ -1797,14 +1919,14 @@ public class VentanaClientes extends javax.swing.JFrame {
         private final javax.swing.JButton btnEliminar =
                 crearBotonEliminar();
 
+        private final javax.swing.JButton btnReactivar =
+                crearBotonReactivar();
+
         private int filaActual = -1;
 
         public EditorAcciones() {
 
             panel.setOpaque(true);
-
-            panel.add(btnEditar);
-            panel.add(btnEliminar);
 
             btnEditar.addActionListener(e -> {
 
@@ -1819,7 +1941,9 @@ public class VentanaClientes extends javax.swing.JFrame {
                             fila
                     );
 
-                    btnEditarClienteActionPerformed(null);
+                    btnEditarClienteActionPerformed(
+                            null
+                    );
                 }
             });
 
@@ -1836,7 +1960,26 @@ public class VentanaClientes extends javax.swing.JFrame {
                             fila
                     );
 
-                    btnEliminarClienteActionPerformed(null);
+                    btnEliminarClienteActionPerformed(
+                            null
+                    );
+                }
+            });
+
+            btnReactivar.addActionListener(e -> {
+
+                int fila = filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblClientes.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    reactivarClienteSeleccionado();
                 }
             });
         }
@@ -1851,6 +1994,25 @@ public class VentanaClientes extends javax.swing.JFrame {
         ) {
 
             filaActual = fila;
+
+            panel.removeAll();
+
+            if (mostrandoClientesInactivos) {
+
+                panel.add(
+                        btnReactivar
+                );
+
+            } else {
+
+                panel.add(
+                        btnEditar
+                );
+
+                panel.add(
+                        btnEliminar
+                );
+            }
 
             panel.setBackground(
                     tabla.getSelectionBackground()
@@ -1899,7 +2061,49 @@ public class VentanaClientes extends javax.swing.JFrame {
 
         return boton;
     }
+    private javax.swing.JButton crearBotonReactivar() {
 
+        javax.swing.JButton boton =
+                new javax.swing.JButton(
+                        "Reactivar"
+                );
+
+        Estilos.estilizarBoton(
+                boton
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(
+                        88,
+                        22
+                );
+
+        boton.setPreferredSize(
+                tamaño
+        );
+
+        boton.setMinimumSize(
+                tamaño
+        );
+
+        boton.setMaximumSize(
+                tamaño
+        );
+
+        boton.setToolTipText(
+                "Reactivar cliente"
+        );
+
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+    }
     private javax.swing.JButton crearBotonEliminar() {
 
         javax.swing.JButton boton =
@@ -1914,7 +2118,7 @@ public class VentanaClientes extends javax.swing.JFrame {
 
         Estilos.aplicarIcono(
                 boton,
-                "/imagenes/iconos/eliminar.png",
+                "/imagenes/iconos/flecha_abajo.png",
                 14,
                 14
         );
@@ -1926,7 +2130,9 @@ public class VentanaClientes extends javax.swing.JFrame {
         boton.setMinimumSize(tamaño);
         boton.setMaximumSize(tamaño);
 
-        boton.setToolTipText("Eliminar cliente");
+        boton.setToolTipText(
+                "Dar de baja al cliente"
+        );
         boton.setFocusable(false);
 
         boton.setCursor(

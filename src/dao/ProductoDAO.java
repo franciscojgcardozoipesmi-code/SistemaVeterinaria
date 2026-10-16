@@ -50,7 +50,6 @@ public class ProductoDAO implements CrudDAO<Producto> {
                         + "SET nombre = ?, "
                         + "precio = ?, "
                         + "stock = ?, "
-                        + "fecha_vencimiento = ?, "
                         + "id_marca = ? "
                         + "WHERE id_producto = ?";
 
@@ -72,18 +71,13 @@ public class ProductoDAO implements CrudDAO<Producto> {
                         producto.getStock()
                 );
 
-                pst.setString(
-                        4,
-                        producto.getFechaVencimiento()
-                );
-
                 pst.setInt(
-                        5,
+                        4,
                         idMarca
                 );
 
                 pst.setInt(
-                        6,
+                        5,
                         producto.getIdProducto()
                 );
 
@@ -190,13 +184,16 @@ public class ProductoDAO implements CrudDAO<Producto> {
         try {
 
             conn = Conexion.getInstancia().conectar();
-
+            asegurarColumnaActivo(
+                    conn
+            );
             String sql =
                     "SELECT p.*, "
                     + "m.nombre AS nombre_marca "
                     + "FROM productos p "
                     + "LEFT JOIN marcas m "
                     + "ON p.id_marca = m.id_marca "
+                    + "WHERE p.activo = 1 "
                     + "ORDER BY p.nombre";
 
             java.sql.Statement st = conn.createStatement();
@@ -225,6 +222,9 @@ public class ProductoDAO implements CrudDAO<Producto> {
                         rs.getString(
                                 "nombre_marca"
                         )
+                );
+                producto.setActivo(
+                        rs.getInt("activo") == 1
                 );
                 lista.add(producto);
             }
@@ -264,16 +264,19 @@ public class ProductoDAO implements CrudDAO<Producto> {
 
             conn =
                     Conexion.getInstancia().conectar();
-
+            asegurarColumnaActivo(
+                    conn
+            );
             String sql =
                     "SELECT p.*, "
                     + "m.nombre AS nombre_marca "
                     + "FROM productos p "
                     + "LEFT JOIN marcas m "
                     + "ON p.id_marca = m.id_marca "
-                    + "WHERE CAST(p.id_producto AS TEXT) LIKE ? "
+                    + "WHERE p.activo = 1 "
+                    + "AND (CAST(p.id_producto AS TEXT) LIKE ? "
                     + "OR LOWER(p.nombre) LIKE LOWER(?) "
-                    + "OR LOWER(COALESCE(m.nombre, '')) LIKE LOWER(?) "
+                    + "OR LOWER(COALESCE(m.nombre, '')) LIKE LOWER(?)) "
                     + "ORDER BY p.nombre";
 
             PreparedStatement pst =
@@ -332,6 +335,9 @@ public class ProductoDAO implements CrudDAO<Producto> {
                                 "nombre_marca"
                         )
                 );
+                producto.setActivo(
+                        rs.getInt("activo") == 1
+                );
                 lista.add(
                         producto
                 );
@@ -370,9 +376,13 @@ public class ProductoDAO implements CrudDAO<Producto> {
         try {
 
             conn = Conexion.getInstancia().conectar();
-
+            asegurarColumnaActivo(
+                    conn
+            );
             String sql =
-                    "DELETE FROM productos WHERE id_producto = ?";
+                    "UPDATE productos "
+                    + "SET activo = 0 "
+                    + "WHERE id_producto = ?";
 
             PreparedStatement pst = conn.prepareStatement(sql);
 
@@ -407,8 +417,14 @@ public class ProductoDAO implements CrudDAO<Producto> {
         try {
 
             conn = Conexion.getInstancia().conectar();
-
-            String sql = "SELECT nombre FROM productos";
+            asegurarColumnaActivo(
+                    conn
+            );
+            String sql =
+                    "SELECT nombre "
+                    + "FROM productos "
+                    + "WHERE activo = 1 "
+                    + "ORDER BY nombre";
 
             java.sql.Statement st = conn.createStatement();
             java.sql.ResultSet rs = st.executeQuery(sql);
@@ -450,9 +466,14 @@ public class ProductoDAO implements CrudDAO<Producto> {
         try {
 
             conn = Conexion.getInstancia().conectar();
-
+            asegurarColumnaActivo(
+                    conn
+            );
             String sql =
-                    "SELECT precio FROM productos WHERE nombre = ?";
+                    "SELECT precio "
+                    + "FROM productos "
+                    + "WHERE nombre = ? "
+                    + "AND activo = 1";
 
             PreparedStatement pst = conn.prepareStatement(sql);
 
@@ -497,8 +518,13 @@ public class ProductoDAO implements CrudDAO<Producto> {
         try {
 
             conn = Conexion.getInstancia().conectar();
-
-            String sql = "SELECT nombre, precio FROM productos";
+            asegurarColumnaActivo(
+                    conn
+            );
+            String sql =
+                    "SELECT nombre, precio "
+                    + "FROM productos "
+                    + "WHERE activo = 1";
 
             java.sql.Statement st = conn.createStatement();
             java.sql.ResultSet rs = st.executeQuery(sql);
@@ -544,9 +570,12 @@ public class ProductoDAO implements CrudDAO<Producto> {
         try {
 
             conn = Conexion.getInstancia().conectar();
-
+            
             String sql =
-                    "SELECT stock FROM productos WHERE nombre = ?";
+                    "SELECT stock "
+                    + "FROM productos "
+                    + "WHERE nombre = ? "
+                    + "AND activo = 1";
 
             PreparedStatement pst = conn.prepareStatement(sql);
 
@@ -591,9 +620,14 @@ public class ProductoDAO implements CrudDAO<Producto> {
         try {
 
             conn = Conexion.getInstancia().conectar();
-
+            asegurarColumnaActivo(
+                    conn
+            );
             String sql =
-                    "SELECT fecha_vencimiento FROM productos WHERE nombre = ?";
+                    "SELECT fecha_vencimiento "
+                    + "FROM productos "
+                    + "WHERE nombre = ? "
+                    + "AND activo = 1";
 
             PreparedStatement pst = conn.prepareStatement(sql);
 
@@ -638,10 +672,13 @@ public class ProductoDAO implements CrudDAO<Producto> {
         try {
 
             conn = Conexion.getInstancia().conectar();
-
+            asegurarColumnaActivo(
+                    conn
+            );
             String sql =
                     "SELECT * FROM productos "
-                    + "WHERE fecha_vencimiento IS NOT NULL "
+                    + "WHERE activo = 1 "
+                    + "AND fecha_vencimiento IS NOT NULL "
                     + "AND fecha_vencimiento != '' "
                     + "AND date(fecha_vencimiento) >= date('now') "
                     + "AND date(fecha_vencimiento) <= date('now', '+7 days') "
@@ -703,5 +740,165 @@ public class ProductoDAO implements CrudDAO<Producto> {
         }
 
         return lista;
+    }
+    private void asegurarColumnaActivo(
+            Connection conn
+    ) throws Exception {
+
+        boolean existeColumna = false;
+
+        PreparedStatement pstConsultar =
+                conn.prepareStatement(
+                        "PRAGMA table_info(productos)"
+                );
+
+        ResultSet rs =
+                pstConsultar.executeQuery();
+
+        while (rs.next()) {
+
+            if ("activo".equalsIgnoreCase(
+                    rs.getString("name")
+            )) {
+
+                existeColumna = true;
+                break;
+            }
+        }
+
+        rs.close();
+        pstConsultar.close();
+
+        if (!existeColumna) {
+
+            PreparedStatement pstCrear =
+                    conn.prepareStatement(
+                            "ALTER TABLE productos "
+                            + "ADD COLUMN activo "
+                            + "INTEGER NOT NULL DEFAULT 1"
+                    );
+
+            pstCrear.executeUpdate();
+            pstCrear.close();
+        }
+    }
+    public ArrayList<Producto> listarInactivos() {
+
+        ArrayList<Producto> lista =
+                new ArrayList<>();
+
+        try (
+                Connection conn =
+                        Conexion.getInstancia().conectar()
+        ) {
+
+            asegurarColumnaActivo(
+                    conn
+            );
+
+            String sql =
+                    "SELECT p.*, "
+                    + "m.nombre AS nombre_marca "
+                    + "FROM productos p "
+                    + "LEFT JOIN marcas m "
+                    + "ON p.id_marca = m.id_marca "
+                    + "WHERE p.activo = 0 "
+                    + "ORDER BY p.nombre";
+
+            try (
+                    PreparedStatement pst =
+                            conn.prepareStatement(sql);
+
+                    ResultSet rs =
+                            pst.executeQuery()
+            ) {
+
+                while (rs.next()) {
+
+                    Producto producto =
+                            new Producto(
+                                    rs.getInt("id_producto"),
+                                    rs.getString("nombre"),
+                                    rs.getDouble("precio"),
+                                    rs.getInt("stock")
+                            );
+
+                    producto.setFechaVencimiento(
+                            rs.getString(
+                                    "fecha_vencimiento"
+                            )
+                    );
+
+                    producto.setIdMarca(
+                            rs.getInt(
+                                    "id_marca"
+                            )
+                    );
+
+                    producto.setNombreMarca(
+                            rs.getString(
+                                    "nombre_marca"
+                            )
+                    );
+
+                    producto.setActivo(false);
+
+                    lista.add(
+                            producto
+                    );
+                }
+            }
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al listar productos inactivos: "
+                    + e.getMessage()
+            );
+        }
+
+        return lista;
+    }
+    public boolean reactivar(
+            int idProducto
+    ) {
+
+        String sql =
+                "UPDATE productos "
+                + "SET activo = 1 "
+                + "WHERE id_producto = ? "
+                + "AND activo = 0";
+
+        try (
+                Connection conn =
+                        Conexion.getInstancia().conectar()
+        ) {
+
+            asegurarColumnaActivo(
+                    conn
+            );
+
+            try (
+                    PreparedStatement pst =
+                            conn.prepareStatement(sql)
+            ) {
+
+                pst.setInt(
+                        1,
+                        idProducto
+                );
+
+                return pst.executeUpdate() > 0;
+            }
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al reactivar el producto: "
+                    + e.getMessage()
+            );
+
+            return false;
+        }
     }
 }

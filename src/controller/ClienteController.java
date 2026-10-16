@@ -119,4 +119,35 @@ public class ClienteController {
 
         clienteDAO.guardar(cliente);
     }
+    public static ArrayList<Object[]> listarClientesInactivos() {
+
+        ArrayList<Object[]> lista =
+                new ArrayList<>();
+
+        for (Cliente cliente
+                : clienteDAO.listarInactivos()) {
+
+            lista.add(
+                    new Object[]{
+                        cliente.getIdCliente(),
+                        cliente.getNombre(),
+                        cliente.getDni(),
+                        cliente.getTelefono(),
+                        cliente.getDireccion(),
+                        cliente.getCorreo(),
+                        cliente.getObservaciones()
+                    }
+            );
+        }
+
+        return lista;
+    }
+    public static boolean reactivarCliente(
+            int idCliente
+    ) {
+
+        return clienteDAO.reactivar(
+                idCliente
+        );
+    }
 }

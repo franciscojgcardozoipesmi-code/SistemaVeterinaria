@@ -179,4 +179,57 @@ public class ProductoController {
 
         return productoDAO.listarProximosAVencer().size();
     }
+    public static ArrayList<Object[]> listarProductosInactivos() {
+
+        ArrayList<Object[]> lista =
+                new ArrayList<>();
+
+        for (Producto producto
+                : productoDAO.listarInactivos()) {
+
+            String fechaMostrar =
+                    producto.getFechaVencimiento();
+
+            if (fechaMostrar != null
+                    && !fechaMostrar.isEmpty()) {
+
+                java.time.LocalDate fecha =
+                        java.time.LocalDate.parse(
+                                fechaMostrar
+                        );
+
+                java.time.format.DateTimeFormatter formato =
+                        java.time.format.DateTimeFormatter
+                                .ofPattern(
+                                        "dd/MM/yyyy"
+                                );
+
+                fechaMostrar =
+                        fecha.format(
+                                formato
+                        );
+            }
+
+            lista.add(
+                    new Object[]{
+                        producto.getIdProducto(),
+                        producto.getNombre(),
+                        producto.getNombreMarca(),
+                        producto.getPrecio(),
+                        producto.getStock(),
+                        fechaMostrar
+                    }
+            );
+        }
+
+        return lista;
+    }
+    public static boolean reactivarProducto(
+            int idProducto
+    ) {
+
+        return productoDAO.reactivar(
+                idProducto
+        );
+    }
 }

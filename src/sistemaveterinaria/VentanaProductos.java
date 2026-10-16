@@ -7,6 +7,7 @@ public class VentanaProductos extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscarProducto;
     private javax.swing.JButton btnMostrarTodos;
     private javax.swing.JTextField campoBusquedaProductos;
+    private boolean mostrandoProductosInactivos = false;
     public VentanaProductos() {
         initComponents();
         inicializarBotonesProductos();
@@ -56,7 +57,7 @@ public class VentanaProductos extends javax.swing.JFrame {
     }
 
     private void cargarTabla() {
-
+        mostrandoProductosInactivos = false;
         javax.swing.table.DefaultTableModel modelo =
                 new javax.swing.table.DefaultTableModel() {
 
@@ -96,11 +97,60 @@ public class VentanaProductos extends javax.swing.JFrame {
         configurarColumnasProductos();
         aplicarColorVencimiento();
     }
-    
+    private void cargarTablaInactivos() {
+
+        mostrandoProductosInactivos = true;
+
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int row,
+                    int column
+            ) {
+                return column == 6;
+            }
+        };
+
+        modelo.addColumn("ID");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Marca");
+        modelo.addColumn("Precio");
+        modelo.addColumn("Stock");
+        modelo.addColumn("Fecha vencimiento");
+        modelo.addColumn("Acciones");
+
+        for (Object[] fila
+                : ProductoController.listarProductosInactivos()) {
+
+            Object[] filaCompleta =
+                    java.util.Arrays.copyOf(
+                            fila,
+                            7
+                    );
+
+            filaCompleta[6] = "";
+
+            modelo.addRow(
+                    filaCompleta
+            );
+        }
+
+        tblProductos.setModel(
+                modelo
+        );
+
+        configurarColumnasProductos();
+        aplicarColorVencimiento();
+
+        tblProductos.revalidate();
+        tblProductos.repaint();
+    }
     private void buscarProductos(
             String filtro
     ) {
-
+        mostrandoProductosInactivos = false;
         javax.swing.table.DefaultTableModel modelo =
                 new javax.swing.table.DefaultTableModel() {
 
@@ -351,7 +401,7 @@ public class VentanaProductos extends javax.swing.JFrame {
         javax.swing.JDialog dialogo =
                 new javax.swing.JDialog(
                         ventanaPadre,
-                        "Confirmar eliminación",
+                        "Confirmar baja",
                         java.awt.Dialog.ModalityType.APPLICATION_MODAL
                 );
 
@@ -384,7 +434,7 @@ public class VentanaProductos extends javax.swing.JFrame {
 
         javax.swing.JLabel lblTitulo =
                 new javax.swing.JLabel(
-                        "CONFIRMAR ELIMINACIÓN",
+                        "CONFIRMAR BAJA",
                         javax.swing.SwingConstants.CENTER
                 );
 
@@ -414,7 +464,7 @@ public class VentanaProductos extends javax.swing.JFrame {
 
         javax.swing.JLabel lblMensaje =
                 new javax.swing.JLabel(
-                        "¿Seguro que querés eliminar el producto "
+                        "¿Seguro que querés dar de baja el producto "
                         + nombreProducto + "?",
                         javax.swing.SwingConstants.CENTER
                 );
@@ -492,7 +542,7 @@ public class VentanaProductos extends javax.swing.JFrame {
                 Estilos.mostrarAdvertencia(
                         this,
                         "Operación exitosa",
-                        "Producto eliminado correctamente"
+                        "Producto dado de baja correctamente"
                 );
 
                 cargarTabla();
@@ -503,7 +553,7 @@ public class VentanaProductos extends javax.swing.JFrame {
                 Estilos.mostrarAdvertencia(
                         this,
                         "Error",
-                        "No se pudo eliminar el producto"
+                        "No se pudo dar de baja el producto"
                 );
             }
         });
@@ -513,7 +563,60 @@ public class VentanaProductos extends javax.swing.JFrame {
         dialogo.setLocationRelativeTo(ventanaPadre);
         dialogo.setVisible(true);
     }//GEN-LAST:event_btnEliminarProductoActionPerformed
+    private void reactivarProductoSeleccionado() {
 
+        int filaVista =
+                tblProductos.getSelectedRow();
+
+        if (filaVista == -1) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "Seleccioná un producto inactivo"
+            );
+
+            return;
+        }
+
+        int filaModelo =
+                tblProductos.convertRowIndexToModel(
+                        filaVista
+                );
+
+        int idProducto =
+                Integer.parseInt(
+                        tblProductos.getModel()
+                                .getValueAt(
+                                        filaModelo,
+                                        0
+                                ).toString()
+                );
+
+        boolean reactivado =
+                ProductoController.reactivarProducto(
+                        idProducto
+                );
+
+        if (reactivado) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Operación exitosa",
+                    "Producto reactivado correctamente"
+            );
+
+            cargarTablaInactivos();
+
+        } else {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Error",
+                    "No se pudo reactivar el producto"
+            );
+        }
+    }
     private void btnEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarProductoActionPerformed
         int fila = tblProductos.getSelectedRow();
 
@@ -1420,7 +1523,55 @@ public class VentanaProductos extends javax.swing.JFrame {
                         38
                 )
         );
-     
+        javax.swing.JButton btnVerInactivos =
+                new javax.swing.JButton(
+                        "Ver inactivos"
+                );
+
+        Estilos.estilizarBoton(
+                btnVerInactivos
+        );
+
+        btnVerInactivos.setPreferredSize(
+                new java.awt.Dimension(
+                        185,
+                        38
+                )
+        );
+
+        btnVerInactivos.addActionListener(e -> {
+
+            if (mostrandoProductosInactivos) {
+
+                cargarTabla();
+
+                btnVerInactivos.setText(
+                        "Ver inactivos"
+                );
+
+            } else {
+
+                cargarTablaInactivos();
+
+                btnVerInactivos.setText(
+                        "Ver activos"
+                );
+            }
+
+            campoBusquedaProductos.setText(
+                    "Buscar por nombre"
+            );
+
+            campoBusquedaProductos.setForeground(
+                    new java.awt.Color(
+                            140,
+                            140,
+                            140
+                    )
+            );
+
+            campoBusquedaProductos.setCaretPosition(0);
+        });
         javax.swing.JPanel panelBotones =
                 new javax.swing.JPanel(
                         new java.awt.FlowLayout(
@@ -1435,7 +1586,9 @@ public class VentanaProductos extends javax.swing.JFrame {
         panelBotones.add(
                 btnCrearProducto
         );       
-
+        panelBotones.add(
+                btnVerInactivos
+        );
         tarjetaProductos.add(
                 panelBotones,
                 java.awt.BorderLayout.SOUTH
@@ -1811,14 +1964,11 @@ public class VentanaProductos extends javax.swing.JFrame {
         private final javax.swing.JButton btnEditar =
                 crearBotonEditar();
 
-        private final javax.swing.JButton btnEliminar =
+        private final javax.swing.JButton btnBaja =
                 crearBotonEliminar();
 
-        private final java.awt.Color colorEditarNormal =
-                btnEditar.getBackground();
-
-        private final java.awt.Color colorEliminarNormal =
-                btnEliminar.getBackground();
+        private final javax.swing.JButton btnReactivar =
+                crearBotonReactivar();
 
         public RenderizadorAcciones() {
 
@@ -1831,9 +1981,6 @@ public class VentanaProductos extends javax.swing.JFrame {
             );
 
             setOpaque(true);
-
-            add(btnEditar);
-            add(btnEliminar);
         }
 
         @Override
@@ -1852,144 +1999,197 @@ public class VentanaProductos extends javax.swing.JFrame {
                             : tabla.getBackground()
             );
 
-            boolean sobreEditar = false;
-            boolean sobreEliminar = false;
+            removeAll();
 
-            java.awt.Point posicionMouse =
-                    tabla.getMousePosition();
+            if (mostrandoProductosInactivos) {
 
-            if (posicionMouse != null) {
+                add(
+                        btnReactivar
+                );
 
-                int filaMouse =
-                        tabla.rowAtPoint(posicionMouse);
+            } else {
 
-                int columnaMouse =
-                        tabla.columnAtPoint(posicionMouse);
+                add(
+                        btnEditar
+                );
 
-                if (filaMouse == fila
-                        && columnaMouse == columna) {
-
-                    java.awt.Rectangle celda =
-                            tabla.getCellRect(
-                                    fila,
-                                    columna,
-                                    false
-                            );
-
-                    int posicionDentro =
-                            posicionMouse.x - celda.x;
-
-                    if (posicionDentro < celda.width / 2) {
-                        sobreEditar = true;
-                    } else {
-                        sobreEliminar = true;
-                    }
-                }
+                add(
+                        btnBaja
+                );
             }
-
-            btnEditar.setBackground(
-                    sobreEditar
-                            ? colorEditarNormal.brighter()
-                            : colorEditarNormal
-            );
-
-            btnEliminar.setBackground(
-                    sobreEliminar
-                            ? new java.awt.Color(255, 165, 165)
-                            : colorEliminarNormal
-            );
 
             return this;
         }
     }
-
     private class EditorAcciones
-            extends javax.swing.AbstractCellEditor
-            implements javax.swing.table.TableCellEditor {
+        extends javax.swing.AbstractCellEditor
+        implements javax.swing.table.TableCellEditor {
 
-        private final javax.swing.JPanel panel =
-                new javax.swing.JPanel(
-                        new java.awt.FlowLayout(
-                                java.awt.FlowLayout.CENTER,
-                                4,
-                                4
-                        )
-                );
-
-        private final javax.swing.JButton btnEditar =
-                crearBotonEditar();
-
-        private final javax.swing.JButton btnEliminar =
-                crearBotonEliminar();
-
-        private int filaActual = -1;
-
-        public EditorAcciones() {
-
-            panel.setOpaque(true);
-
-            panel.add(btnEditar);
-            panel.add(btnEliminar);
-
-            btnEditar.addActionListener(e -> {
-
-                int fila = filaActual;
-
-                fireEditingStopped();
-
-                if (fila >= 0) {
-
-                    tblProductos.setRowSelectionInterval(
-                            fila,
-                            fila
-                    );
-
-                    btnEditarProductoActionPerformed(null);
-                }
-            });
-
-            btnEliminar.addActionListener(e -> {
-
-                int fila = filaActual;
-
-                fireEditingStopped();
-
-                if (fila >= 0) {
-
-                    tblProductos.setRowSelectionInterval(
-                            fila,
-                            fila
-                    );
-
-                    btnEliminarProductoActionPerformed(null);
-                }
-            });
-        }
-
-        @Override
-        public java.awt.Component getTableCellEditorComponent(
-                javax.swing.JTable tabla,
-                Object valor,
-                boolean seleccionado,
-                int fila,
-                int columna
-        ) {
-
-            filaActual = fila;
-
-            panel.setBackground(
-                    tabla.getSelectionBackground()
+    private final javax.swing.JPanel panel =
+            new javax.swing.JPanel(
+                    new java.awt.FlowLayout(
+                            java.awt.FlowLayout.CENTER,
+                            4,
+                            4
+                    )
             );
 
-            return panel;
-        }
+    private final javax.swing.JButton btnEditar =
+            crearBotonEditar();
 
-        @Override
-        public Object getCellEditorValue() {
-            return "";
-        }
+    private final javax.swing.JButton btnBaja =
+            crearBotonEliminar();
+
+    private final javax.swing.JButton btnReactivar =
+            crearBotonReactivar();
+
+    private int filaActual = -1;
+
+    public EditorAcciones() {
+
+        panel.setOpaque(true);
+
+        btnEditar.addActionListener(e -> {
+
+            int fila = filaActual;
+
+            fireEditingStopped();
+
+            if (fila >= 0) {
+
+                tblProductos.setRowSelectionInterval(
+                        fila,
+                        fila
+                );
+
+                btnEditarProductoActionPerformed(
+                        null
+                );
+            }
+        });
+
+        btnBaja.addActionListener(e -> {
+
+            int fila = filaActual;
+
+            fireEditingStopped();
+
+            if (fila >= 0) {
+
+                tblProductos.setRowSelectionInterval(
+                        fila,
+                        fila
+                );
+
+                btnEliminarProductoActionPerformed(
+                        null
+                );
+            }
+        });
+
+        btnReactivar.addActionListener(e -> {
+
+            int fila = filaActual;
+
+            fireEditingStopped();
+
+            if (fila >= 0) {
+
+                tblProductos.setRowSelectionInterval(
+                        fila,
+                        fila
+                );
+
+                reactivarProductoSeleccionado();
+            }
+        });
     }
 
+    @Override
+    public java.awt.Component getTableCellEditorComponent(
+            javax.swing.JTable tabla,
+            Object valor,
+            boolean seleccionado,
+            int fila,
+            int columna
+    ) {
+
+        filaActual = fila;
+
+        panel.removeAll();
+
+        if (mostrandoProductosInactivos) {
+
+            panel.add(
+                    btnReactivar
+            );
+
+        } else {
+
+            panel.add(
+                    btnEditar
+            );
+
+            panel.add(
+                    btnBaja
+            );
+        }
+
+        panel.setBackground(
+                tabla.getSelectionBackground()
+        );
+
+        return panel;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        return "";
+    }
+}
+    private javax.swing.JButton crearBotonReactivar() {
+
+        javax.swing.JButton boton =
+                new javax.swing.JButton(
+                        "Reactivar"
+                );
+
+        Estilos.estilizarBoton(
+                boton
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(
+                        88,
+                        22
+                );
+
+        boton.setPreferredSize(
+                tamaño
+        );
+
+        boton.setMinimumSize(
+                tamaño
+        );
+
+        boton.setMaximumSize(
+                tamaño
+        );
+
+        boton.setToolTipText(
+                "Reactivar producto"
+        );
+
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+    }
     private javax.swing.JButton crearBotonEditar() {
 
         javax.swing.JButton boton =
@@ -2039,7 +2239,7 @@ public class VentanaProductos extends javax.swing.JFrame {
 
         Estilos.aplicarIcono(
                 boton,
-                "/imagenes/iconos/eliminar.png",
+                "/imagenes/iconos/flecha_abajo.png",
                 14,
                 14
         );
@@ -2051,7 +2251,9 @@ public class VentanaProductos extends javax.swing.JFrame {
         boton.setMinimumSize(tamaño);
         boton.setMaximumSize(tamaño);
 
-        boton.setToolTipText("Eliminar producto");
+        boton.setToolTipText(
+                "Dar de baja el producto"
+        );
         boton.setFocusable(false);
 
         boton.setCursor(

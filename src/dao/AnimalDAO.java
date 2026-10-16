@@ -18,7 +18,9 @@ public class AnimalDAO implements CrudDAO<Animal> {
         try {
 
             conn = Conexion.getInstancia().conectar();
-
+            asegurarColumnaActivo(
+                    conn
+            );
             boolean editando = (animal.getIdAnimal() != -1);
 
             if (editando) {
@@ -83,7 +85,9 @@ public class AnimalDAO implements CrudDAO<Animal> {
 
             conn = Conexion.getInstancia().conectar();
 
-            String sql = "SELECT * FROM animales";
+            String sql =
+                    "SELECT * FROM animales "
+                    + "WHERE activo = 1";
 
             PreparedStatement pst = conn.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
@@ -98,7 +102,9 @@ public class AnimalDAO implements CrudDAO<Animal> {
                         rs.getInt("edad"),
                         rs.getInt("id_cliente")
                 );
-
+                animal.setActivo(
+                        rs.getInt("activo") == 1
+                );
                 lista.add(animal);
             }
 
@@ -135,7 +141,9 @@ public class AnimalDAO implements CrudDAO<Animal> {
             conn = Conexion.getInstancia().conectar();
 
             String sql =
-                    "DELETE FROM animales WHERE id_animal = ?";
+                    "UPDATE animales "
+                    + "SET activo = 0 "
+                    + "WHERE id_animal = ?";
 
             PreparedStatement pst = conn.prepareStatement(sql);
 
@@ -170,13 +178,18 @@ public class AnimalDAO implements CrudDAO<Animal> {
         try {
 
             conn = Conexion.getInstancia().conectar();
-
+            asegurarColumnaActivo(
+                    conn
+            );
+            asegurarColumnaActivo(
+                    conn
+            );
             String sql =
                     "SELECT * FROM animales "
-                    + "WHERE nombre LIKE ? "
+                    + "WHERE activo = 1 "
+                    + "AND (nombre LIKE ? "
                     + "OR especie LIKE ? "
-                    + "OR raza LIKE ?";
-
+                    + "OR raza LIKE ?)";
             PreparedStatement pst = conn.prepareStatement(sql);
 
             pst.setString(1, "%" + filtro + "%");
@@ -197,6 +210,9 @@ public class AnimalDAO implements CrudDAO<Animal> {
                 );
 
                 lista.add(animal);
+                animal.setActivo(
+                        rs.getInt("activo") == 1
+                );
             }
 
             rs.close();
@@ -220,5 +236,145 @@ public class AnimalDAO implements CrudDAO<Animal> {
         }
 
         return lista;
+    }
+    private void asegurarColumnaActivo(
+            Connection conn
+    ) throws Exception {
+
+        boolean existeColumna = false;
+
+        PreparedStatement pstConsultar =
+                conn.prepareStatement(
+                        "PRAGMA table_info(animales)"
+                );
+
+        ResultSet rs =
+                pstConsultar.executeQuery();
+
+        while (rs.next()) {
+
+            if ("activo".equalsIgnoreCase(
+                    rs.getString("name")
+            )) {
+
+                existeColumna = true;
+                break;
+            }
+        }
+
+        rs.close();
+        pstConsultar.close();
+
+        if (!existeColumna) {
+
+            PreparedStatement pstCrear =
+                    conn.prepareStatement(
+                            "ALTER TABLE animales "
+                            + "ADD COLUMN activo "
+                            + "INTEGER NOT NULL DEFAULT 1"
+                    );
+
+            pstCrear.executeUpdate();
+            pstCrear.close();
+        }
+    }
+    public ArrayList<Animal> listarInactivos() {
+
+        ArrayList<Animal> lista =
+                new ArrayList<>();
+
+        try (
+                Connection conn =
+                        Conexion.getInstancia().conectar()
+        ) {
+
+            asegurarColumnaActivo(
+                    conn
+            );
+
+            String sql =
+                    "SELECT * FROM animales "
+                    + "WHERE activo = 0 "
+                    + "ORDER BY nombre";
+
+            try (
+                    PreparedStatement pst =
+                            conn.prepareStatement(sql);
+
+                    ResultSet rs =
+                            pst.executeQuery()
+            ) {
+
+                while (rs.next()) {
+
+                    Animal animal =
+                            new Animal(
+                                    rs.getInt("id_animal"),
+                                    rs.getString("nombre"),
+                                    rs.getString("especie"),
+                                    rs.getString("raza"),
+                                    rs.getInt("edad"),
+                                    rs.getInt("id_cliente")
+                            );
+
+                    animal.setActivo(false);
+
+                    lista.add(
+                            animal
+                    );
+                }
+            }
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al listar animales inactivos: "
+                    + e.getMessage()
+            );
+        }
+
+        return lista;
+    }
+    public boolean reactivar(
+            int idAnimal
+    ) {
+
+        String sql =
+                "UPDATE animales "
+                + "SET activo = 1 "
+                + "WHERE id_animal = ? "
+                + "AND activo = 0";
+
+        try (
+                Connection conn =
+                        Conexion.getInstancia().conectar()
+        ) {
+
+            asegurarColumnaActivo(
+                    conn
+            );
+
+            try (
+                    PreparedStatement pst =
+                            conn.prepareStatement(sql)
+            ) {
+
+                pst.setInt(
+                        1,
+                        idAnimal
+                );
+
+                return pst.executeUpdate() > 0;
+            }
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al reactivar el animal: "
+                    + e.getMessage()
+            );
+
+            return false;
+        }
     }
 }

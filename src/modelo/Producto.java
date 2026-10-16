@@ -9,6 +9,7 @@ public class Producto {
     private String fechaVencimiento;
     private int idMarca = -1;
     private String nombreMarca = "Sin marca";
+    private boolean activo = true;
 
     public Producto() {
     }
@@ -122,5 +123,14 @@ public class Producto {
             this.nombreMarca =
                     nombreMarca;
         }
+    }
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(
+            boolean activo
+    ) {
+        this.activo = activo;
     }
 }

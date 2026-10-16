@@ -137,6 +137,41 @@ public class AnimalController {
 
             return lista;
         }
+        public static ArrayList<Object[]> listarAnimalesInactivos() {
+
+            ArrayList<Object[]> lista =
+                    new ArrayList<>();
+
+            for (Animal animal
+                    : animalDAO.listarInactivos()) {
+
+                String nombreCliente =
+                        obtenerNombreCliente(
+                                animal.getIdCliente()
+                        );
+
+                lista.add(
+                        new Object[]{
+                            animal.getIdAnimal(),
+                            animal.getNombre(),
+                            animal.getEspecie(),
+                            animal.getRaza(),
+                            animal.getEdad(),
+                            nombreCliente
+                        }
+                );
+            }
+
+            return lista;
+        }
+        public static boolean reactivarAnimal(
+                int idAnimal
+        ) {
+
+            return animalDAO.reactivar(
+                    idAnimal
+            );
+        }
         private static String obtenerNombreCliente(
                 int idCliente
         ) {

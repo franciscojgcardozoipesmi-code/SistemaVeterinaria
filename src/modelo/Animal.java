@@ -8,7 +8,7 @@ public class Animal {
     private String raza;
     private int edad;
     private int idCliente;
-
+    private boolean activo = true;
     public Animal() {
     }
 
@@ -69,5 +69,14 @@ public class Animal {
 
     public void setIdCliente(int idCliente) {
         this.idCliente = idCliente;
+    }
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(
+            boolean activo
+    ) {
+        this.activo = activo;
     }
 }
