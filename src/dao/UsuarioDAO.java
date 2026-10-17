@@ -19,7 +19,12 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
 
             conn = Conexion.getInstancia().conectar();
 
-            boolean editando = (usuario.getIdUsuario() != -1);
+            asegurarColumnaActivo(
+                    conn
+            );
+
+            boolean editando =
+                    usuario.getIdUsuario() != -1;
 
             if (editando) {
 
@@ -83,7 +88,14 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
 
             conn = Conexion.getInstancia().conectar();
 
-            String sql = "SELECT * FROM usuarios";
+            asegurarColumnaActivo(
+                    conn
+            );
+
+            String sql =
+                    "SELECT * FROM usuarios "
+                    + "WHERE activo = 1 "
+                    + "ORDER BY usuario";
 
             PreparedStatement pst = conn.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
@@ -103,7 +115,9 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
                 usuario.setCorreo(
                         rs.getString("correo")
                 );
-
+                usuario.setActivo(
+                        rs.getInt("activo") == 1
+                );
                 lista.add(usuario);
             }
 
@@ -142,12 +156,19 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
             conn =
                     Conexion.getInstancia().conectar();
 
+            asegurarColumnaActivo(
+                    conn
+            );
+
             String sql =
                     "SELECT * FROM usuarios "
-                    + "WHERE CAST(id_usuario AS TEXT) LIKE ? "
+                    + "WHERE activo = 1 "
+                    + "AND ("
+                    + "CAST(id_usuario AS TEXT) LIKE ? "
                     + "OR LOWER(usuario) LIKE LOWER(?) "
                     + "OR LOWER(rol) LIKE LOWER(?) "
-                    + "OR LOWER(COALESCE(correo, '')) LIKE LOWER(?) "
+                    + "OR LOWER(COALESCE(correo, '')) LIKE LOWER(?)"
+                    + ") "
                     + "ORDER BY usuario";
 
             PreparedStatement pst =
@@ -205,7 +226,9 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
                 usuario.setCorreo(
                         rs.getString("correo")
                 );
-
+                usuario.setActivo(
+                        rs.getInt("activo") == 1
+                );
                 lista.add(
                         usuario
                 );
@@ -244,8 +267,14 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
 
             conn = Conexion.getInstancia().conectar();
 
+            asegurarColumnaActivo(
+                    conn
+            );
+
             String sql =
-                    "DELETE FROM usuarios WHERE id_usuario = ?";
+                    "UPDATE usuarios "
+                    + "SET activo = 0 "
+                    + "WHERE id_usuario = ?";
 
             PreparedStatement pst = conn.prepareStatement(sql);
 
@@ -256,7 +285,9 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
 
         } catch (Exception e) {
 
-            System.out.println("Error al eliminar usuario: " + e);
+            System.out.println(
+                    "Error al dar de baja al usuario: " + e
+            );
 
         } finally {
 
@@ -280,8 +311,15 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
 
             conn = Conexion.getInstancia().conectar();
 
+            asegurarColumnaActivo(
+                    conn
+            );
+
             String sql =
-                    "SELECT * FROM usuarios WHERE usuario = ? AND password = ?";
+                    "SELECT 1 FROM usuarios "
+                    + "WHERE usuario = ? "
+                    + "AND password = ? "
+                    + "AND activo = 1";
 
             PreparedStatement pst = conn.prepareStatement(sql);
 
@@ -326,8 +364,15 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
 
             conn = Conexion.getInstancia().conectar();
 
+            asegurarColumnaActivo(
+                    conn
+            );
+
             String sql =
-                    "SELECT rol FROM usuarios WHERE usuario = ? AND password = ?";
+                    "SELECT rol FROM usuarios "
+                    + "WHERE usuario = ? "
+                    + "AND password = ? "
+                    + "AND activo = 1";
 
             PreparedStatement pst = conn.prepareStatement(sql);
 
@@ -677,5 +722,196 @@ public class UsuarioDAO implements CrudDAO<Usuario> {
         }
 
         return null;
+    }
+    public ArrayList<Usuario> listarInactivos() {
+
+        ArrayList<Usuario> lista =
+                new ArrayList<>();
+
+        Connection conn = null;
+
+        try {
+
+            conn =
+                    Conexion.getInstancia().conectar();
+
+            asegurarColumnaActivo(
+                    conn
+            );
+
+            String sql =
+                    "SELECT * FROM usuarios "
+                    + "WHERE activo = 0 "
+                    + "ORDER BY usuario";
+
+            PreparedStatement pst =
+                    conn.prepareStatement(
+                            sql
+                    );
+
+            ResultSet rs =
+                    pst.executeQuery();
+
+            while (rs.next()) {
+
+                Usuario usuario =
+                        new Usuario(
+                                rs.getInt("id_usuario"),
+                                rs.getString("usuario"),
+                                rs.getString("password")
+                        );
+
+                usuario.setRol(
+                        rs.getString("rol")
+                );
+
+                usuario.setCorreo(
+                        rs.getString("correo")
+                );
+
+                usuario.setActivo(
+                        false
+                );
+
+                lista.add(
+                        usuario
+                );
+            }
+
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al listar usuarios inactivos: "
+                    + e.getMessage()
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return lista;
+    }
+    public void reactivar(
+            int idUsuario
+    ) {
+
+        Connection conn = null;
+
+        try {
+
+            conn =
+                    Conexion.getInstancia().conectar();
+
+            asegurarColumnaActivo(
+                    conn
+            );
+
+            String sql =
+                    "UPDATE usuarios "
+                    + "SET activo = 1 "
+                    + "WHERE id_usuario = ?";
+
+            PreparedStatement pst =
+                    conn.prepareStatement(
+                            sql
+                    );
+
+            pst.setInt(
+                    1,
+                    idUsuario
+            );
+
+            pst.executeUpdate();
+            pst.close();
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al reactivar al usuario: "
+                    + e.getMessage()
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void asegurarColumnaActivo(
+            Connection conn
+    ) {
+
+        try {
+
+            boolean existe =
+                    false;
+
+            String sqlColumnas =
+                    "PRAGMA table_info(usuarios)";
+
+            PreparedStatement pstColumnas =
+                    conn.prepareStatement(
+                            sqlColumnas
+                    );
+
+            ResultSet rs =
+                    pstColumnas.executeQuery();
+
+            while (rs.next()) {
+
+                if ("activo".equalsIgnoreCase(
+                        rs.getString("name")
+                )) {
+
+                    existe = true;
+                    break;
+                }
+            }
+
+            rs.close();
+            pstColumnas.close();
+
+            if (!existe) {
+
+                String sqlAgregar =
+                        "ALTER TABLE usuarios "
+                        + "ADD COLUMN activo INTEGER "
+                        + "NOT NULL DEFAULT 1";
+
+                PreparedStatement pstAgregar =
+                        conn.prepareStatement(
+                                sqlAgregar
+                        );
+
+                pstAgregar.executeUpdate();
+                pstAgregar.close();
+            }
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al preparar la columna activo de usuarios: "
+                    + e.getMessage()
+            );
+        }
     }
 }

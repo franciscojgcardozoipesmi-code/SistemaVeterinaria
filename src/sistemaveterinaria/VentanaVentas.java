@@ -49,49 +49,65 @@ public class VentanaVentas extends javax.swing.JFrame {
         inicializarBotonesVentas();
     }
     private void cargarVentas() {
-            javax.swing.table.DefaultTableModel modelo =
-                    new javax.swing.table.DefaultTableModel() {
 
-                @Override
-                public boolean isCellEditable(
-                        int row,
-                        int column
-                ) {
-                    return column == 9;
-                }
-            };
+        javax.swing.table.DefaultTableModel modelo =
+                new javax.swing.table.DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(
+                    int fila,
+                    int columna
+            ) {
+
+                return columna == 7;
+            }
+        };
 
         modelo.addColumn("ID");
         modelo.addColumn("Fecha");
-        modelo.addColumn("Producto");
-        modelo.addColumn("Cantidad");
-        modelo.addColumn("Precio");
-        modelo.addColumn("Subtotal");
+        modelo.addColumn("Cliente");
+        modelo.addColumn("Usuario");
         modelo.addColumn("Total");
         modelo.addColumn("Medio de pago");
         modelo.addColumn("Estado");
         modelo.addColumn("Acciones");
 
-       for (Object[] fila
-                : VentaController.listarVentasConDetalle()) {
-
-            Object[] filaCompleta =
-                    java.util.Arrays.copyOf(
-                            fila,
-                            10
-                    );
-
-            filaCompleta[9] = "";
+        for (Object[] fila
+                : VentaController.listarVentasResumen()) {
 
             modelo.addRow(
-                    filaCompleta
+                    new Object[]{
+                        fila[0],
+                        fila[1],
+                        fila[2],
+                        fila[3],
+                        fila[4],
+                        fila[5],
+                        fila[6],
+                        ""
+                    }
             );
         }
 
-       tblVentas.setModel(modelo);
-       configurarColorEstadoVentas();
-       configurarColumnaAccionesVentas();
-   }
+        tblVentas.setModel(
+                modelo
+        );
+
+        tblVentas.getColumnModel()
+                .getColumn(0)
+                .setMinWidth(0);
+
+        tblVentas.getColumnModel()
+                .getColumn(0)
+                .setMaxWidth(0);
+
+        tblVentas.getColumnModel()
+                .getColumn(0)
+                .setPreferredWidth(0);
+
+        configurarColorEstadoVentas();
+        configurarColumnaAccionesVentas();
+    }
     
     private void configurarColorEstadoVentas() {
 
@@ -124,7 +140,7 @@ public class VentanaVentas extends javax.swing.JFrame {
                 Object valorEstado =
                         table.getModel().getValueAt(
                                 filaModelo,
-                                8
+                                6
                         );
 
                 boolean anulada =
@@ -1014,6 +1030,12 @@ public class VentanaVentas extends javax.swing.JFrame {
                 )
         );
 
+        campoBuscarVenta.setMinimumSize(
+                new java.awt.Dimension(
+                        340,
+                        38
+                )
+        );
         campoBuscarVenta.setBorder(
                 javax.swing.BorderFactory.createCompoundBorder(
                         javax.swing.BorderFactory.createLineBorder(
@@ -1134,191 +1156,96 @@ public class VentanaVentas extends javax.swing.JFrame {
     private void buscarVentas(
             String filtro
     ) {
+
         javax.swing.table.DefaultTableModel modelo =
                 new javax.swing.table.DefaultTableModel() {
 
             @Override
             public boolean isCellEditable(
-                    int row,
-                    int column
+                    int fila,
+                    int columna
             ) {
-                return column == 9;
+
+                return columna == 7;
             }
         };
 
-        modelo.addColumn(
-                "ID"
-        );
-
-        modelo.addColumn(
-                "Fecha"
-        );
-
-        modelo.addColumn(
-                "Producto"
-        );
-
-        modelo.addColumn(
-                "Cantidad"
-        );
-
-        modelo.addColumn(
-                "Precio"
-        );
-
-        modelo.addColumn(
-                "Subtotal"
-        );
-
-        modelo.addColumn(
-                "Total"
-        );
-
-        modelo.addColumn(
-                "Medio de pago"
-        );
-        
-        modelo.addColumn(
-                "Estado"
-        );
-        modelo.addColumn(
-                "Acciones"
-        );
+        modelo.addColumn("ID");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Cliente");
+        modelo.addColumn("Usuario");
+        modelo.addColumn("Total");
+        modelo.addColumn("Medio de pago");
+        modelo.addColumn("Estado");
+        modelo.addColumn("Acciones");
 
         for (Object[] fila
-                : VentaController.buscarVentas(filtro)) {
-
-            Object[] filaCompleta =
-                    java.util.Arrays.copyOf(
-                            fila,
-                            10
-                    );
-
-            filaCompleta[9] = "";
+                : VentaController.buscarVentasResumen(
+                        filtro
+                )) {
 
             modelo.addRow(
-                    filaCompleta
+                    new Object[]{
+                        fila[0],
+                        fila[1],
+                        fila[2],
+                        fila[3],
+                        fila[4],
+                        fila[5],
+                        fila[6],
+                        ""
+                    }
             );
         }
 
         tblVentas.setModel(
                 modelo
         );
+
+        tblVentas.getColumnModel()
+                .getColumn(0)
+                .setMinWidth(0);
+
+        tblVentas.getColumnModel()
+                .getColumn(0)
+                .setMaxWidth(0);
+
+        tblVentas.getColumnModel()
+                .getColumn(0)
+                .setPreferredWidth(0);
+
         configurarColorEstadoVentas();
         configurarColumnaAccionesVentas();
     }
     private void configurarColumnaAccionesVentas() {
 
-        if (tblVentas.getColumnCount() < 10) {
+        if (tblVentas.getColumnCount() < 8) {
             return;
         }
 
-        javax.swing.table.TableColumn columnaId =
-                tblVentas.getColumnModel()
-                        .getColumn(0);
+        tblVentas.getColumnModel()
+                .getColumn(7)
+                .setCellRenderer(
+                        new RenderizadorAnularVenta()
+                );
 
-        columnaId.setMinWidth(0);
-        columnaId.setMaxWidth(0);
-        columnaId.setPreferredWidth(0);
-        columnaId.setResizable(false);
+        tblVentas.getColumnModel()
+                .getColumn(7)
+                .setCellEditor(
+                        new EditorAnularVenta()
+                );
 
-        javax.swing.table.TableColumn columnaAcciones =
-                tblVentas.getColumnModel()
-                        .getColumn(9);
+        tblVentas.getColumnModel()
+                .getColumn(7)
+                .setPreferredWidth(95);
 
-        columnaAcciones.setMinWidth(85);
-        columnaAcciones.setMaxWidth(85);
-        columnaAcciones.setPreferredWidth(85);
-        columnaAcciones.setResizable(false);
+        tblVentas.getColumnModel()
+                .getColumn(7)
+                .setMinWidth(95);
 
-        columnaAcciones.setCellRenderer(
-                new RenderizadorAnularVenta()
-        );
-
-        columnaAcciones.setCellEditor(
-                new EditorAnularVenta()
-        );
-
-        tblVentas.setRowHeight(32);
-        if (!eventosAccionesVentasConfigurados) {
-
-            eventosAccionesVentasConfigurados = true;
-
-            tblVentas.addMouseMotionListener(
-                    new java.awt.event.MouseMotionAdapter() {
-
-                @Override
-                public void mouseMoved(
-                        java.awt.event.MouseEvent e
-                ) {
-
-                    int fila =
-                            tblVentas.rowAtPoint(
-                                    e.getPoint()
-                            );
-
-                    int columnaVista =
-                            tblVentas.columnAtPoint(
-                                    e.getPoint()
-                            );
-
-                    boolean sobreAcciones =
-                            fila >= 0
-                            && columnaVista >= 0
-                            && tblVentas.convertColumnIndexToModel(
-                                    columnaVista
-                            ) == 9;
-
-                    boolean ventaActiva = false;
-
-                    if (sobreAcciones) {
-
-                        int filaModelo =
-                                tblVentas.convertRowIndexToModel(
-                                        fila
-                                );
-
-                        Object estado =
-                                tblVentas.getModel().getValueAt(
-                                        filaModelo,
-                                        8
-                                );
-
-                        ventaActiva =
-                                estado != null
-                                && !"ANULADA".equalsIgnoreCase(
-                                        estado.toString()
-                                );
-                    }
-
-                    tblVentas.setCursor(
-                            sobreAcciones && ventaActiva
-                                    ? java.awt.Cursor.getPredefinedCursor(
-                                            java.awt.Cursor.HAND_CURSOR
-                                    )
-                                    : java.awt.Cursor.getDefaultCursor()
-                    );
-
-                    tblVentas.repaint();
-                }
-            });
-
-            tblVentas.addMouseListener(
-                    new java.awt.event.MouseAdapter() {
-
-                @Override
-                public void mouseExited(
-                        java.awt.event.MouseEvent e
-                ) {
-
-                    tblVentas.setCursor(
-                            java.awt.Cursor.getDefaultCursor()
-                    );
-
-                    tblVentas.repaint();
-                }
-            });
-        }
+        tblVentas.getColumnModel()
+                .getColumn(7)
+                .setMaxWidth(95);
     }
     private class RenderizadorAnularVenta
         extends javax.swing.JPanel
@@ -1360,7 +1287,7 @@ public class VentanaVentas extends javax.swing.JFrame {
             Object estado =
                     table.getModel().getValueAt(
                             filaModelo,
-                            8
+                            6
                     );
 
             boolean anulada =
@@ -1497,7 +1424,7 @@ public class VentanaVentas extends javax.swing.JFrame {
             Object estado =
                     table.getModel().getValueAt(
                             filaModelo,
-                            8
+                            6
                     );
 
             boolean anulada =
@@ -1543,9 +1470,9 @@ public class VentanaVentas extends javax.swing.JFrame {
 
         Estilos.aplicarIcono(
                 boton,
-                "/imagenes/iconos/eliminar.png",
-                14,
-                14
+                "/imagenes/iconos/flecha_abajo.png",
+                16,
+                16
         );
 
         java.awt.Dimension tamaño =
@@ -1574,6 +1501,9 @@ public class VentanaVentas extends javax.swing.JFrame {
     }
     private void inicializarBotonesVentas() {
 
+        String textoBuscador =
+                "Buscar fecha, cliente, usuario o pago";
+
         btnBuscarVenta =
                 new javax.swing.JButton();
 
@@ -1584,7 +1514,7 @@ public class VentanaVentas extends javax.swing.JFrame {
 
         campoBuscarVenta =
                 new javax.swing.JTextField(
-                        "Buscar por fecha, producto o pago"
+                        textoBuscador
                 );
 
         campoBuscarVenta.setForeground(
@@ -1603,9 +1533,8 @@ public class VentanaVentas extends javax.swing.JFrame {
                     java.awt.event.FocusEvent evt
             ) {
 
-                if (campoBuscarVenta.getText().equals(
-                        "Buscar por fecha, producto o pago"
-                )) {
+                if (campoBuscarVenta.getText()
+                        .equals(textoBuscador)) {
 
                     campoBuscarVenta.setText("");
 
@@ -1613,7 +1542,6 @@ public class VentanaVentas extends javax.swing.JFrame {
                             Estilos.VERDE_OSCURO
                     );
                 }
-                campoBuscarVenta.setCaretPosition(0);
             }
 
             @Override
@@ -1625,7 +1553,7 @@ public class VentanaVentas extends javax.swing.JFrame {
                         .trim().isEmpty()) {
 
                     campoBuscarVenta.setText(
-                            "Buscar por fecha, producto o pago"
+                            textoBuscador
                     );
 
                     campoBuscarVenta.setForeground(
@@ -1635,8 +1563,9 @@ public class VentanaVentas extends javax.swing.JFrame {
                                     145
                             )
                     );
+
+                    campoBuscarVenta.setCaretPosition(0);
                 }
-                campoBuscarVenta.setCaretPosition(0);
             }
         });
 
@@ -1646,9 +1575,7 @@ public class VentanaVentas extends javax.swing.JFrame {
                     campoBuscarVenta.getText().trim();
 
             if (filtro.isEmpty()
-                    || filtro.equals(
-                            "Buscar por fecha, producto o pago"
-                    )) {
+                    || filtro.equals(textoBuscador)) {
 
                 cargarVentas();
 
@@ -1669,7 +1596,7 @@ public class VentanaVentas extends javax.swing.JFrame {
             cargarVentas();
 
             campoBuscarVenta.setText(
-                    "Buscar por fecha, producto o pago"
+                    textoBuscador
             );
 
             campoBuscarVenta.setForeground(
@@ -1680,11 +1607,9 @@ public class VentanaVentas extends javax.swing.JFrame {
                     )
             );
 
-            tblVentas.requestFocusInWindow();
+            campoBuscarVenta.setCaretPosition(0);
 
-            javax.swing.SwingUtilities.invokeLater(() ->
-                    campoBuscarVenta.setCaretPosition(0)
-            );
+            tblVentas.requestFocusInWindow();
         });
     }
     
@@ -1978,6 +1903,9 @@ public class VentanaVentas extends javax.swing.JFrame {
                 true
         );
     }
+    
+
+    
     public static void main(String args[]) {
     
         java.awt.EventQueue.invokeLater(() -> new VentanaVentas().setVisible(true));

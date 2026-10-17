@@ -10,7 +10,9 @@ public class ProcedimientoMedico {
     private String fecha;
     private String descripcion;
     private String animal;
-    private boolean activo;
+    private String cliente;
+    private String dniCliente;
+    private boolean activo = true;
     public ProcedimientoMedico() {
     }
 
@@ -101,5 +103,23 @@ public class ProcedimientoMedico {
     public void setActivo(boolean activo) {
         this.activo = activo;
     }
-    
+    public String getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(
+            String cliente
+    ) {
+        this.cliente = cliente;
+    }
+
+    public String getDniCliente() {
+        return dniCliente;
+    }
+
+    public void setDniCliente(
+            String dniCliente
+    ) {
+        this.dniCliente = dniCliente;
+    }
 }

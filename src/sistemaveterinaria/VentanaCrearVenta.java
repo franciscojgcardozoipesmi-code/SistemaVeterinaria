@@ -7,11 +7,32 @@ import java.util.HashSet;
 import excepciones.StockInsuficienteException;
 import excepciones.ProductoVencidoException;
 import java.time.LocalDate;
+import controller.ClienteController;
 
 public class VentanaCrearVenta extends javax.swing.JFrame {
     private String rolUsuario;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaCrearVenta.class.getName());
     private VentanaPrincipal ventanaPrincipal;
+    private final javax.swing.JLabel lblClienteVenta =
+            new javax.swing.JLabel("Cliente");
+
+    private final javax.swing.JComboBox<String> cmbClienteVenta =
+            new javax.swing.JComboBox<>();
+    private final java.util.ArrayList<Integer> idsClientesVenta =
+            new java.util.ArrayList<>();
+    private final javax.swing.JLabel lblDniClienteVenta =
+            new javax.swing.JLabel("DNI");
+
+    private final javax.swing.JTextField txtDniClienteVenta =
+            new javax.swing.JTextField();
+
+    private final java.util.ArrayList<String> dnisClientesVenta =
+            new java.util.ArrayList<>();
+    private final javax.swing.JLabel lblUsuarioVenta =
+            new javax.swing.JLabel("Usuario");
+
+    private final javax.swing.JTextField txtUsuarioVenta =
+            new javax.swing.JTextField();
     public VentanaCrearVenta() {
         initComponents();
 
@@ -27,6 +48,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 
         cargarProductos();
+        configurarDatosAutomaticosVenta();
 
         mapaPrecios =
                 ProductoController.obtenerMapaPrecios();
@@ -51,6 +73,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 
         cargarProductos();
+        configurarDatosAutomaticosVenta();
 
         mapaPrecios =
                 ProductoController.obtenerMapaPrecios();
@@ -77,6 +100,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         tblDetalle.setModel(modelo);
 
         cargarProductos();
+        configurarDatosAutomaticosVenta();
 
         mapaPrecios =
                 ProductoController.obtenerMapaPrecios();
@@ -93,6 +117,119 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         for (String producto : ProductoController.listarNombres()) {
             cmbProducto.addItem(producto);
         }
+    }
+    private void cargarClientesVenta() {
+
+        cmbClienteVenta.removeAllItems();
+        idsClientesVenta.clear();
+        dnisClientesVenta.clear();
+
+        for (Object[] cliente
+                : ClienteController.listarClientesParaCombo()) {
+
+            idsClientesVenta.add(
+                    Integer.parseInt(
+                            cliente[0].toString()
+                    )
+            );
+
+            dnisClientesVenta.add(
+                    cliente[2].toString()
+            );
+
+            cmbClienteVenta.addItem(
+                    cliente[1].toString()
+            );
+        }
+
+        actualizarDniClienteVenta();
+    }
+    private void actualizarDniClienteVenta() {
+
+        int indice =
+                cmbClienteVenta.getSelectedIndex();
+
+        if (indice >= 0
+                && indice < dnisClientesVenta.size()) {
+
+            txtDniClienteVenta.setText(
+                    dnisClientesVenta.get(indice)
+            );
+
+        } else {
+
+            txtDniClienteVenta.setText("");
+        }
+    }
+    private void configurarDatosAutomaticosVenta() {
+
+        String fechaActual =
+                LocalDate.now().format(
+                        java.time.format.DateTimeFormatter
+                                .ofPattern(
+                                        "dd/MM/yyyy"
+                                )
+                );
+
+        txtFecha.setText(
+                fechaActual
+        );
+
+        txtFecha.setEditable(false);
+        txtFecha.setFocusable(false);
+
+        txtFecha.setBackground(
+                new java.awt.Color(
+                        235,
+                        235,
+                        235
+                )
+        );
+
+        txtFecha.setToolTipText(
+                "La fecha se establece automáticamente"
+        );
+
+        String nombreUsuario =
+                SesionUsuario.haySesionActiva()
+                        ? SesionUsuario.getNombreUsuario()
+                        : "Sin usuario";
+
+        txtUsuarioVenta.setText(
+                nombreUsuario
+        );
+
+        txtUsuarioVenta.setEditable(false);
+        txtUsuarioVenta.setFocusable(false);
+
+        txtUsuarioVenta.setBackground(
+                new java.awt.Color(
+                        235,
+                        235,
+                        235
+                )
+        );
+
+        txtUsuarioVenta.setToolTipText(
+                "Usuario que registra la venta"
+        );
+
+        cargarClientesVenta();
+        cmbClienteVenta.addActionListener(
+                evento -> actualizarDniClienteVenta()
+        );
+
+        actualizarDniClienteVenta();
+
+        txtDniClienteVenta.setEditable(false);
+        txtDniClienteVenta.setFocusable(false);
+        txtDniClienteVenta.setBackground(
+                new java.awt.Color(
+                        235,
+                        235,
+                        235
+                )
+        );
     }
     private void calcularTotal() {
 
@@ -352,8 +489,30 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                 return;
             }
 
-            VentaController.guardarVenta(txtFecha.getText().trim(),cmbMedioPago.getSelectedItem().toString(),
-                                                                      tblDetalle);
+            if (cmbClienteVenta.getSelectedItem() == null) {
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Atención",
+                        "Seleccioná un cliente"
+                );
+
+                return;
+            }
+
+            int indiceCliente =
+                    cmbClienteVenta.getSelectedIndex();
+
+            int idCliente =
+                    idsClientesVenta.get(
+                            indiceCliente
+                    );
+
+            VentaController.guardarVenta(
+                    cmbMedioPago.getSelectedItem().toString(),
+                    tblDetalle,
+                    idCliente
+            );
 
             Estilos.mostrarAdvertencia(
                     this,
@@ -539,6 +698,9 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
 
         javax.swing.JLabel[] etiquetas = {
             lblFecha,
+            lblClienteVenta,
+            lblDniClienteVenta,
+            lblUsuarioVenta,
             lblProducto,
             lblCantidad,
             jLabel1
@@ -598,9 +760,9 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
 
         gbc.insets =
                 new java.awt.Insets(
+                        6,
                         10,
-                        10,
-                        10,
+                        6,
                         10
                 );
 
@@ -623,7 +785,8 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 5;
+        gbc.weightx = 0;
 
         tarjetaDatos.add(
                 lblProducto,
@@ -631,6 +794,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         );
 
         gbc.gridx = 1;
+        gbc.weightx = 1;
 
         tarjetaDatos.add(
                 cmbProducto,
@@ -805,7 +969,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
 
         gbcPrincipal.gridx = 0;
         gbcPrincipal.gridy = 0;
-        gbcPrincipal.weightx = 0.35;
+        gbcPrincipal.weightx = 0.47;
 
         panelContenido.add(
                 tarjetaDatos,
@@ -813,7 +977,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         );
 
         gbcPrincipal.gridx = 1;
-        gbcPrincipal.weightx = 0.65;
+        gbcPrincipal.weightx = 0.53;
 
         panelContenido.add(
                 tarjetaDetalle,
@@ -1000,15 +1164,18 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                         ),
                         javax.swing.BorderFactory.createEmptyBorder(
                                 25,
-                                40,
+                                20,
                                 25,
-                                40
+                                20
                         )
                 )
         );
 
         javax.swing.JLabel[] etiquetas = {
             lblFecha,
+            lblClienteVenta,
+            lblDniClienteVenta,
+            lblUsuarioVenta,
             lblProducto,
             lblCantidad,
             jLabel1
@@ -1040,7 +1207,39 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         cmbMedioPago.setFont(
                 Estilos.fuenteNormal()
         );
+        cmbClienteVenta.setFont(
+                Estilos.fuenteNormal()
+        );
 
+        txtUsuarioVenta.setFont(
+                Estilos.fuenteNormal()
+        );
+        lblDniClienteVenta.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        lblDniClienteVenta.setForeground(
+                Estilos.VERDE_OSCURO
+        );
+
+        txtDniClienteVenta.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        txtDniClienteVenta.setForeground(
+                java.awt.Color.BLACK
+        );
+
+        txtDniClienteVenta.setBackground(
+                new java.awt.Color(
+                        235,
+                        235,
+                        235
+                )
+        );
+
+        txtDniClienteVenta.setEditable(false);
+        txtDniClienteVenta.setFocusable(false);
         java.awt.Dimension tamañoCampo =
                 new java.awt.Dimension(
                         240,
@@ -1078,9 +1277,29 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         cmbMedioPago.setMinimumSize(
                 tamañoCampo
         );
+        cmbClienteVenta.setPreferredSize(
+                tamañoCampo
+        );
 
+        cmbClienteVenta.setMinimumSize(
+                tamañoCampo
+        );
+
+        txtUsuarioVenta.setPreferredSize(
+                tamañoCampo
+        );
+
+        txtUsuarioVenta.setMinimumSize(
+                tamañoCampo
+        );
         btnVolver.setText("");
+        txtDniClienteVenta.setPreferredSize(
+                tamañoCampo
+        );
 
+        txtDniClienteVenta.setMinimumSize(
+                tamañoCampo
+        );
         javax.swing.ImageIcon iconoVolver =
                 new javax.swing.ImageIcon(
                         getClass().getResource(
@@ -1201,17 +1420,16 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
 
         gbc.insets =
                 new java.awt.Insets(
+                        6,
                         10,
-                        10,
-                        10,
+                        6,
                         10
                 );
 
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 0;
-        gbc.fill =
-                java.awt.GridBagConstraints.HORIZONTAL;
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
 
         tarjetaDatos.add(
                 lblFecha,
@@ -1226,8 +1444,60 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                 gbc
         );
 
+  
         gbc.gridx = 0;
         gbc.gridy = 2;
+        gbc.weightx = 0;
+
+        tarjetaDatos.add(
+                lblClienteVenta,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+
+        tarjetaDatos.add(
+                cmbClienteVenta,
+                gbc
+        );
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weightx = 0;
+
+        tarjetaDatos.add(
+                lblDniClienteVenta,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+
+        tarjetaDatos.add(
+                txtDniClienteVenta,
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.weightx = 0;
+
+        tarjetaDatos.add(
+                lblUsuarioVenta,
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+
+        tarjetaDatos.add(
+                txtUsuarioVenta,
+                gbc
+        );
+
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
         gbc.weightx = 0;
 
         tarjetaDatos.add(
@@ -1243,8 +1513,9 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                 gbc
         );
 
+
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 6;
         gbc.weightx = 0;
 
         tarjetaDatos.add(
@@ -1260,8 +1531,9 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                 gbc
         );
 
+
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 7;
         gbc.weightx = 0;
 
         tarjetaDatos.add(
@@ -1300,7 +1572,7 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
         );
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 8;
         gbc.gridwidth = 2;
         gbc.weightx = 0;
 
@@ -1311,12 +1583,12 @@ public class VentanaCrearVenta extends javax.swing.JFrame {
                 java.awt.GridBagConstraints.CENTER;
 
         gbc.insets =
-                new java.awt.Insets(
-                        20,
-                        10,
-                        0,
-                        10
-                );
+            new java.awt.Insets(
+                    10,
+                    10,
+                    0,
+                    10
+            );
 
         tarjetaDatos.add(
                 btnAgregar,

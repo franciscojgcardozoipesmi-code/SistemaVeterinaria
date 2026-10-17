@@ -6,6 +6,8 @@ public class VentanaUsuarios extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscarUsuario;
     private javax.swing.JButton btnMostrarTodos;
     private javax.swing.JTextField campoBusquedaUsuarios;
+    private javax.swing.JButton btnVerInactivos;
+    private boolean mostrandoInactivos = false;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaUsuarios.class.getName());
 
    
@@ -66,16 +68,22 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         modelo.addColumn("Rol");
         modelo.addColumn("Acciones");
 
-        for (Object[] fila
-                : UsuarioController.listarUsuarios()) {
+        java.util.ArrayList<Object[]> usuarios =
+                mostrandoInactivos
+                        ? UsuarioController.listarUsuariosInactivos()
+                        : UsuarioController.listarUsuarios();
 
-            modelo.addRow(new Object[]{
-                fila[0],
-                fila[1],
-                fila[4],
-                fila[3],
-                ""
-            });
+        for (Object[] fila : usuarios) {
+
+            modelo.addRow(
+                    new Object[]{
+                        fila[0],
+                        fila[1],
+                        fila[4],
+                        fila[3],
+                        ""
+                    }
+            );
         }
 
         tblUsuarios.setModel(modelo);
@@ -332,14 +340,27 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
         String nombreUsuario =
                 tblUsuarios.getValueAt(fila, 1).toString();
+        if (SesionUsuario.haySesionActiva()
+                && nombreUsuario.equalsIgnoreCase(
+                        SesionUsuario.getNombreUsuario()
+                )) {
 
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "No podés dar de baja al usuario "
+                    + "con el que tenés la sesión iniciada"
+            );
+
+            return;
+        }
         java.awt.Window ventanaPadre =
                 javax.swing.SwingUtilities.getWindowAncestor(this);
 
         javax.swing.JDialog dialogo =
                 new javax.swing.JDialog(
                         ventanaPadre,
-                        "Confirmar eliminación",
+                        "Confirmar baja",
                         java.awt.Dialog.ModalityType.APPLICATION_MODAL
                 );
 
@@ -372,7 +393,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
         javax.swing.JLabel lblTitulo =
                 new javax.swing.JLabel(
-                        "CONFIRMAR ELIMINACIÓN",
+                        "CONFIRMAR BAJA",
                         javax.swing.SwingConstants.CENTER
                 );
 
@@ -402,7 +423,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
         javax.swing.JLabel lblMensaje =
                 new javax.swing.JLabel(
-                        "¿Seguro que querés eliminar al usuario "
+                        "¿Seguro que querés dar de baja al usuario "
                         + nombreUsuario + "?",
                         javax.swing.SwingConstants.CENTER
                 );
@@ -480,7 +501,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                 Estilos.mostrarAdvertencia(
                         this,
                         "Operación exitosa",
-                        "Usuario eliminado correctamente"
+                        "Usuario dado de baja correctamente"
                 );
 
                 cargarTabla();
@@ -491,7 +512,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                 Estilos.mostrarAdvertencia(
                         this,
                         "Error",
-                        "No se pudo eliminar el usuario"
+                        "No se pudo dar de baja al usuario"
                 );
             }
         });
@@ -501,6 +522,8 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         dialogo.setLocationRelativeTo(ventanaPadre);
         dialogo.setVisible(true);
     }//GEN-LAST:event_btnEliminarUsuarioActionPerformed
+    private final javax.swing.JButton btnReactivar =
+        crearBotonReactivar();
     private void configurarDiseñoUsuarios() {
 
         setTitle(
@@ -953,8 +976,12 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         Estilos.estilizarBoton(btnCrearUsuario);
         Estilos.estilizarBotonEditar(btnEditarUsuario);
         Estilos.estilizarBotonEliminar(btnEliminarUsuario);
+        btnEliminarUsuario.setText(
+                "Dar de baja usuario"
+        );
         Estilos.estilizarBoton(btnBuscarUsuario);
         Estilos.estilizarBoton(btnMostrarTodos);
+        Estilos.estilizarBoton(btnVerInactivos);
 
         Estilos.aplicarIcono(
                 btnCrearUsuario,
@@ -1177,7 +1204,12 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                 panelAccionesSuperiores,
                 java.awt.BorderLayout.NORTH
         );
-
+        btnVerInactivos.setPreferredSize(
+                new java.awt.Dimension(
+                        210,
+                        38
+                )
+        );
         btnCrearUsuario.setPreferredSize(
                 new java.awt.Dimension(175, 38)
         );
@@ -1203,7 +1235,9 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         panelBotones.setOpaque(false);
 
         panelBotones.add(btnCrearUsuario);
-
+        panelBotones.add(
+                btnVerInactivos
+        );
 
         tarjetaUsuarios.add(
                 panelBotones,
@@ -1234,7 +1268,43 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
         btnMostrarTodos =
                 new javax.swing.JButton("Actualizar tabla");
+        btnVerInactivos =
+        new javax.swing.JButton(
+                "Ver usuarios inactivos"
+        );
 
+        btnVerInactivos.addActionListener(e -> {
+
+            mostrandoInactivos =
+                    !mostrandoInactivos;
+
+            btnVerInactivos.setText(
+                    mostrandoInactivos
+                            ? "Ver usuarios activos"
+                            : "Ver usuarios inactivos"
+            );
+
+            cargarTabla();
+
+            if (campoBusquedaUsuarios != null) {
+
+                campoBusquedaUsuarios.setText(
+                        "Buscar por usuario, correo o rol"
+                );
+
+                campoBusquedaUsuarios.setForeground(
+                        new java.awt.Color(
+                                140,
+                                140,
+                                140
+                        )
+                );
+
+                campoBusquedaUsuarios.setCaretPosition(
+                        0
+                );
+            }
+        });
         btnBuscarUsuario.addActionListener(e ->
                 buscarDesdeCampo()
         );
@@ -1570,6 +1640,61 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                 true
         );
     }
+    private void reactivarUsuarioSeleccionado() {
+
+        int fila =
+                tblUsuarios.getSelectedRow();
+
+        if (fila == -1) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Atención",
+                    "Seleccioná un usuario"
+            );
+
+            return;
+        }
+
+        int idUsuario =
+                Integer.parseInt(
+                        tblUsuarios.getValueAt(
+                                fila,
+                                0
+                        ).toString()
+                );
+
+        String nombreUsuario =
+                tblUsuarios.getValueAt(
+                        fila,
+                        1
+                ).toString();
+
+        try {
+
+            UsuarioController.reactivarUsuario(
+                    idUsuario
+            );
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Operación exitosa",
+                    "El usuario "
+                    + nombreUsuario
+                    + " fue reactivado correctamente"
+            );
+
+            cargarTabla();
+
+        } catch (Exception e) {
+
+            Estilos.mostrarAdvertencia(
+                    this,
+                    "Error",
+                    "No se pudo reactivar el usuario"
+            );
+        }
+    }
     private class RenderizadorAcciones
             extends javax.swing.JPanel
             implements javax.swing.table.TableCellRenderer {
@@ -1598,8 +1723,22 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
             setOpaque(true);
 
-            add(btnEditar);
-            add(btnEliminar);
+            if (mostrandoInactivos) {
+
+                add(
+                        btnReactivar
+                );
+
+            } else {
+
+                add(
+                        btnEditar
+                );
+
+                add(
+                        btnEliminar
+                );
+            }          
         }
 
         @Override
@@ -1617,7 +1756,9 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                             ? tabla.getSelectionBackground()
                             : tabla.getBackground()
             );
-
+            if (mostrandoInactivos) {
+                return this;
+            }
             boolean sobreEditar = false;
             boolean sobreEliminar = false;
 
@@ -1687,15 +1828,30 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
         private final javax.swing.JButton btnEliminar =
                 crearBotonEliminar();
-
+        private final javax.swing.JButton btnReactivar =
+                crearBotonReactivar();
         private int filaActual = -1;
 
         public EditorAcciones() {
 
             panel.setOpaque(true);
 
-            panel.add(btnEditar);
-            panel.add(btnEliminar);
+            if (mostrandoInactivos) {
+
+                panel.add(
+                        btnReactivar
+                );
+
+            } else {
+
+                panel.add(
+                        btnEditar
+                );
+
+                panel.add(
+                        btnEliminar
+                );
+            }
 
             btnEditar.addActionListener(e -> {
 
@@ -1730,6 +1886,23 @@ public class VentanaUsuarios extends javax.swing.JFrame {
                     btnEliminarUsuarioActionPerformed(null);
                 }
             });
+            btnReactivar.addActionListener(e -> {
+
+                int fila =
+                        filaActual;
+
+                fireEditingStopped();
+
+                if (fila >= 0) {
+
+                    tblUsuarios.setRowSelectionInterval(
+                            fila,
+                            fila
+                    );
+
+                    reactivarUsuarioSeleccionado();
+                }
+            });
         }
 
         @Override
@@ -1755,7 +1928,48 @@ public class VentanaUsuarios extends javax.swing.JFrame {
             return "";
         }
     }
+    private javax.swing.JButton crearBotonReactivar() {
 
+        javax.swing.JButton boton =
+                new javax.swing.JButton();
+
+        Estilos.estilizarBoton(
+                boton
+        );
+
+        boton.setText("");
+
+        Estilos.aplicarIcono(
+                boton,
+                "/imagenes/iconos/flecha_arriba.png",
+                14,
+                14
+        );
+
+        java.awt.Dimension tamaño =
+                new java.awt.Dimension(
+                        30,
+                        22
+                );
+
+        boton.setPreferredSize(tamaño);
+        boton.setMinimumSize(tamaño);
+        boton.setMaximumSize(tamaño);
+
+        boton.setToolTipText(
+                "Reactivar usuario"
+        );
+
+        boton.setFocusable(false);
+
+        boton.setCursor(
+                java.awt.Cursor.getPredefinedCursor(
+                        java.awt.Cursor.HAND_CURSOR
+                )
+        );
+
+        return boton;
+    }
     private javax.swing.JButton crearBotonEditar() {
 
         javax.swing.JButton boton =
@@ -1805,7 +2019,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
 
         Estilos.aplicarIcono(
                 boton,
-                "/imagenes/iconos/eliminar.png",
+                "/imagenes/iconos/flecha_abajo.png",
                 14,
                 14
         );
@@ -1817,7 +2031,7 @@ public class VentanaUsuarios extends javax.swing.JFrame {
         boton.setMinimumSize(tamaño);
         boton.setMaximumSize(tamaño);
 
-        boton.setToolTipText("Eliminar usuario");
+        boton.setToolTipText("Dar de baja usuario");
         boton.setFocusable(false);
 
         boton.setCursor(

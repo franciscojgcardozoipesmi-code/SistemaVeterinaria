@@ -7,7 +7,7 @@ public class Usuario extends Persona {
     private String password;
     private String rol;
     private String correo;
-
+    private boolean activo = true;
     public Usuario() {
         super(-1);
     }
@@ -62,5 +62,12 @@ public class Usuario extends Persona {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }

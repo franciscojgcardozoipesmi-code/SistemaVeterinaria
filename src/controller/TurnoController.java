@@ -24,7 +24,9 @@ public class TurnoController {
                 turno.getDni(),
                 turno.getAnimal(),
                 turno.getFecha(),
-                turno.getHora(),
+                formatearHora(
+                        turno.getHora()
+                ),
                 turno.getMotivo(),
                 turno.getEstado().getNombre()
             });
@@ -45,7 +47,9 @@ public class TurnoController {
                 turno.getDni(),
                 turno.getAnimal(),
                 turno.getFecha(),
-                turno.getHora(),
+                formatearHora(
+                        turno.getHora()
+                ),
                 turno.getMotivo(),
                 turno.getEstado().getNombre()
             });
@@ -146,7 +150,9 @@ public class TurnoController {
                 turno.getDni(),
                 turno.getAnimal(),
                 turno.getFecha(),
-                turno.getHora(),
+                formatearHora(
+                        turno.getHora()
+                ),
                 turno.getMotivo(),
                 turno.getEstado().getNombre()
             });
@@ -194,7 +200,9 @@ public class TurnoController {
                 turno.getDni(),
                 turno.getAnimal(),
                 turno.getFecha(),
-                turno.getHora(),
+                formatearHora(
+                        turno.getHora()
+                ),
                 turno.getMotivo(),
                 turno.getEstado().getNombre()
             });
@@ -214,7 +222,9 @@ public class TurnoController {
                 turno.getDni(),
                 turno.getAnimal(),
                 turno.getFecha(),
-                turno.getHora(),
+                formatearHora(
+                        turno.getHora()
+                ),
                 turno.getMotivo(),
                 turno.getEstado().getNombre()
             });
@@ -234,7 +244,9 @@ public class TurnoController {
                 turno.getDni(),
                 turno.getAnimal(),
                 turno.getFecha(),
-                turno.getHora(),
+                formatearHora(
+                        turno.getHora()
+                ),
                 turno.getMotivo(),
                 turno.getEstado().getNombre()
             });
@@ -258,12 +270,46 @@ public class TurnoController {
                 turno.getDni(),
                 turno.getAnimal(),
                 turno.getFecha(),
-                turno.getHora(),
+                formatearHora(
+                        turno.getHora()
+                ),
                 turno.getMotivo(),
                 turno.getEstado().getNombre()
             });
         }
 
         return lista;
+    }
+    private static String formatearHora(
+            String hora
+    ) {
+
+        if (hora == null
+                || hora.trim().isEmpty()) {
+
+            return "";
+        }
+
+        try {
+
+            java.time.LocalTime horaConvertida =
+                    java.time.LocalTime.parse(
+                            hora.trim(),
+                            java.time.format.DateTimeFormatter
+                                    .ofPattern("HH:mm")
+                    );
+
+            return horaConvertida.format(
+                    java.time.format.DateTimeFormatter
+                            .ofPattern(
+                                    "hh:mm a",
+                                    java.util.Locale.US
+                            )
+            );
+
+        } catch (Exception e) {
+
+            return hora;
+        }
     }
 }

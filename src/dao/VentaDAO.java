@@ -22,19 +22,61 @@ public class VentaDAO implements CrudDAO<Venta> {
             conn.setAutoCommit(false);
 
             String sqlVenta =
-                "INSERT INTO ventas (fecha, total, medio_pago) "
-                + "VALUES (?, ?, ?)";
+                    "INSERT INTO ventas "
+                    + "(fecha, total, medio_pago, id_cliente, id_usuario) "
+                    + "VALUES (?, ?, ?, ?, ?)";
 
             PreparedStatement pstVenta = conn.prepareStatement(
                     sqlVenta,
                     java.sql.Statement.RETURN_GENERATED_KEYS
             );
 
-            pstVenta.setString(1, venta.getFecha());
-            pstVenta.setDouble(2, venta.getTotal());
-            pstVenta.setString(3, venta.getMedioPago());
-            pstVenta.executeUpdate();
+            pstVenta.setString(
+                    1,
+                    venta.getFecha()
+            );
 
+            pstVenta.setDouble(
+                    2,
+                    venta.getTotal()
+            );
+
+            pstVenta.setString(
+                    3,
+                    venta.getMedioPago()
+            );
+
+            if (venta.getIdCliente() > 0) {
+
+                pstVenta.setInt(
+                        4,
+                        venta.getIdCliente()
+                );
+
+            } else {
+
+                pstVenta.setNull(
+                        4,
+                        java.sql.Types.INTEGER
+                );
+            }
+
+            if (venta.getIdUsuario() > 0) {
+
+                pstVenta.setInt(
+                        5,
+                        venta.getIdUsuario()
+                );
+
+            } else {
+
+                pstVenta.setNull(
+                        5,
+                        java.sql.Types.INTEGER
+                );
+            }
+
+            pstVenta.executeUpdate();
             ResultSet rsVenta = pstVenta.getGeneratedKeys();
 
             if (!rsVenta.next()) {
@@ -154,7 +196,18 @@ public class VentaDAO implements CrudDAO<Venta> {
 
             conn = Conexion.getInstancia().conectar();
 
-            String sql = "SELECT * FROM ventas";
+            String sql =
+                    "SELECT v.*, "
+                    + "COALESCE(c.nombre, 'Sin cliente') "
+                    + "AS nombre_cliente, "
+                    + "COALESCE(u.usuario, 'Sin usuario') "
+                    + "AS nombre_usuario "
+                    + "FROM ventas v "
+                    + "LEFT JOIN clientes c "
+                    + "ON v.id_cliente = c.id_cliente "
+                    + "LEFT JOIN usuarios u "
+                    + "ON v.id_usuario = u.id_usuario "
+                    + "ORDER BY v.id_venta DESC";
 
             PreparedStatement pst =
                     conn.prepareStatement(sql);
@@ -169,7 +222,21 @@ public class VentaDAO implements CrudDAO<Venta> {
                         rs.getDouble("total"),
                         rs.getString("medio_pago")
                 );
+                venta.setIdCliente(
+                        rs.getInt("id_cliente")
+                );
 
+                venta.setNombreCliente(
+                        rs.getString("nombre_cliente")
+                );
+
+                venta.setIdUsuario(
+                        rs.getInt("id_usuario")
+                );
+
+                venta.setNombreUsuario(
+                        rs.getString("nombre_usuario")
+                );
                 lista.add(venta);
             }
 
@@ -325,9 +392,89 @@ public class VentaDAO implements CrudDAO<Venta> {
         return lista;
     }
     public VentaDAO() {
-    inicializarEstadoVentas();
-}
 
+        inicializarEstadoVentas();
+        inicializarResponsablesVenta();
+    }
+    private void inicializarResponsablesVenta() {
+
+        try (
+                Connection conn =
+                        Conexion.getInstancia().conectar()
+        ) {
+
+            agregarColumnaSiNoExiste(
+                    conn,
+                    "id_cliente"
+            );
+
+            agregarColumnaSiNoExiste(
+                    conn,
+                    "id_usuario"
+            );
+
+        } catch (Exception e) {
+
+            throw new RuntimeException(
+                    "Error al preparar los responsables de las ventas: "
+                    + e.getMessage(),
+                    e
+            );
+        }
+    }
+
+    private void agregarColumnaSiNoExiste(
+            Connection conn,
+            String nombreColumna
+    ) throws Exception {
+
+        boolean existe =
+                false;
+
+        String sqlColumnas =
+                "PRAGMA table_info(ventas)";
+
+        try (
+                PreparedStatement pst =
+                        conn.prepareStatement(
+                                sqlColumnas
+                        );
+
+                ResultSet rs =
+                        pst.executeQuery()
+        ) {
+
+            while (rs.next()) {
+
+                if (nombreColumna.equalsIgnoreCase(
+                        rs.getString("name")
+                )) {
+
+                    existe = true;
+                    break;
+                }
+            }
+        }
+
+        if (!existe) {
+
+            String sqlAgregar =
+                    "ALTER TABLE ventas "
+                    + "ADD COLUMN "
+                    + nombreColumna
+                    + " INTEGER";
+
+            try (
+                    PreparedStatement pst =
+                            conn.prepareStatement(
+                                    sqlAgregar
+                            )
+            ) {
+
+                pst.executeUpdate();
+            }
+        }
+    }
     private void inicializarEstadoVentas() {
 
         String sql =

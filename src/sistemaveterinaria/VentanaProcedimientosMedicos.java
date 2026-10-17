@@ -56,7 +56,7 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return column == 8;
+                return column == 10;
             }
         };
 
@@ -66,30 +66,38 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
         modelo.addColumn("Monto");
         modelo.addColumn("ID Animal");
         modelo.addColumn("Animal");
+        modelo.addColumn("Cliente");
+        modelo.addColumn("DNI");
         modelo.addColumn("Fecha");
         modelo.addColumn("Descripción");
         modelo.addColumn("Acciones");
 
         for (Object[] fila
                 : ProcedimientoMedicoController
-                        .buscarProcedimientos(filtro)) {
+                        .buscarProcedimientos(
+                                filtro
+                        )) {
 
             Object[] filaCompleta =
                     java.util.Arrays.copyOf(
                             fila,
-                            9
+                            11
                     );
 
-            filaCompleta[8] = "";
+            filaCompleta[10] = "";
 
-            modelo.addRow(filaCompleta);
+            modelo.addRow(
+                    filaCompleta
+            );
         }
 
-        tblProcedimientos.setModel(modelo);
+        tblProcedimientos.setModel(
+                modelo
+        );
 
         ocultarColumnasInternas();
     }
-    
+
     private void cargarTabla() {
 
         javax.swing.table.DefaultTableModel modelo =
@@ -100,7 +108,7 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
                     int row,
                     int column
             ) {
-                return column == 8;
+                return column == 10;
             }
         };
 
@@ -110,6 +118,8 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
         modelo.addColumn("Monto");
         modelo.addColumn("ID Animal");
         modelo.addColumn("Animal");
+        modelo.addColumn("Cliente");
+        modelo.addColumn("DNI");
         modelo.addColumn("Fecha");
         modelo.addColumn("Descripción");
         modelo.addColumn("Acciones");
@@ -121,22 +131,26 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
             Object[] filaCompleta =
                     java.util.Arrays.copyOf(
                             fila,
-                            9
+                            11
                     );
 
-            filaCompleta[8] = "";
+            filaCompleta[10] = "";
 
-            modelo.addRow(filaCompleta);
+            modelo.addRow(
+                    filaCompleta
+            );
         }
 
-        tblProcedimientos.setModel(modelo);
+        tblProcedimientos.setModel(
+                modelo
+        );
 
         ocultarColumnasInternas();
     }
     
     private void ocultarColumnasInternas() {
 
-        if (tblProcedimientos.getColumnCount() < 9) {
+        if (tblProcedimientos.getColumnCount() < 11) {
             return;
         }
 
@@ -148,7 +162,16 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
         columnaId.setMaxWidth(0);
         columnaId.setPreferredWidth(0);
         columnaId.setResizable(false);
-        
+
+        javax.swing.table.TableColumn columnaIdAnimal =
+                tblProcedimientos.getColumnModel()
+                        .getColumn(4);
+
+        columnaIdAnimal.setMinWidth(0);
+        columnaIdAnimal.setMaxWidth(0);
+        columnaIdAnimal.setPreferredWidth(0);
+        columnaIdAnimal.setResizable(false);
+
         javax.swing.table.DefaultTableCellRenderer centrado =
                 new javax.swing.table.DefaultTableCellRenderer();
 
@@ -165,20 +188,16 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
                 .setCellRenderer(centrado);
 
         tblProcedimientos.getColumnModel()
-                .getColumn(6)
+                .getColumn(7)
                 .setCellRenderer(centrado);
 
-        javax.swing.table.TableColumn columnaIdAnimal =
-                tblProcedimientos.getColumnModel()
-                        .getColumn(4);
+        tblProcedimientos.getColumnModel()
+                .getColumn(8)
+                .setCellRenderer(centrado);
 
-        columnaIdAnimal.setMinWidth(0);
-        columnaIdAnimal.setMaxWidth(0);
-        columnaIdAnimal.setPreferredWidth(0);
-        columnaIdAnimal.setResizable(false);
         javax.swing.table.TableColumn columnaAcciones =
                 tblProcedimientos.getColumnModel()
-                        .getColumn(8);
+                        .getColumn(10);
 
         columnaAcciones.setMinWidth(95);
         columnaAcciones.setMaxWidth(95);
@@ -192,58 +211,7 @@ public class VentanaProcedimientosMedicos extends javax.swing.JFrame {
         columnaAcciones.setCellEditor(
                 new EditorAcciones()
         );
-        tblProcedimientos.addMouseMotionListener(
-                new java.awt.event.MouseMotionAdapter() {
 
-            @Override
-            public void mouseMoved(
-                    java.awt.event.MouseEvent e
-            ) {
-
-                int fila =
-                        tblProcedimientos.rowAtPoint(
-                                e.getPoint()
-                        );
-
-                int columnaVista =
-                        tblProcedimientos.columnAtPoint(
-                                e.getPoint()
-                        );
-
-                boolean sobreAcciones =
-                        fila >= 0
-                        && columnaVista >= 0
-                        && tblProcedimientos.convertColumnIndexToModel(
-                                columnaVista
-                        ) == 8;
-
-                tblProcedimientos.setCursor(
-                        sobreAcciones
-                                ? java.awt.Cursor.getPredefinedCursor(
-                                        java.awt.Cursor.HAND_CURSOR
-                                )
-                                : java.awt.Cursor.getDefaultCursor()
-                );
-
-                tblProcedimientos.repaint();
-            }
-        });
-
-tblProcedimientos.addMouseListener(
-        new java.awt.event.MouseAdapter() {
-
-    @Override
-    public void mouseExited(
-            java.awt.event.MouseEvent e
-    ) {
-
-        tblProcedimientos.setCursor(
-                java.awt.Cursor.getDefaultCursor()
-        );
-
-        tblProcedimientos.repaint();
-    }
-});
         tblProcedimientos.setRowHeight(32);
     }
 
@@ -396,10 +364,16 @@ tblProcedimientos.addMouseListener(
         );
 
         String fecha =
-                tblProcedimientos.getValueAt(fila, 6).toString();
+                tblProcedimientos.getValueAt(
+                        fila,
+                        8
+                ).toString();
 
         String descripcion =
-                tblProcedimientos.getValueAt(fila, 7).toString();
+                tblProcedimientos.getValueAt(
+                        fila,
+                        9
+                ).toString();
 
         ventanaPrincipal.mostrarEditarProcedimiento(
                 idProcedimiento,
@@ -567,7 +541,7 @@ tblProcedimientos.addMouseListener(
 
         btnConfirmarDialogo.addActionListener(e -> {
             try {
-                ProcedimientoMedicoController.eliminarProcedimiento(
+                ProcedimientoMedicoController.darDeBajaProcedimiento(
                         idProcedimiento
                 );
 
@@ -606,7 +580,7 @@ tblProcedimientos.addMouseListener(
 
         if (texto.isEmpty()
                 || texto.equals(
-                        "Buscar por tipo, animal o fecha"
+                        "Buscar por tipo, animal, cliente o DNI"
                 )) {
 
             cargarTabla();
@@ -620,7 +594,7 @@ tblProcedimientos.addMouseListener(
         cargarTabla();
 
         campoBusquedaProcedimientos.setText(
-                "Buscar por tipo, animal o fecha"
+                "Buscar por tipo, animal, cliente o DNI"
         );
 
         campoBusquedaProcedimientos.setForeground(
@@ -1178,7 +1152,7 @@ tblProcedimientos.addMouseListener(
 
         campoBusquedaProcedimientos =
                 new javax.swing.JTextField(
-                        "Buscar por tipo, animal o fecha"
+                        "Buscar por tipo, animal, cliente o DNI"
                 );
 
         campoBusquedaProcedimientos.setFont(
@@ -1220,7 +1194,7 @@ tblProcedimientos.addMouseListener(
                 if (campoBusquedaProcedimientos
                         .getText()
                         .equals(
-                                "Buscar por tipo, animal o fecha"
+                                "Buscar por tipo, animal, cliente o DNI"
                         )) {
 
                     campoBusquedaProcedimientos.setText("");
@@ -1242,7 +1216,7 @@ tblProcedimientos.addMouseListener(
                         .isEmpty()) {
 
                     campoBusquedaProcedimientos.setText(
-                            "Buscar por tipo, animal o fecha"
+                            "Buscar por tipo, animal, cliente o DNI"
                     );
 
                     campoBusquedaProcedimientos.setForeground(
@@ -1636,9 +1610,9 @@ tblProcedimientos.addMouseListener(
 
         Estilos.aplicarIcono(
                 boton,
-                "/imagenes/iconos/eliminar.png",
-                14,
-                14
+                "/imagenes/iconos/flecha_abajo.png",
+                16,
+                16
         );
 
         java.awt.Dimension tamaño =

@@ -9,6 +9,13 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
     private boolean reprogramando = false;
     private String rolUsuario;
     private javax.swing.JLabel lblTituloFormulario;
+    private final javax.swing.JComboBox<String> cmbPeriodo =
+        new javax.swing.JComboBox<>(
+                new String[]{
+                    "AM",
+                    "PM"
+                }
+        );
     private VentanaPrincipal ventanaPrincipal;
         public void cargarDatosReprogramacion(
             int id,
@@ -215,14 +222,15 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
 
             String dni = txtDni.getText().trim();
             String fecha = txtFecha.getText().trim();
-            String hora = txtHora.getText().trim();
+            String horaTexto =
+                    txtHora.getText().trim();
             String motivo = txtMotivo.getText().trim();
 
             if (dueno.isEmpty()
                     || animal.isEmpty()
                     || dni.isEmpty()
                     || fecha.isEmpty()
-                    || hora.isEmpty()
+                    || horaTexto.isEmpty()
                     || motivo.isEmpty()) {
 
                 Estilos.mostrarAdvertencia(
@@ -233,7 +241,27 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
 
                 return;
             }
+            String hora;
 
+            try {
+
+                hora =
+                        convertirHoraA24(
+                                horaTexto,
+                                cmbPeriodo.getSelectedItem()
+                                        .toString()
+                        );
+
+            } catch (IllegalArgumentException e) {
+
+                Estilos.mostrarAdvertencia(
+                        this,
+                        "Atención",
+                        e.getMessage()
+                );
+
+                return;
+            }
             TurnoController.guardarTurno(
                     dueno,
                     dni,
@@ -288,7 +316,9 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         txtDueno.setText(dueno);
         cmbAnimal.setSelectedItem(animal);
         txtFecha.setText(fecha);
-        txtHora.setText(hora);
+        cargarHora(
+                hora
+        );
         txtMotivo.setText(motivo);
         txtDni.setText(dni);
         if (lblTituloFormulario != null) {
@@ -350,7 +380,154 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         }
     
     }//GEN-LAST:event_cmbAnimalActionPerformed
+    private String convertirHoraA24(
+            String horaTexto,
+            String periodo
+    ) {
 
+        if (!horaTexto.matches(
+                "(0?[1-9]|1[0-2]):[0-5][0-9]"
+        )) {
+
+            throw new IllegalArgumentException(
+                    "Ingresá una hora entre 01:00 y 12:59"
+            );
+        }
+
+        String[] partes =
+                horaTexto.split(":");
+
+        int hora =
+                Integer.parseInt(
+                        partes[0]
+                );
+
+        int minutos =
+                Integer.parseInt(
+                        partes[1]
+                );
+
+        if ("PM".equals(periodo)
+                && hora != 12) {
+
+            hora += 12;
+        }
+
+        if ("AM".equals(periodo)
+                && hora == 12) {
+
+            hora = 0;
+        }
+
+        return String.format(
+                "%02d:%02d",
+                hora,
+                minutos
+        );
+    }
+    private void cargarHora(
+            String horaGuardada
+    ) {
+
+        if (horaGuardada == null
+                || horaGuardada.trim().isEmpty()) {
+
+            txtHora.setText("");
+            cmbPeriodo.setSelectedItem("AM");
+            return;
+        }
+
+        String valor =
+                horaGuardada.trim()
+                        .toUpperCase()
+                        .replaceAll(
+                                "\\s+",
+                                " "
+                        );
+
+        if (valor.matches(
+                "(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)"
+        )) {
+
+            int posicionEspacio =
+                    valor.lastIndexOf(" ");
+
+            String horaTexto =
+                    valor.substring(
+                            0,
+                            posicionEspacio
+                    );
+
+            String periodo =
+                    valor.substring(
+                            posicionEspacio + 1
+                    );
+
+            String[] partes =
+                    horaTexto.split(":");
+
+            txtHora.setText(
+                    String.format(
+                            "%02d:%s",
+                            Integer.parseInt(
+                                    partes[0]
+                            ),
+                            partes[1]
+                    )
+            );
+
+            cmbPeriodo.setSelectedItem(
+                    periodo
+            );
+
+            return;
+        }
+
+        try {
+
+            String[] partes =
+                    valor.split(":");
+
+            int hora =
+                    Integer.parseInt(
+                            partes[0]
+                    );
+
+            int minutos =
+                    Integer.parseInt(
+                            partes[1]
+                    );
+
+            String periodo =
+                    hora >= 12
+                            ? "PM"
+                            : "AM";
+
+            int hora12 =
+                    hora % 12;
+
+            if (hora12 == 0) {
+                hora12 = 12;
+            }
+
+            txtHora.setText(
+                    String.format(
+                            "%02d:%02d",
+                            hora12,
+                            minutos
+                    )
+            );
+
+            cmbPeriodo.setSelectedItem(
+                    periodo
+            );
+
+        } catch (Exception e) {
+
+            txtHora.setText("");
+            cmbPeriodo.setSelectedItem("AM");
+        }
+    }
     private void cargarAnimales() {
 
         cmbAnimal.removeAllItems();
@@ -368,7 +545,76 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
             );
         }
     }
-    
+    private javax.swing.JPanel crearPanelHora() {
+
+        java.awt.Dimension tamañoHora =
+                new java.awt.Dimension(
+                        210,
+                        38
+                );
+
+        java.awt.Dimension tamañoPeriodo =
+                new java.awt.Dimension(
+                        82,
+                        38
+                );
+
+        txtHora.setPreferredSize(
+                tamañoHora
+        );
+
+        txtHora.setMinimumSize(
+                tamañoHora
+        );
+
+        cmbPeriodo.setPreferredSize(
+                tamañoPeriodo
+        );
+
+        cmbPeriodo.setMinimumSize(
+                tamañoPeriodo
+        );
+
+        cmbPeriodo.setFont(
+                Estilos.fuenteNormal()
+        );
+
+        javax.swing.JPanel panelHora =
+                new javax.swing.JPanel(
+                        new java.awt.BorderLayout(
+                                8,
+                                0
+                        )
+                );
+
+        panelHora.setOpaque(false);
+
+        java.awt.Dimension tamañoPanel =
+                new java.awt.Dimension(
+                        300,
+                        38
+                );
+
+        panelHora.setPreferredSize(
+                tamañoPanel
+        );
+
+        panelHora.setMinimumSize(
+                tamañoPanel
+        );
+
+        panelHora.add(
+                txtHora,
+                java.awt.BorderLayout.CENTER
+        );
+
+        panelHora.add(
+                cmbPeriodo,
+                java.awt.BorderLayout.EAST
+        );
+
+        return panelHora;
+    }    
     private void aplicarDiseñoCrearEditarTurnos() {
 
         setTitle(
@@ -663,7 +909,7 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
         gbc.gridx = 5;
 
         tarjetaFormulario.add(
-                txtHora,
+                crearPanelHora(),
                 gbc
         );
 
@@ -1134,10 +1380,16 @@ public class VentanaCrearTurno extends javax.swing.JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 5;
-        tarjetaFormulario.add(lblHora, gbc);
+        tarjetaFormulario.add(
+                lblHora,
+                gbc
+        );
 
         gbc.gridx = 1;
-        tarjetaFormulario.add(txtHora, gbc);
+        tarjetaFormulario.add(
+                crearPanelHora(),
+                gbc
+        );
 
         gbc.gridx = 0;
         gbc.gridy = 6;

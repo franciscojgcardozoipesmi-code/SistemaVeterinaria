@@ -11,43 +11,61 @@ public class ProcedimientoMedicoController {
 
     public static ArrayList<Object[]> listarProcedimientos() {
 
-        ArrayList<Object[]> lista = new ArrayList<>();
+        ArrayList<Object[]> lista =
+                new ArrayList<>();
 
-        for (ProcedimientoMedico procedimiento : procedimientoDAO.listar()) {
+        for (ProcedimientoMedico procedimiento
+                : procedimientoDAO.listar()) {
 
-            lista.add(new Object[]{
-                procedimiento.getIdProcedimiento(),
-                procedimiento.getTipo(),
-                procedimiento.isEmergencia() ? "Sí" : "No",
-                procedimiento.getMonto(),
-                procedimiento.getIdAnimal(),
-                procedimiento.getAnimal(),
-                procedimiento.getFecha(),
-                procedimiento.getDescripcion()
-            });
+            lista.add(
+                    new Object[]{
+                        procedimiento.getIdProcedimiento(),
+                        procedimiento.getTipo(),
+                        procedimiento.isEmergencia()
+                                ? "Sí"
+                                : "No",
+                        procedimiento.getMonto(),
+                        procedimiento.getIdAnimal(),
+                        procedimiento.getAnimal(),
+                        procedimiento.getCliente(),
+                        procedimiento.getDniCliente(),
+                        procedimiento.getFecha(),
+                        procedimiento.getDescripcion()
+                    }
+            );
         }
 
         return lista;
     }
 
     public static ArrayList<Object[]> buscarProcedimientos(
-            String filtro) {
+            String filtro
+    ) {
 
-        ArrayList<Object[]> lista = new ArrayList<>();
+        ArrayList<Object[]> lista =
+                new ArrayList<>();
 
         for (ProcedimientoMedico procedimiento
-                : procedimientoDAO.buscarProcedimientos(filtro)) {
+                : procedimientoDAO.buscarProcedimientos(
+                        filtro
+                )) {
 
-            lista.add(new Object[]{
-                procedimiento.getIdProcedimiento(),
-                procedimiento.getTipo(),
-                procedimiento.isEmergencia() ? "Sí" : "No",
-                procedimiento.getMonto(),
-                procedimiento.getIdAnimal(),
-                procedimiento.getAnimal(),
-                procedimiento.getFecha(),
-                procedimiento.getDescripcion()
-            });
+            lista.add(
+                    new Object[]{
+                        procedimiento.getIdProcedimiento(),
+                        procedimiento.getTipo(),
+                        procedimiento.isEmergencia()
+                                ? "Sí"
+                                : "No",
+                        procedimiento.getMonto(),
+                        procedimiento.getIdAnimal(),
+                        procedimiento.getAnimal(),
+                        procedimiento.getCliente(),
+                        procedimiento.getDniCliente(),
+                        procedimiento.getFecha(),
+                        procedimiento.getDescripcion()
+                    }
+            );
         }
 
         return lista;
@@ -77,10 +95,13 @@ public class ProcedimientoMedicoController {
         procedimientoDAO.guardar(procedimiento);
     }
 
-    public static void eliminarProcedimiento(
-            int idProcedimiento) {
+    public static void darDeBajaProcedimiento(
+            int idProcedimiento
+    ) {
 
-        procedimientoDAO.eliminar(idProcedimiento);
+        procedimientoDAO.eliminar(
+                idProcedimiento
+        );
     }
     public static ArrayList<Object[]> listarPorAnimal(int idAnimal) {
 

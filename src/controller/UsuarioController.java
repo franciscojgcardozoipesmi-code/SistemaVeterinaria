@@ -321,18 +321,51 @@ public class UsuarioController {
             return false;
         }
     }
-    public static Usuario obtenerUsuarioPorNombre(
-            String nombreUsuario
-    ) {
+    
 
-        if (nombreUsuario == null
-                || nombreUsuario.trim().isEmpty()) {
+        public static Usuario obtenerUsuarioPorNombre(
+                String nombreUsuario
+        ) {
 
-            return null;
+            if (nombreUsuario == null
+                    || nombreUsuario.trim().isEmpty()) {
+
+                return null;
+            }
+
+            return usuarioDAO.buscarPorNombreUsuario(
+                    nombreUsuario
+            );
+        }
+        
+    public static ArrayList<Object[]> listarUsuariosInactivos() {
+
+        ArrayList<Object[]> lista =
+                new ArrayList<>();
+
+        for (Usuario usuario
+                : usuarioDAO.listarInactivos()) {
+
+            lista.add(
+                    new Object[]{
+                        usuario.getIdUsuario(),
+                        usuario.getUsuario(),
+                        usuario.getPassword(),
+                        usuario.getRol(),
+                        usuario.getCorreo()
+                    }
+            );
         }
 
-        return usuarioDAO.buscarPorNombreUsuario(
-                nombreUsuario
+        return lista;
+    }
+
+    public static void reactivarUsuario(
+            int idUsuario
+    ) {
+
+        usuarioDAO.reactivar(
+                idUsuario
         );
     }
 }

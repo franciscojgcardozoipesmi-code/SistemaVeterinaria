@@ -45,8 +45,8 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
 
                 String sql =
                         "INSERT INTO procedimientos_medicos "
-                        + "(tipo, emergencia, monto, id_animal, fecha, descripcion) "
-                        + "VALUES (?, ?, ?, ?, ?, ?)";
+                        + "(tipo, emergencia, monto, id_animal, fecha, descripcion, activo) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, 1)";
 
                 PreparedStatement pst =
                         conn.prepareStatement(sql);
@@ -90,9 +90,15 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
             conn = Conexion.getInstancia().conectar();
 
             String sql =
-                    "SELECT p.*, a.nombre AS animal "
+                    "SELECT p.*, "
+                    + "a.nombre AS animal, "
+                    + "c.nombre AS cliente, "
+                    + "c.dni AS dni_cliente "
                     + "FROM procedimientos_medicos p "
-                    + "JOIN animales a ON p.id_animal = a.id_animal "
+                    + "JOIN animales a "
+                    + "ON p.id_animal = a.id_animal "
+                    + "JOIN clientes c "
+                    + "ON a.id_cliente = c.id_cliente "
                     + "WHERE p.activo = 1";
 
             PreparedStatement pst =
@@ -115,6 +121,13 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
                         );
                 procedimiento.setAnimal(
                         rs.getString("animal")
+                );
+                procedimiento.setCliente(
+                        rs.getString("cliente")
+                );
+
+                procedimiento.setDniCliente(
+                        rs.getString("dni_cliente")
                 );
                 lista.add(procedimiento);
             }
@@ -199,13 +212,21 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
             conn = Conexion.getInstancia().conectar();
 
             String sql =
-                    "SELECT p.*, a.nombre AS animal "
+                    "SELECT p.*, "
+                    + "a.nombre AS animal, "
+                    + "c.nombre AS cliente, "
+                    + "c.dni AS dni_cliente "
                     + "FROM procedimientos_medicos p "
-                    + "JOIN animales a ON p.id_animal = a.id_animal "
+                    + "JOIN animales a "
+                    + "ON p.id_animal = a.id_animal "
+                    + "JOIN clientes c "
+                    + "ON a.id_cliente = c.id_cliente "
                     + "WHERE p.activo = 1 "
                     + "AND ("
                     + "p.tipo LIKE ? "
                     + "OR a.nombre LIKE ? "
+                    + "OR c.nombre LIKE ? "
+                    + "OR c.dni LIKE ? "
                     + "OR p.fecha LIKE ?"
                     + ")";
 
@@ -216,7 +237,9 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
 
                 pst.setString(1, valor);
                 pst.setString(2, valor);
-                pst.setString(3, valor);          
+                pst.setString(3, valor);
+                pst.setString(4, valor);
+                pst.setString(5, valor);        
 
             ResultSet rs =
                     pst.executeQuery();
@@ -237,7 +260,13 @@ public class ProcedimientoMedicoDAO implements CrudDAO<ProcedimientoMedico> {
                         procedimiento.setAnimal(
                                 rs.getString("animal")
                         );
+                        procedimiento.setCliente(
+                                rs.getString("cliente")
+                        );
 
+                        procedimiento.setDniCliente(
+                                rs.getString("dni_cliente")
+                        );    
                 lista.add(procedimiento);
             }
 

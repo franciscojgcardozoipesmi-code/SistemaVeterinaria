@@ -7,6 +7,10 @@ public class Venta {
     private int idVenta;
     private String fecha;
     private double total;
+    private int idCliente = -1;
+    private String nombreCliente = "Sin cliente";
+    private int idUsuario = -1;
+    private String nombreUsuario = "Sin usuario";
     private ArrayList<DetalleVenta> detalles;
 
     public Venta() {
@@ -63,5 +67,66 @@ public class Venta {
 
     public void setMedioPago(String medioPago) {
         this.medioPago = medioPago;
+    }
+    public int getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(
+            int idCliente
+    ) {
+        this.idCliente = idCliente;
+    }
+
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+
+    public void setNombreCliente(
+            String nombreCliente
+    ) {
+
+        if (nombreCliente == null
+                || nombreCliente.trim().isEmpty()) {
+
+            this.nombreCliente =
+                    "Sin cliente";
+
+        } else {
+
+            this.nombreCliente =
+                    nombreCliente;
+        }
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(
+            int idUsuario
+    ) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public void setNombreUsuario(
+            String nombreUsuario
+    ) {
+
+        if (nombreUsuario == null
+                || nombreUsuario.trim().isEmpty()) {
+
+            this.nombreUsuario =
+                    "Sin usuario";
+
+        } else {
+
+            this.nombreUsuario =
+                    nombreUsuario;
+        }
     }
 }

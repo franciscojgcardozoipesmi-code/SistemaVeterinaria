@@ -42,27 +42,50 @@ public class VentanaAgregarProcedimiento extends javax.swing.JFrame {
         configurarTipos();
     }
     
-    public void cargarDatos(int idProcedimiento,
-                            String tipo,
-                            boolean emergencia,
-                            double monto,
-                            int idAnimal,
-                            String fecha,
-                            String descripcion) {
+    public void cargarDatos(
+            int idProcedimiento,
+            String tipo,
+            boolean emergencia,
+            double monto,
+            int idAnimal,
+            String fecha,
+            String descripcion
+    ) {
 
-        this.idProcedimiento = idProcedimiento;
-                
+        this.idProcedimiento =
+                idProcedimiento;
+
         cmbTipo.setSelectedItem(
                 tipo
         );
-        chkEmergencia.setSelected(emergencia);
-        txtMonto.setText(String.valueOf(monto));
-        txtDescripcion.setText(descripcion);
-        for (int i = 0; i < cmbAnimal.getItemCount(); i++) {
 
-            String item = cmbAnimal.getItemAt(i);
+        chkEmergencia.setSelected(
+                emergencia
+        );
 
-            if (item.startsWith(idAnimal + " - ")) {
+        txtMonto.setText(
+                String.valueOf(monto)
+        );
+
+        txtFecha.setText(
+                fecha
+        );
+
+        txtDescripcion.setText(
+                descripcion
+        );
+
+        for (int i = 0;
+                i < cmbAnimal.getItemCount();
+                i++) {
+
+            String item =
+                    cmbAnimal.getItemAt(i);
+
+            if (item.startsWith(
+                    idAnimal + " - "
+            )) {
+
                 cmbAnimal.setSelectedIndex(i);
                 break;
             }
